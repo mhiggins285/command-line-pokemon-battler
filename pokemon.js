@@ -1,11 +1,12 @@
 const { type } = require("os")
 
-function Pokemon(name, HP, attack, type) {
+function Pokemon(name, HP, attack, type1, type2 = 'N/A') {
 
     this.name = name
     this.HP = HP
     this.attack = attack
-    this.type = type
+    this.type1 = type1
+    this.type2 = type2
     
 }
 
@@ -35,7 +36,15 @@ function Move(name, type) {
 
 Individual.prototype.teach = function (move) {
 
-    this.moves.push(move)
+    if (this.moves.length < 4) {
+
+        this.moves.push(move)
+
+    } else {
+
+        console.log('You cannot teach another move to this Pokemon, it already knows four')
+
+    }
 
 }
 
@@ -46,11 +55,11 @@ function Trainer(name) {
 
 }
 
-Trainer.prototype.catch = function(species, nickname, move) {
+Trainer.prototype.catch = function(species, nickname) {
 
     if (this.pokemon.length < 6) {
 
-        const individual = new Individual(species, nickname, move)
+        const individual = new Individual(species, nickname)
 
         this.pokemon.push(individual)
 
@@ -69,31 +78,48 @@ const weak = 0.75
 const typeChart = {
 
     Normal: {
+        undefined: neut,
         Normal: neut,
         Grass: neut,
         Fire: neut,
-        Water: neut
+        Water: neut,
+        Rock: weak
     },
 
     Grass: {
+        undefined: neut,
         Normal: neut,
         Grass: weak,
         Fire: weak,
-        Water: strong
+        Water: strong,
+        Rock: strong
     },
 
     Fire: {
+        undefined: neut,
         Normal: neut,
         Grass: strong,
         Fire: weak,
-        Water: weak
+        Water: weak,
+        Rock: strong
     },
 
     Water: {
+        undefined: neut,
         Normal: neut,
         Grass: weak,
         Fire: strong,
-        Water: weak
+        Water: weak,
+        Rock: strong
+    },
+
+    Rock: {
+        undefined: neut,
+        Normal: neut,
+        Grass: neut,
+        Fire: strong,
+        Water: neut,
+        Rock: neut
     }
 
 }
@@ -135,13 +161,13 @@ Battle.prototype.fight = function () {
     const opponentPokemon = 'pokemon' + (3 - trainerTurn).toString()
 
 
-    const typeModifier = typeChart[this[currentPokemon].moves[0].type][this[opponentPokemon].species.type]
+    const typeModifier = typeChart[this[currentPokemon].moves[0].type][this[opponentPokemon].species.type1]
 
     this[opponentPokemon].currentHP -= Math.floor((this[currentPokemon].species.attack * typeModifier) / 2)
 
     // damage dealt is reduced to a half as otherwise battles would be over too quickly
 
-    console.log(`${this[currentPokemon].species.name} used ${this[currentPokemon].moves[0].name}`)
+    console.log(`${this[currentPokemon].nickname} used ${this[currentPokemon].moves[0].name}`)
 
     if (typeModifier > 1) {
 
@@ -159,7 +185,7 @@ Battle.prototype.fight = function () {
 
         this[opponentPokemon].currentHP = 0
 
-        console.log(`${this[opponentPokemon].species.name} has fainted! ${this[currentTrainer].name} has won the battle!`)
+        console.log(`${this[opponentPokemon].nickname} has fainted! ${this[currentTrainer].name} has won the battle!`)
 
         this.winner = this[currentTrainer]
 
