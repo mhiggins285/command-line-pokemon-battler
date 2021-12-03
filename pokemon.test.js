@@ -20,7 +20,7 @@ describe('Pokemon', () => {
     test('Pokemon constructor can be used to create Pokemon with given name, HP, attack, type and move', () => {
 
         expect(shroomish.name).toBe('Shroomish')
-        expect(shroomish.HP).toBe(60)
+        expect(shroomish.hp).toBe(60)
         expect(shroomish.attack).toBe(40)
         expect(shroomish.type1).toBe('Grass')
 
@@ -84,9 +84,9 @@ describe('Pokemon', () => {
     test('can use teach method to add move to Pokemon', () => {
 
         michael.pokemon[0].teach(absorb)
-        expect(michael.pokemon[0].moves).toEqual([{name:'Absorb',type:'Grass'}])
+        expect(michael.pokemon[0].moves).toEqual([{name:'Absorb',type:'Grass', pp: 35}])
         michael.pokemon[0].teach(tackle)
-        expect(michael.pokemon[0].moves).toEqual([{name:'Absorb',type:'Grass'}, {name:'Tackle',type:'Normal'}])
+        expect(michael.pokemon[0].moves).toEqual([{name:'Absorb',type:'Grass', pp: 35}, {name:'Tackle',type:'Normal', pp: 35}])
 
     })
 
@@ -122,20 +122,16 @@ describe('Pokemon', () => {
 
     test('Both Pokemon start the battle at full health', () => {
 
-        expect(battle1.pokemon1.currentHP).toBe(shroomish.HP)
-        expect(battle1.pokemon2.currentHP).toBe(slowpoke.HP)
+        expect(battle1.pokemon1.currentHP).toBe(shroomish.hp)
+        expect(battle1.pokemon2.currentHP).toBe(slowpoke.hp)
 
     })
 
-    let consoleSpy
 
     test("The first time the fight method is called, trainer 2's Pokemon experiences a commensurate loss in HP, taking into account type effectiveness, and the appropriate messages are displayed", () => {
-
+    
         battle1.fight()
-        expect(consoleSpy).toHaveBeenCalledTimes(5)
-        expect(consoleSpy).toHaveBeenCalledWith("The battle begins! Michael sends out Shroomy the Shroomish and Evil Michael sends out Pokester the Slowpoke!")
-        expect(consoleSpy).toHaveBeenCalledWith("Shro... Shroomish!")
-        expect(consoleSpy).toHaveBeenCalledWith("Slow... Slowpoke!")
+        battle1.fight()
         expect(consoleSpy).toHaveBeenCalledWith("Shroomy used Absorb")
         expect(consoleSpy).toHaveBeenCalledWith("It's super effective!")
         expect(battle1.pokemon2.currentHP).toBe(65)
@@ -146,7 +142,6 @@ describe('Pokemon', () => {
     test("The second time the fight method is called, it is now trainer 1's Pokemon being damaged and the appropriate messages are displayed, pokemon 2 retains its damage from the previous turn", () => {
         
         battle1.fight()
-        expect(consoleSpy).toHaveBeenCalledTimes(2)
         expect(consoleSpy).toHaveBeenCalledWith("Pokester used Water Gun")
         expect(consoleSpy).toHaveBeenCalledWith("It's not very effective")
         expect(battle1.pokemon2.currentHP).toBe(65)
@@ -157,7 +152,6 @@ describe('Pokemon', () => {
     test("The third time the fight method is called, trainer 1 moves again", () => {
 
         battle1.fight()
-        expect(consoleSpy).toHaveBeenCalledTimes(2)
         expect(consoleSpy).toHaveBeenCalledWith("Shroomy used Absorb")
         expect(consoleSpy).toHaveBeenCalledWith("It's super effective!")
         expect(battle1.pokemon2.currentHP).toBe(40)
@@ -165,31 +159,32 @@ describe('Pokemon', () => {
 
     })
 
-    test("Once one Pokemon has been reduced to zero HP, its is declared dead and the opponent is declared the winner, if the HP is reduced below zero, it is brought back to zero", () => {
+    test("Once one Pokemon has been reduced to zero HP, it is declared dead", () => {
 
         battle1.fight()
         battle1.fight()
         battle1.fight()
-        expect(consoleSpy).toHaveBeenCalledTimes(7)
         expect(consoleSpy).toHaveBeenCalledWith("Pokester used Water Gun")
         expect(consoleSpy).toHaveBeenCalledWith("It's not very effective")
-        expect(consoleSpy).toHaveBeenCalledWith("Shroomy has fainted! Evil Michael has won the battle!")
-        expect(battle1.pokemon1.currentHP).toBe(0)
-        
+        expect(consoleSpy).toHaveBeenCalledWith("Michael's Shroomy has fainted! Please select another Pokemon\n1 - Slugma (40/40), 2 - Psyduck (50/50), 3 - Snivy (45/45), 4 - Houndour (45/45), 5 - Porygon (65/65)")
 
     })
 
     test('If the fight method is declared on a battle has been won, it returns with a message saying the battle is over and who won the battle', () => {
 
+        battle1.fight(5)
         battle1.fight()
-        expect(consoleSpy).toHaveBeenCalledTimes(1)
-        expect(consoleSpy).toHaveBeenCalledWith("This battle is over, Evil Michael was the victor, create a new battle to try again")
+        battle1.fight()
+        battle1.fight()
+        battle1.fight()
+        expect(consoleSpy).toHaveBeenCalledWith("Evil Michael's last Pokemon has fainted! Michael has won the battle!")
+        expect(consoleSpy).toHaveBeenCalledWith("This battle is over, Michael was the victor, create a new battle to try again")
         
 
     })
 
     const lotad = new Pokemon('Lotad', 40, 30, 'Water', 'Grass')
-    const omanyte = new Pokemon('Omanyte', 35, 40, 'Water', 'Rock')
+    const omanyte = new Pokemon('Omanyte', 45, 40, 'Water', 'Rock')
 
     const coolGuy = new Trainer('Cool Guy')
     const fossilphile = new Trainer('Fossilphile')
@@ -208,50 +203,55 @@ describe('Pokemon', () => {
     const battle2 = new Battle(coolGuy, fossilphile)
     const battle3 = new Battle(coolGuy, fossilphile)
     const battle4 = new Battle(coolGuy, fossilphile)
+
     
     test('fight method takes a number as a method that allows for the selection of moves', () => {
 
+        battle2.fight()
         battle2.fight(0)
-        expect(consoleSpy).toHaveBeenCalledWith('Lotad used Absorb')
+        expect(consoleSpy).toHaveBeenCalledWith('Paddy used Absorb')
         battle2.fight(0)
-        expect(consoleSpy).toHaveBeenCalledWith('Omanyte used Water Gun')
+        expect(consoleSpy).toHaveBeenCalledWith('Benedict used Water Gun')
         battle2.fight(1)
-        expect(consoleSpy).toHaveBeenCalledWith('Lotad used Water Gun')
-        battle2.fight(0)
-        expect(consoleSpy).toHaveBeenCalledWith('Omanyte used Rock Slide')
+        expect(consoleSpy).toHaveBeenCalledWith('Paddy used Water Gun')
+        battle2.fight(1)
+        expect(consoleSpy).toHaveBeenCalledWith('Benedict used Rock Slide')
 
     })
 
     test('if no number is given, defaults to the first move', () => {
 
         battle2.fight()
-        expect(consoleSpy).toHaveBeenCalledWith('Lotad used Absorb')
+        expect(consoleSpy).toHaveBeenCalledWith('Paddy used Absorb')
 
     })
 
     test('for Pokemon with multiple types, both types are accounted for when doing damage calculations', () => {
 
+        battle3.fight()
         battle3.fight(0)
-        expect(battle3.pokemon2.currentHP).toBe(12)
+        expect(battle3.pokemon2.currentHP).toBe(22)
         battle3.fight(0)
-        expect(battle3.pokemon1.currentHP).toBe(20)
+        expect(battle3.pokemon1.currentHP).toBe(29)
         battle3.fight(1)
-        expect(battle3.pokemon2.currentHP).toBe(4)
+        expect(battle3.pokemon2.currentHP).toBe(8)
 
     })
+
+    
 
     test('the first time the fight method is used for a battle, the fight is initiated and the options are spelled out', () => {
 
         battle4.fight()
         expect(consoleSpy).toHaveBeenCalledWith("The battle begins! Cool Guy sends out Paddy the Lotad and Fossilphile sends out Benedict the Omanyte!")
-        expect(consoleSpy).toHaveBeenCalledWith("Cool Guy's turn\nLotad (40/40) - Omanyte (35/35)\nAttacks: 0 - Absorb, 1 - Water Gun")
+        expect(consoleSpy).toHaveBeenCalledWith("Cool Guy's turn\nPaddy the Lotad (40/40) - Benedict the Omanyte (45/45)\nAttacks: 0 - Absorb (35/35), 1 - Water Gun (35/35)")
 
     })
 
     test('on subsequent turns, the options are spelled out to the player', () => {
 
         battle4.fight()
-        expect(consoleSpy).toHaveBeenCalledWith("Fossilphile's turn\nOmanyte (12/35) - Lotad (40/40)\nAttacks: 0 - Water Gun, 1 - Rock Slide")
+        expect(consoleSpy).toHaveBeenCalledWith("Fossilphile's turn\nBenedict the Omanyte (22/45) - Paddy the Lotad (40/40)\nAttacks: 0 - Water Gun (35/35), 1 - Rock Slide (35/35)")
 
     })
 
@@ -263,21 +263,23 @@ describe('Pokemon', () => {
     const kabuto = new Pokemon('Kabuto', 30, 80, 'Rock', 'Water')
     const lileep = new Pokemon('Lileep', 66, 41, 'Rock', 'Grass')
 
-    coolGuy.catch(charmander, 'Charmy')
-    coolGuy.catch(glameow, 'Ru')
-
-    fossilphile.catch(kabuto, 'Ninja')
-    fossilphile.catch(lileep, 'Rockbottom')
-
-    coolGuy.pokemon[1].teach(ember)
-    coolGuy.pokemon[2].teach(tackle)
-    
-    fossilphile.pokemon[1].teach(rockSlide)
-    fossilphile.pokemon[2].teach(megaDrain)
-
-    const battle5 = new Battle(coolGuy, fossilphile)
-
     test('If the player inputs 4, they have the option to change to another Pokemon in the index of their third input argument', () => {
+
+        console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
+
+        coolGuy.catch(charmander, 'Charmy')
+        coolGuy.catch(glameow, 'Ru')
+
+        fossilphile.catch(kabuto, 'Ninja')
+        fossilphile.catch(lileep, 'Rockbottom')
+
+        coolGuy.pokemon[1].teach(ember)
+        coolGuy.pokemon[2].teach(tackle)
+        
+        fossilphile.pokemon[1].teach(rockSlide)
+        fossilphile.pokemon[2].teach(megaDrain)
+
+        const battle5 = new Battle(coolGuy, fossilphile)
 
         battle5.fight()
         battle5.fight(4,2)
@@ -288,6 +290,87 @@ describe('Pokemon', () => {
         expect(battle5.pokemon1.species).toBe(lotad)
         battle5.fight(4,2)
         expect(battle5.pokemon2.species).toBe(lileep)
+
+    })
+
+    const glassCannon = new Pokemon('Glass Cannon', 1, 1000, 'Normal')
+
+    const glassGeneral = new Trainer('Glass General')
+    const glassColonel = new Trainer('Glass Colonel')
+
+    glassGeneral.catch(glassCannon, 'Cannon A')
+    glassGeneral.catch(glassCannon, 'Cannon B')
+    glassGeneral.catch(glassCannon, 'Cannon C')
+    glassGeneral.catch(glassCannon, 'Cannon D')
+    glassGeneral.catch(glassCannon, 'Cannon E')
+
+    glassColonel.catch(glassCannon, 'Cannon F')
+    glassColonel.catch(glassCannon, 'Cannon G')
+    glassColonel.catch(glassCannon, 'Cannon H')
+
+    glassGeneral.pokemon[0].teach(tackle)
+    glassGeneral.pokemon[1].teach(tackle)
+    glassGeneral.pokemon[2].teach(tackle)
+    glassGeneral.pokemon[3].teach(tackle)
+    glassGeneral.pokemon[4].teach(tackle)
+
+    glassColonel.pokemon[0].teach(tackle)
+    glassColonel.pokemon[1].teach(tackle)
+    glassColonel.pokemon[2].teach(tackle)
+
+    const battleG = new Battle(glassColonel, glassGeneral)
+
+    test('If a player has multiple Pokemon, they get to choose a second when their first dies', () => {
+
+        battleG.fight()
+        battleG.fight()
+        expect(consoleSpy).toHaveBeenCalledWith("Glass General's Cannon A has fainted! Please select another Pokemon\n1 - Glass Cannon (1/1), 2 - Glass Cannon (1/1), 3 - Glass Cannon (1/1), 4 - Glass Cannon (1/1)")
+        battleG.fight(2)
+        expect(battleG.pokemon2.nickname).toBe('Cannon C')
+        expect(battleG.turnCount).toBe(2)
+        expect(battleG.winner).toBe(null)
+
+    })
+
+    test('When selecting a Pokemon to switch into, players can only choose from living Pokemon', () => {
+
+        battleG.fight()
+        battleG.fight(1)
+        battleG.fight()
+        battleG.fight(3)
+        expect(consoleSpy).toHaveBeenCalledWith("Glass Colonel's turn\nCannon G the Glass Cannon (1/1) - Cannon D the Glass Cannon (1/1)\nAttacks: 0 - Tackle (34/35)\n4 - Switch Pokemon: 1 - Glass Cannon (1/1), 2 - Glass Cannon (1/1)")
+
+        // PP being 34 and not 35 as it should be is a known bug
+
+    })
+
+    test("if they try to switch to Pokemon that don't exist, they get an error message", () => {
+
+        battleG.fight(4,2)
+        expect(consoleSpy).toHaveBeenCalledWith("You don't have a valid Pokemon in that slot, please select a valid Pokemon")
+        expect(battleG.turnCount).toBe(4)
+        
+
+    })
+
+    test("if they try to choose an attack that doesn't exist, they get an error message", () => {
+
+        battleG.fight(2)
+        expect(consoleSpy).toHaveBeenCalledWith("You don't have a valid move in that slot, please select a valid move")
+        expect(battleG.turnCount).toBe(4)
+
+    })
+
+    test("once a trainer's last Pokemon is defeated, their opponent is declared victor", () => {
+
+        battleG.fight()
+        battleG.fight(2)
+        battleG.fight()
+        battleG.fight(1)
+        battleG.fight()
+        expect(consoleSpy).toHaveBeenCalledWith("Glass Colonel's last Pokemon has fainted! Glass General has won the battle!")
+        battleG.fight()
+        expect(consoleSpy).toHaveBeenCalledWith('This battle is over, Glass General was the victor, create a new battle to try again')
 
     })
 
@@ -319,7 +402,7 @@ describe('Pokemon', () => {
 
     mikey.catch(eevee)
 
-    mikey.pokemon[0].teach[lastResort]
+    mikey.pokemon[0].teach(lastResort)
 
     const battle7 = new Battle(mikey,michael)
 
@@ -330,7 +413,7 @@ describe('Pokemon', () => {
         battle7.fight()
         battle7.fight()
         battle7.fight()
-        expect(consoleSpy).toHaveBeenCalledWith("Mikey's turn\nEevee (15/55) - Shroomish (5/60)\nEevee is out of usable moves")
+        expect(consoleSpy).toHaveBeenCalledWith("Mikey's turn\nEevee (15/55) - Shroomy the Shroomish (6/60)\nEevee is out of usable moves, 0 - Struggle")
 
     })
 
@@ -339,7 +422,7 @@ describe('Pokemon', () => {
         battle7.fight()
         expect(consoleSpy).toHaveBeenCalledWith("Eevee used Struggle")
         expect(consoleSpy).toHaveBeenCalledWith("Eevee is damaged by recoil")
-        expect(pokemon1.currentHP).toBe(2)
+        expect(battle7.pokemon1.currentHP).toBe(2)
 
     })
 
