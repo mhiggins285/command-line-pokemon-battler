@@ -768,7 +768,7 @@ class Battle {
 
                         if (this[currentPokemon].moves[actionNo].type === this[currentPokemon].species.type1 || this[currentPokemon].moves[actionNo].type === this[currentPokemon].species.type2) {
 
-                            stabModifier = 1
+                            stabModifier = 1.5
 
                         }
 
@@ -783,7 +783,7 @@ class Battle {
 
                         }
 
-                        this[opponentPokemon].currentHP -= Math.floor(attackStat * 60 / defenseStat * typeModifier * this[currentPokemon].moves[actionNo].power / 60 * criticalModifier * stabModifier / 2)
+                        this[opponentPokemon].currentHP -= Math.floor(attackStat * 60 / defenseStat * typeModifier * this[currentPokemon].moves[actionNo].power / 60 * criticalModifier * stabModifier * 0.3)
 
                         // damage dealt is reduced to a half as otherwise battles would be over too quickly
 

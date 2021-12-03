@@ -81,32 +81,3 @@ while (champBattle.winner === null) {
     champBattle.fight(randomSelection)
 
 }
-
-// const firstQuestions = [
-//   {
-//     type: 'input',
-//     name: 'name',
-//     message: 'Blabla',
-//     default: '0',
-//   }
-// ];
-
-// function playGame() {
-//   inquirer
-//     .prompt(firstQuestions)
-//     .then(function(firstAnswers) {
-
-//         const actionNo = parseInt(firstAnswers[0])
-    
-//         if (firstAnswers.length > 1) {
-
-//             const pokemonNo = parseInt(firstAnswers[2])
-
-//         }
-
-
-
-//     })
-// }
-
-// playGame();

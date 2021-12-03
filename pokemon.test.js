@@ -629,4 +629,40 @@ describe('Pokemon', () => {
         
     })
 
+    const red = new Trainer('Red')
+    const blue = new Trainer('Blue')
+
+    const charizard = new Pokemon('Charizard', [78, 84, 109, 78, 85], 'Fire', 'Flying')
+    const rhydon = new Pokemon('Rhydon', [105, 130, 45, 120, 45], 'Rock', 'Ground')
+
+    const wingAttack = new Move('Wing Attack', 'Flying', 35, 60, 100, 'Physical')
+    const fireBlast = new Move('Fire Blast', 'Fire', 15, 120, 75, 'Special')
+    const slash = new Move('Slash', 'Normal', 20, 70, 100, 'Physical')
+    const earthquake = new Move('Earthquake', 'Ground', 5, 100, 100, 'Physical')
+
+    red.catch(charizard)
+    blue.catch(rhydon)
+
+    red.pokemon[0].teach(wingAttack)
+    red.pokemon[0].teach(fireBlast)
+    red.pokemon[0].teach(slash)
+    red.pokemon[0].teach(earthquake)
+
+    blue.pokemon[0].teach(earthquake)
+
+    const battle16 = new Battle (red, blue)
+
+    test('player can select 5 to see details of moves', () => {
+
+        battle16.fight()
+        expect(consoleSpy).toHaveBeenCalledWith('5 - See Move Details')
+        battle16.fight(5)
+        expect(consoleSpy).toHaveBeenCalledWith('Wing Attack - Flying - 60 Power - 100 Accuracy - Physical')
+        expect(consoleSpy).toHaveBeenCalledWith('Fire Blast - Fire - 120 Power - 75 Accuracy - Special')
+        expect(consoleSpy).toHaveBeenCalledWith('Slash - Normal - 70 Power - 100 Accuracy - Physical')
+        expect(consoleSpy).toHaveBeenCalledWith('Earthquake - Ground - 100 Power - 100 Accuracy - Physical')
+        expect(battle16.turnCount).toBe(1)
+
+    })
+
 })
