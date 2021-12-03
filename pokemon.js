@@ -496,7 +496,7 @@ const typeChart = {
         Dragon: strong,
         Dark: strong,
         Fairy: neut
-    },
+    }
 
 }
 
@@ -515,6 +515,8 @@ class Battle {
     }
 
     fight(actionNo = 0, pokemonNo = -1) {
+
+        console.log('')
 
         if (this.winner !== null) {
 
@@ -592,6 +594,7 @@ class Battle {
             console.log(`The battle begins! ${this.trainer1.name} sends out ${opponentPokemonFullName} and ${this.trainer2.name} sends out ${currentPokemonFullName}!`)
             console.log(this.pokemon1.species.makeSound())
             console.log(this.pokemon2.species.makeSound())
+            console.log('')
 
             for (const pokemon of this.trainer1.pokemon) {
 
@@ -623,7 +626,7 @@ class Battle {
 
                 if (this[currentTrainer].pokemon[actionNo] === undefined || this[currentTrainer].pokemon[actionNo].currentHP === 0) {
 
-                    console.log("You don't have a valid Pokemon in that slot, please select a valid Pokemon")
+                    console.log("You don't have a valid Pokemon in that slot, please select a valid move")
 
                     console.log('')
 
@@ -642,7 +645,7 @@ class Battle {
 
                 if (this[opponentTrainer].pokemon[actionNo] === undefined || this[opponentTrainer].pokemon[actionNo].currentHP === 0) {
 
-                    console.log("You don't have a valid Pokemon in that slot, please select a valid Pokemon")
+                    console.log("You don't have a valid Pokemon in that slot, please select a valid move")
 
                     console.log('')
 
@@ -683,7 +686,7 @@ class Battle {
 
                         this[currentPokemon] = this[currentTrainer].pokemon[pokemonNo]
 
-                        console.log(`${this[currentTrainer].name} has switched out ${currentPokemonFullName} for ${this[currentPokemon].nickname}`)
+                        console.log(`${this[currentTrainer].name} has switched out ${currentPokemonFullName} for ${this[currentPokemon].species.name}`)
                         console.log(this[currentPokemon].species.makeSound())
 
                     }
@@ -963,6 +966,8 @@ class Battle {
             battleScreen = battleScreen + '\n' + pokemonLine
 
         }
+        
+        console.log('')
 
         console.log(battleScreen)
 

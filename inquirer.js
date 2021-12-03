@@ -1,4 +1,4 @@
-// const inquirer = require('inquirer');
+const inquirer = require('inquirer');
 const { Pokemon, Move, Trainer, Battle } = require('./pokemon')
 
 const red = new Trainer('Red')
@@ -71,42 +71,655 @@ const champBattle = new Battle(red, blue)
 
 champBattle.fight()
 
-while (champBattle.winner === null) {
+const firstQuestions = [
+    {
+      type: 'input',
+      name: 'action',
+      message: 'Select action',
+      default: '0',
+    }
+  ];
+  
+  function playGame() {
 
-    let randomSelection = Math.round(2 * Math.random())
+    inquirer
+        .prompt(firstQuestions)
+        .then(function(firstAnswers) {
+  
+            const actionNo = parseInt(firstAnswers.action[0])
 
-    console.log(randomSelection)
-    console.log('')
+            let pokemonNo = -1
 
-    champBattle.fight(randomSelection)
+            if (firstAnswers.action.length > 2) {
 
-}
+                pokemonNo = parseInt(firstAnswers.action[2])
 
-// const firstQuestions = [
-//   {
-//     type: 'input',
-//     name: 'name',
-//     message: 'Blabla',
-//     default: '0',
-//   }
-// ];
+            }
 
-// function playGame() {
-//   inquirer
-//     .prompt(firstQuestions)
-//     .then(function(firstAnswers) {
+            champBattle.fight(actionNo, pokemonNo)
 
-//         const actionNo = parseInt(firstAnswers[0])
+            return inquirer.prompt(firstQuestions)
+  
+        })
+
+        .then(function(firstAnswers) {
     
-//         if (firstAnswers.length > 1) {
+            const actionNo = parseInt(firstAnswers.action[0])
 
-//             const pokemonNo = parseInt(firstAnswers[2])
+            let pokemonNo = -1
 
-//         }
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+
+        .then(function(firstAnswers) {
+    
+            const actionNo = parseInt(firstAnswers.action[0])
+
+            let pokemonNo = -1
+
+            if (firstAnswers.action.length > 2) {
+
+                pokemonNo = parseInt(firstAnswers.action[2])
+
+            }
+
+            champBattle.fight(actionNo, pokemonNo)
+
+            return inquirer.prompt(firstQuestions)
+    
+        })
+        
+    }
+
+playGame()
+    
 
 
 
-//     })
-// }
 
-// playGame();
+
