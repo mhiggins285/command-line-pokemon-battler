@@ -5,17 +5,21 @@ describe('Pokemon', () => {
 
     beforeEach(function () {
 
-        consoleSpy = jest.spyOn(console, 'log');
+        consoleSpy = jest.spyOn(console, 'log')
+
+        jest.spyOn(global.Math, 'random').mockReturnValue(0.1)
 
     });
     
     afterEach(function () {
 
-        consoleSpy.mockRestore();
+        consoleSpy.mockRestore()
+
+        jest.spyOn(global.Math, 'random').mockRestore()
 
     });
 
-    const shroomish = new Pokemon('Shroomish', 60, 40, 'Grass')
+    const shroomish = new Pokemon('Shroomish', [60, 40], 'Grass')
 
     test('Pokemon constructor can be used to create Pokemon with given name, HP, attack, type and move', () => {
 
@@ -26,7 +30,7 @@ describe('Pokemon', () => {
 
     }) 
 
-    const porygon = new Pokemon('Porygon', 65, 60, 'Normal')
+    const porygon = new Pokemon('Porygon', [65, 60], 'Normal')
 
     test('Pokemon prototype has makeSound method that Pokemon made with the Pokemon constructor can use', () => {
 
@@ -42,11 +46,11 @@ describe('Pokemon', () => {
 
     })
 
-    const slugma = new Pokemon('Slugma', 40, 40, 'Fire')
-    const psyduck = new Pokemon('Psyduck', 50, 52, 'Water')
-    const houndour = new Pokemon('Houndour', 45, 60, 'Fire')
-    const snivy = new Pokemon('Snivy', 45, 45, 'Grass')
-    const slowpoke = new Pokemon('Slowpoke', 90, 65, 'Water')
+    const slugma = new Pokemon('Slugma', [40, 40], 'Fire')
+    const psyduck = new Pokemon('Psyduck', [50, 52], 'Water')
+    const houndour = new Pokemon('Houndour', [45, 60], 'Fire', 'Dark')
+    const snivy = new Pokemon('Snivy', [45, 45], 'Grass')
+    const slowpoke = new Pokemon('Slowpoke', [90, 65], 'Water', 'Psychic')
 
     michael.catch(shroomish, 'Shroomy')
     michael.catch(slugma, 'Slugs')
@@ -84,9 +88,9 @@ describe('Pokemon', () => {
     test('can use teach method to add move to Pokemon', () => {
 
         michael.pokemon[0].teach(absorb)
-        expect(michael.pokemon[0].moves).toEqual([{name:'Absorb',type:'Grass', pp: 35}])
+        expect(michael.pokemon[0].moves).toEqual([{name:'Absorb',type:'Grass', pp: 35, power: 60, accuracy: 100, category: 'Physical'}])
         michael.pokemon[0].teach(tackle)
-        expect(michael.pokemon[0].moves).toEqual([{name:'Absorb',type:'Grass', pp: 35}, {name:'Tackle',type:'Normal', pp: 35}])
+        expect(michael.pokemon[0].moves).toEqual([{name:'Absorb',type:'Grass', pp: 35, power: 60, accuracy: 100, category: 'Physical'}, {name:'Tackle',type:'Normal', pp: 35, power: 60, accuracy: 100, category: 'Physical'}])
 
     })
 
@@ -183,8 +187,8 @@ describe('Pokemon', () => {
 
     })
 
-    const lotad = new Pokemon('Lotad', 40, 30, 'Water', 'Grass')
-    const omanyte = new Pokemon('Omanyte', 45, 40, 'Water', 'Rock')
+    const lotad = new Pokemon('Lotad', [40, 30], 'Water', 'Grass')
+    const omanyte = new Pokemon('Omanyte', [45, 40], 'Water', 'Rock')
 
     const coolGuy = new Trainer('Cool Guy')
     const fossilphile = new Trainer('Fossilphile')
@@ -257,16 +261,13 @@ describe('Pokemon', () => {
 
     const ember = new Move('Ember', 'Fire')
 
-    const charmander = new Pokemon('Charmander', 39, 52, 'Fire')
-    const glameow = new Pokemon('Glameow', 49, 55, 'Normal')
+    const charmander = new Pokemon('Charmander', [39, 52], 'Fire')
+    const glameow = new Pokemon('Glameow', [49, 55], 'Normal')
 
-    const kabuto = new Pokemon('Kabuto', 30, 80, 'Rock', 'Water')
-    const lileep = new Pokemon('Lileep', 66, 41, 'Rock', 'Grass')
+    const kabuto = new Pokemon('Kabuto', [30, 80], 'Rock', 'Water')
+    const lileep = new Pokemon('Lileep', [66, 41], 'Rock', 'Grass')
 
     test('If the player inputs 4, they have the option to change to another Pokemon in the index of their third input argument', () => {
-
-        console.log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX')
-
         coolGuy.catch(charmander, 'Charmy')
         coolGuy.catch(glameow, 'Ru')
 
@@ -293,7 +294,7 @@ describe('Pokemon', () => {
 
     })
 
-    const glassCannon = new Pokemon('Glass Cannon', 1, 1000, 'Normal')
+    const glassCannon = new Pokemon('Glass Cannon', [1, 1000], 'Normal')
 
     const glassGeneral = new Trainer('Glass General')
     const glassColonel = new Trainer('Glass Colonel')
@@ -376,7 +377,7 @@ describe('Pokemon', () => {
 
     const paul = new Trainer('Paul')
 
-    const chimchar = new Pokemon('Chimchar', 44, 58, 'Fire')
+    const chimchar = new Pokemon('Chimchar', [44, 58], 'Fire')
 
     paul.catch(chimchar)
 
@@ -396,7 +397,7 @@ describe('Pokemon', () => {
 
     const mikey = new Trainer('Mikey')
 
-    const eevee = new Pokemon('Eevee', 55, 55, 'Normal')
+    const eevee = new Pokemon('Eevee', [55, 55], 'Normal')
 
     const lastResort = new Move('Last Resort', 'Normal', 2)
 
@@ -424,6 +425,208 @@ describe('Pokemon', () => {
         expect(consoleSpy).toHaveBeenCalledWith("Eevee is damaged by recoil")
         expect(battle7.pokemon1.currentHP).toBe(2)
 
+    })
+
+    const flamethrower = new Move ('Flamethrower', 'Fire', 10, 90)
+    const zapCannon = new Move ('Zap Cannon', 'Electric', 10, 90, 50) 
+
+    const firebreather = new Trainer('Firebreather')
+    const gambler = new Trainer('Gambler')
+
+    firebreather.catch(charmander)
+    gambler.catch(porygon)
+
+    firebreather.pokemon[0].teach(flamethrower)
+    gambler.pokemon[0].teach(zapCannon)
+
+    battle8 = new Battle(firebreather,gambler)
+    battle9 = new Battle(firebreather,gambler)
+
+    test('moves can have different attack powers, defaulting at 60', () => {
+
+        battle8.fight()
+        battle8.fight()
+        expect(battle8.pokemon2.currentHP).toBe(26)
+
+    })
+
+    test('moves can have different accuracies, defaulting at 100, with lower accuracy moves having a chance to miss', () => {
+
+        jest.spyOn(global.Math, 'random').mockRestore();
+
+        jest.spyOn(global.Math, 'random').mockReturnValue(0.24);
+
+        battle8.fight()
+
+        expect(battle8.pokemon1.currentHP).toBeLessThanOrEqual(0)
+
+        jest.spyOn(global.Math, 'random').mockRestore();
+
+        jest.spyOn(global.Math, 'random').mockReturnValue(0.76);
+
+        battle9.fight()
+        battle9.fight()
+        battle9.fight()
+
+
+        expect(consoleSpy).toHaveBeenCalledWith("Porygon used Zap Cannon")
+        expect(consoleSpy).toHaveBeenCalledWith("Porygon's attack missed!")
+
+        expect(battle8.pokemon1.currentHP).toBe(39)
+
+        jest.spyOn(global.Math, 'random').mockRestore();
+
+
+    })
+
+    const shroomFan = new Trainer('Shroom Fan')
+    const shroomLover = new Trainer('Shroom Lover')
+    
+    shroomFan.catch(shroomish)
+    shroomLover.catch(shroomish)
+
+    shroomFan.pokemon[0].teach(absorb)
+    shroomLover.pokemon[0].teach(absorb)
+
+    const battle10 = new Battle(shroomFan,shroomLover)
+
+    test('moves have a one in 8 chance of critically hitting, doing extra damage', () => {
+
+        battle10.fight()
+
+        jest.spyOn(global.Math, 'random').mockRestore();
+        
+        jest.spyOn(global.Math, 'random').mockReturnValue(0.24);
+
+        battle10.fight()
+
+        expect(battle10.pokemon2.currentHP).toBe(45)
+
+        jest.spyOn(global.Math, 'random').mockRestore();
+
+        jest.spyOn(global.Math, 'random').mockReturnValue(0.91);
+
+        battle10.fight()
+
+        expect(battle10.pokemon1.currentHP).toBe(30)
+
+        expect(consoleSpy).toHaveBeenCalledWith("It's a critical hit!")
+
+    })
+
+    const misdreavus = new Pokemon('Misdreavus', [60, 60], 'Ghost')
+
+    const medium = new Trainer('Medium')
+    const glamourMom = new Trainer('Glamour Mom')
+
+    const bite = new Move('Bite', 'Dark')
+    const scratch = new Move('Scratch', 'Normal')
+    const shadowBall = new Move('Shadow Ball', 'Ghost')
+    const confusion = new Move('Confusion', 'Psychic')
+
+    medium.catch(misdreavus)
+    glamourMom.catch(glameow)
+
+    medium.pokemon[0].teach(shadowBall)
+    medium.pokemon[0].teach(confusion)
+
+    glamourMom.pokemon[0].teach(bite)
+    glamourMom.pokemon[0].teach(scratch)
+
+    const battle11 = new Battle(medium, glamourMom)
+
+    test('some types can be immune to others', () => {
+
+        battle11.fight()
+        battle11.fight(0)
+        expect(consoleSpy).toHaveBeenCalledWith('It had no effect')
+        expect(battle11.pokemon2.currentHP).toBe(49)
+        battle11.fight(0)
+        expect(battle11.pokemon1.currentHP).toBe(26)
+        battle11.fight(1)
+        expect(battle11.pokemon2.currentHP).toBe(19)
+        battle11.fight(1)
+        expect(battle11.pokemon1.currentHP).toBe(26)
+
+    })
+
+    const scientist = new Trainer('Scientist')
+    const nerd = new Trainer('Nerd')
+
+    scientist.catch(porygon)
+    nerd.catch(porygon)
+
+    scientist.pokemon[0].teach(tackle)
+    nerd.pokemon[0].teach(confusion)
+
+    const battle12 = new Battle(scientist, nerd)
+
+    const mystic = new Trainer('Mystic')
+    mystic.catch(slowpoke)
+    mystic.pokemon[0].teach(confusion)
+
+    const battle13 = new Battle(mystic, nerd)
+
+    test('pokemon get STAB for using a move of the same type', () => {
+
+        battle12.fight()
+        battle12.fight(0)
+        expect(battle12.pokemon2.currentHP).toBe(20)
+        battle12.fight(0)
+        expect(battle12.pokemon1.currentHP).toBe(35)
+
+        battle13.fight()
+        battle13.fight()
+        expect(battle13.pokemon2.currentHP).toBe(17)
+
+    })
+
+    const solrock = new Pokemon('Solrock', [70, 95, 55], 'Rock', 'Psychic')
+
+    const powerGem = new Move('Power Gem', 'Rock', 25, 60, 100, 'Special')
+
+    const starman = new Trainer('Starman')
+    const sunboy = new Trainer('Sunboy')
+
+    starman.catch(solrock)
+    sunboy.catch(solrock)
+
+    starman.pokemon[0].teach(rockSlide)
+    sunboy.pokemon[0].teach(powerGem)
+
+    const battle14 = new Battle(starman, sunboy)
+
+    test('moves can be special and physical and do different damage depending on attack stats', () => {
+
+        battle14.fight()
+        battle14.fight(0)
+        expect(battle14.pokemon2.currentHP).toBe(23)
+        battle14.fight(0)
+        expect(battle14.pokemon1.currentHP).toBe(43)
+
+    })
+
+    const lunatone = new Pokemon('Lunatone', [70, 60, 60, 65, 85], 'Rock', 'Psychic')
+
+    const lunarlad = new Trainer('Lunarlad')
+    const moonman = new Trainer('Moonman')
+
+    lunarlad.catch(lunatone)
+    moonman.catch(lunatone)
+
+    lunarlad.pokemon[0].teach(rockSlide)
+    moonman.pokemon[0].teach(powerGem)
+
+    const battle15 = new Battle(lunarlad, moonman)
+
+    test('moves can be special and physical and do different damage depending on defense stats', () => {
+
+        battle15.fight()
+        battle15.fight(0)
+        expect(battle15.pokemon2.currentHP).toBe(43)
+        battle15.fight(0)
+        expect(battle15.pokemon1.currentHP).toBe(49)
+        
     })
 
 })
