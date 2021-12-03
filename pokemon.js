@@ -526,6 +526,8 @@ class Battle {
 
         let trainerTurn = (this.turnCount % 2)
 
+        let returnFlag = false
+
         const currentTrainer = 'trainer' + (2 - trainerTurn).toString()
         const opponentTrainer = 'trainer' + (1 + trainerTurn).toString()
         const currentPokemon = 'pokemon' + (2 - trainerTurn).toString()
@@ -623,17 +625,17 @@ class Battle {
 
                     console.log("You don't have a valid Pokemon in that slot, please select a valid Pokemon")
 
+                    console.log('')
+
                     return
 
                 }
 
                 this[currentPokemon] = this[currentTrainer].pokemon[actionNo]
 
-                this.turnCount--
-
                 skipFlag = true
 
-                console.log(`${this[currentTrainer].name} has sent out ${this[currentPokemon].nickname}`)
+                console.log(`${this[currentTrainer].name} has sent out ${this[currentPokemon].species.name}`)
                 console.log(this[currentPokemon].species.makeSound())
 
             } else if (this[opponentPokemon].currentHP === 0) {
@@ -642,18 +644,18 @@ class Battle {
 
                     console.log("You don't have a valid Pokemon in that slot, please select a valid Pokemon")
 
+                    console.log('')
+
                     return
 
                 }
 
                 this[opponentPokemon] = this[opponentTrainer].pokemon[actionNo]
 
-                this.turnCount--
-
                 skipFlag = true
 
-                console.log(`${this[opponentTrainer].name} has sent out ${this[currentPokemon].nickname}`)
-                console.log(this[currentPokemon].species.makeSound())
+                console.log(`${this[opponentTrainer].name} has sent out ${this[opponentPokemon].species.name}`)
+                console.log(this[opponentPokemon].species.makeSound())
 
             }
 
@@ -672,6 +674,8 @@ class Battle {
                     if (this[currentTrainer].pokemon[pokemonNo] === undefined || this[currentTrainer].pokemon[pokemonNo].currentHP === 0) {
 
                         console.log("You don't have a valid Pokemon in that slot, please select a valid Pokemon")
+
+                        console.log('')
 
                         return
 
@@ -701,6 +705,8 @@ class Battle {
                 } else if (this[currentPokemon].pp[actionNo] === 0 || this[currentPokemon].pp[actionNo] === undefined) {
 
                     console.log("You don't have a valid move in that slot, please select a valid move")
+
+                    console.log('')
 
                     return
 
@@ -789,6 +795,8 @@ class Battle {
 
                         this.winner = this[currentTrainer]
 
+                        console.log('')
+
                         return
 
                     } else {
@@ -815,6 +823,10 @@ class Battle {
 
                         console.log(faintedScreen)
 
+                        console.log('')
+
+                        returnFlag = true
+
                     }
 
                 }  
@@ -828,6 +840,8 @@ class Battle {
                         console.log(`${currentPokemonNickname} has fainted!`)
 
                         console.log(`${this[currentTrainer].name}'s last Pokemon has fainted! ${this[opponentTrainer].name} has won the battle!`)
+
+                        console.log('')
 
                         this.winner = this[opponentTrainer]
 
@@ -857,11 +871,19 @@ class Battle {
 
                         console.log(faintedScreen)
 
+                        console.log('')
 
+                        returnFlag = true
 
                     }
 
                 } 
+
+                if (returnFlag) {
+
+                    return
+
+                }
             
             }
 
@@ -928,7 +950,7 @@ class Battle {
 
             for (let i = 0; i < noOfPokemon; i++) {
 
-                if (this[opponentTrainer].pokemon[i].currentHP > 0) {
+                if (this[opponentTrainer].pokemon[i].currentHP > 0 && this[opponentTrainer].pokemon[i] !== this[opponentPokemon]) {
 
                     pokemonLine = pokemonLine + i.toString() + ' - ' + this[opponentTrainer].pokemon[i].species.name + ' (' + this[opponentTrainer].pokemon[i].currentHP + '/' + this[opponentTrainer].pokemon[i].species.hp + '), '
     
@@ -943,6 +965,8 @@ class Battle {
         }
 
         console.log(battleScreen)
+
+        console.log('')
 
     }
 
