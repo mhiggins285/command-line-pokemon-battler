@@ -1,5 +1,8 @@
 const inquirer = require('inquirer');
-const { Pokemon, Move, Trainer, Battle } = require('./pokemonSTAB')
+const { Pokemon } = require('./classes/Pokemon')
+const { Move } = require('./classes/Move')
+const { Trainer } = require('./classes/Trainer')
+const { Battle } = require('./classes/Battle')
 
 const red = new Trainer('Red')
 const blue = new Trainer('Blue')

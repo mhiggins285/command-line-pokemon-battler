@@ -1,505 +1,4 @@
-
-class Pokemon {
-
-    constructor(name, [hp, attack, spAttack = 60, def = 60, spDef = 60], type1, type2 = 'N/A') {
-
-        this.name = name
-        this.hp = hp
-        this.attack = attack
-        this.spAttack = spAttack
-        this.def = def
-        this.spDef = spDef
-        this.type1 = type1
-        this.type2 = type2
-        
-    }
-
-    makeSound() {
-
-        const cry = this.name.substring(0,4)
-        const sound = cry + '... ' + this.name + '!'
-        return sound
-
-    }
-
-}
-
-class Individual {
-
-    constructor(species, nickname) {
-
-        this.species = species
-        this.nickname = nickname
-        this.moves = []
-        this.currentHP = species.hp
-        this.pp = []
-
-    }
-
-    teach(move) {
-
-        if (this.moves.length < 4) {
-
-            this.moves.push(move)
-            this.pp.push(move.pp)
-    
-        } else {
-    
-            console.log('You cannot teach another move to this Pokemon, it already knows four')
-    
-        }
-
-    }
-
-}
-
-class Move {
-
-    constructor(name, type, pp = 35, power = 60, accuracy = 100, category = 'Physical') {
-
-        this.name = name
-        this.type = type
-        this.pp = pp
-        this.power = power
-        this.accuracy = accuracy
-        this.category = category
-
-    }
-
-}
-
-class Trainer {
-
-    constructor(name) {
-
-        this.name = name
-        this.pokemon = []
-
-    }
-
-    catch(species, nickname) {
-
-        if (this.pokemon.length < 6) {
-
-            const individual = new Individual(species, nickname)
-    
-            this.pokemon.push(individual)
-    
-        } else {
-    
-            console.log('You cannot catch this Pokemon, your party is already full!')
-    
-        }
-
-    }
-
-}
-
-const strong = 1.25
-const neut = 1
-const weak = 0.75
-const immune = 0
-
-const typeChart = {
-
-    Normal: {
-        'N/A': neut,
-        Normal: neut,
-        Grass: neut,
-        Fire: neut,
-        Water: neut,
-        Rock: weak,
-        Electric: neut,
-        Psychic: neut,
-        Ground: neut,
-        Poison: neut,
-        Flying: neut,
-        Bug: neut,
-        Ghost: immune,
-        Steel: neut,
-        Fighting: neut,
-        Ice: neut,
-        Dragon: neut,
-        Dark: neut,
-        Fairy: neut
-    },
-
-    Grass: {
-        'N/A': neut,
-        Normal: neut,
-        Grass: weak,
-        Fire: weak,
-        Water: strong,
-        Rock: strong,
-        Electric: neut,
-        Psychic: neut,
-        Ground: strong,
-        Poison: weak,
-        Flying: weak,
-        Bug: weak,
-        Ghost: neut,
-        Steel: weak,
-        Fighting: neut,
-        Ice: neut,
-        Dragon: weak,
-        Dark: neut,
-        Fairy: neut
-    },
-
-    Fire: {
-        'N/A': neut,
-        Normal: neut,
-        Grass: strong,
-        Fire: weak,
-        Water: weak,
-        Rock: weak,
-        Electric: neut,
-        Psychic: neut,
-        Ground: neut,
-        Poison: neut,
-        Flying: neut,
-        Bug: strong,
-        Ghost: neut,
-        Steel: strong,
-        Fighting: neut,
-        Ice: strong,
-        Dragon: weak,
-        Dark: neut,
-        Fairy: neut
-    },
-
-    Water: {
-        'N/A': neut,
-        Normal: neut,
-        Grass: weak,
-        Fire: strong,
-        Water: weak,
-        Rock: strong,
-        Electric: neut,
-        Psychic: neut,
-        Ground: strong,
-        Poison: neut,
-        Flying: neut,
-        Bug: neut,
-        Ghost: neut,
-        Steel: neut,
-        Fighting: neut,
-        Ice: neut,
-        Dragon: weak,
-        Dark: neut,
-        Fairy: neut
-    },
-
-    Rock: {
-        'N/A': neut,
-        Normal: neut,
-        Grass: neut,
-        Fire: strong,
-        Water: neut,
-        Rock: neut,
-        Electric: neut,
-        Psychic: neut,
-        Ground: weak,
-        Poison: neut,
-        Flying: strong,
-        Bug: strong,
-        Ghost: neut,
-        Steel: weak,
-        Fighting: weak,
-        Ice: strong,
-        Dragon: neut,
-        Dark: neut,
-        Fairy: neut
-    },
-
-    Electric: {
-        'N/A': neut,
-        Normal: neut,
-        Grass: weak,
-        Fire: neut,
-        Water: strong,
-        Rock: neut,
-        Electric: weak,
-        Psychic: neut,
-        Ground: immune,
-        Poison: neut,
-        Flying: strong,
-        Bug: neut,
-        Ghost: neut,
-        Steel: neut,
-        Fighting: neut,
-        Ice: neut,
-        Dragon: weak,
-        Dark: neut,
-        Fairy: neut
-    },
-
-    Psychic: {
-        'N/A': neut,
-        Normal: neut,
-        Grass: neut,
-        Fire: neut,
-        Water: neut,
-        Rock: neut,
-        Electric: neut,
-        Psychic: weak,
-        Ground: neut,
-        Poison: strong,
-        Flying: neut,
-        Bug: neut,
-        Ghost: neut,
-        Steel: weak,
-        Fighting: strong,
-        Ice: neut,
-        Dragon: neut,
-        Dark: immune,
-        Fairy: neut
-    },
-
-    Ground: {
-        'N/A': neut,
-        Normal: neut,
-        Grass: weak,
-        Fire: strong,
-        Water: neut,
-        Rock: strong,
-        Electric: strong,
-        Psychic: neut,
-        Ground: neut,
-        Poison: strong,
-        Flying: immune,
-        Bug: weak,
-        Ghost: neut,
-        Steel: strong,
-        Fighting: neut,
-        Ice: neut,
-        Dragon: neut,
-        Dark: neut,
-        Fairy: neut
-    },
-
-    Poison: {
-        'N/A': neut,
-        Normal: neut,
-        Grass: strong,
-        Fire: neut,
-        Water: neut,
-        Rock: weak,
-        Electric: neut,
-        Psychic: neut,
-        Ground: weak,
-        Poison: weak,
-        Flying: neut,
-        Bug: neut,
-        Ghost: weak,
-        Steel: immune,
-        Fighting: neut,
-        Ice: neut,
-        Dragon: neut,
-        Dark: neut,
-        Fairy: strong
-    },
-
-    Flying: {
-        'N/A': neut,
-        Normal: neut,
-        Grass: strong,
-        Fire: neut,
-        Water: neut,
-        Rock: weak,
-        Electric: weak,
-        Psychic: neut,
-        Ground: neut,
-        Poison: neut,
-        Flying: neut,
-        Bug: strong,
-        Ghost: neut,
-        Steel: weak,
-        Fighting: strong,
-        Ice: neut,
-        Dragon: neut,
-        Dark: neut,
-        Fairy: neut
-    },
-
-    Bug: {
-        'N/A': neut,
-        Normal: neut,
-        Grass: strong,
-        Fire: weak,
-        Water: neut,
-        Rock: neut,
-        Electric: neut,
-        Psychic: strong,
-        Ground: neut,
-        Poison: weak,
-        Flying: weak,
-        Bug: neut,
-        Ghost: weak,
-        Steel: weak,
-        Fighting: weak,
-        Ice: neut,
-        Dragon: neut,
-        Dark: strong,
-        Fairy: weak
-    },
-
-    Ghost: {
-        'N/A': neut,
-        Normal: immune,
-        Grass: neut,
-        Fire: neut,
-        Water: neut,
-        Rock: neut,
-        Electric: neut,
-        Psychic: strong,
-        Ground: neut,
-        Poison: neut,
-        Flying: neut,
-        Bug: neut,
-        Ghost: strong,
-        Steel: neut,
-        Fighting: neut,
-        Ice: neut,
-        Dragon: neut,
-        Dark: weak,
-        Fairy: neut
-    },
-
-    Steel: {
-        'N/A': neut,
-        Normal: neut,
-        Grass: neut,
-        Fire: weak,
-        Water: weak,
-        Rock: strong,
-        Electric: weak,
-        Psychic: neut,
-        Ground: neut,
-        Poison: neut,
-        Flying: neut,
-        Bug: neut,
-        Ghost: neut,
-        Steel: weak,
-        Fighting: neut,
-        Ice: strong,
-        Dragon: neut,
-        Dark: neut,
-        Fairy: strong
-    },
-
-    Fighting: {
-        'N/A': neut,
-        Normal: strong,
-        Grass: neut,
-        Fire: neut,
-        Water: neut,
-        Rock: strong,
-        Electric: neut,
-        Psychic: weak,
-        Ground: neut,
-        Poison: weak,
-        Flying: weak,
-        Bug: weak,
-        Ghost: immune,
-        Steel: strong,
-        Fighting: neut,
-        Ice: strong,
-        Dragon: neut,
-        Dark: strong,
-        Fairy: weak
-    },
-
-    Ice: {
-        'N/A': neut,
-        Normal: neut,
-        Grass: strong,
-        Fire: weak,
-        Water: weak,
-        Rock: neut,
-        Electric: neut,
-        Psychic: neut,
-        Ground: strong,
-        Poison: neut,
-        Flying: strong,
-        Bug: neut,
-        Ghost: neut,
-        Steel: weak,
-        Fighting: neut,
-        Ice: weak,
-        Dragon: strong,
-        Dark: neut,
-        Fairy: neut
-    },
-
-    Dragon: {
-        'N/A': neut,
-        Normal: neut,
-        Grass: neut,
-        Fire: neut,
-        Water: neut,
-        Rock: neut,
-        Electric: neut,
-        Psychic: neut,
-        Ground: neut,
-        Poison: neut,
-        Flying: neut,
-        Bug: neut,
-        Ghost: neut,
-        Steel: weak,
-        Fighting: neut,
-        Ice: neut,
-        Dragon: strong,
-        Dark: neut,
-        Fairy: immune
-    },
-
-    Dark: {
-        'N/A': neut,
-        Normal: neut,
-        Grass: neut,
-        Fire: neut,
-        Water: neut,
-        Rock: neut,
-        Electric: neut,
-        Psychic: strong,
-        Ground: neut,
-        Poison: neut,
-        Flying: neut,
-        Bug: neut,
-        Ghost: strong,
-        Steel: neut,
-        Fighting: weak,
-        Ice: neut,
-        Dragon: neut,
-        Dark: weak,
-        Fairy: weak
-    },
-
-    Fairy: {
-        'N/A': neut,
-        Normal: neut,
-        Grass: neut,
-        Fire: weak,
-        Water: neut,
-        Rock: neut,
-        Electric: neut,
-        Psychic: neut,
-        Ground: neut,
-        Poison: weak,
-        Flying: neut,
-        Bug: neut,
-        Ghost: neut,
-        Steel: weak,
-        Fighting: strong,
-        Ice: neut,
-        Dragon: strong,
-        Dark: strong,
-        Fairy: neut
-    }
-
-}
-
+const { typeChart } = require('./typeChart')
 
 class Battle {
 
@@ -514,9 +13,11 @@ class Battle {
 
     }
 
-    fight(actionNo = 0, pokemonNo = -1) {
+    fight(actionNo = 0, pokemonNo = -1, damageCalc = 1) {
 
         console.log('')
+
+        // code for when battle has already been completed
 
         if (this.winner !== null) {
 
@@ -528,15 +29,19 @@ class Battle {
 
         }
 
-        let trainerTurn = (this.turnCount % 2)
+        // defining current/opponent Pokemon/trainer for each turn
 
-        let returnFlag = false
+        let trainerTurn = (this.turnCount % 2)
 
         const currentTrainer = 'trainer' + (2 - trainerTurn).toString()
         const opponentTrainer = 'trainer' + (1 + trainerTurn).toString()
         const currentPokemon = 'pokemon' + (2 - trainerTurn).toString()
         const opponentPokemon = 'pokemon' + (1 + trainerTurn).toString()
+
+        let returnFlag = false
         let skipFlag = false
+
+        // defining nickname and full name of each Pokemon
 
         let currentPokemonNickname = ''
         let opponentPokemonNickname = ''
@@ -567,35 +72,41 @@ class Battle {
 
         }
 
+        // calculating remianing Pokemon for each trainer
+
         let currentRemainingPokemon = 0
 
-            for (const pokemon of this[currentTrainer].pokemon) {
+        for (const pokemon of this[currentTrainer].pokemon) {
 
-                if (pokemon.currentHP > 0) {
+            if (pokemon.currentHP > 0) {
 
-                    currentRemainingPokemon++
-
-                }
+                currentRemainingPokemon++
 
             }
 
-            let opponentRemainingPokemon = 0
+        }
 
-            for (const pokemon of this[opponentTrainer].pokemon) {
+        let opponentRemainingPokemon = 0
 
-                if (pokemon.currentHP > 0) {
+        for (const pokemon of this[opponentTrainer].pokemon) {
 
-                    opponentRemainingPokemon++
+            if (pokemon.currentHP > 0) {
 
-                }
+                opponentRemainingPokemon++
 
             }
+
+        }
+
+        // initiates battle on turn 0
 
         if (this.turnCount === 0) {
 
             console.log(`The battle begins! ${this.trainer1.name} sends out ${opponentPokemonFullName} and ${this.trainer2.name} sends out ${currentPokemonFullName}!`)
             console.log(this.pokemon1.species.makeSound())
             console.log(this.pokemon2.species.makeSound())
+
+            // Heals all Pokemon from previous battles
 
             for (const pokemon of this.trainer1.pokemon) {
 
@@ -621,7 +132,11 @@ class Battle {
 
             }
 
-        } else {   
+        // for turns after turn zero
+
+        } else {
+
+            // course of action if current Pokemon fainted on previous turn
 
             if (this[currentPokemon].currentHP === 0) {
 
@@ -641,6 +156,8 @@ class Battle {
 
                 console.log(`${this[currentTrainer].name} has sent out ${this[currentPokemon].species.name}`)
                 console.log(this[currentPokemon].species.makeSound())
+
+            // course of action if opponent Pokemon fainted on previous turn
 
             } else if (this[opponentPokemon].currentHP === 0) {
 
@@ -663,6 +180,8 @@ class Battle {
 
             }
 
+            // checks total PP of current Pokemon for struggle
+
             let totalPP = 0
 
             for (const movePP of this[currentPokemon].pp) {
@@ -672,6 +191,8 @@ class Battle {
             }
 
             if (!skipFlag) {
+
+                // course of action if switch Pokemon is picked
 
                 if (actionNo === 4) {
 
@@ -700,6 +221,8 @@ class Battle {
 
                     }
 
+                // course of action if check moves is used
+
                 } else if (actionNo === 5) {
 
                     for (const move of this[currentPokemon].moves) {
@@ -711,6 +234,8 @@ class Battle {
                     console.log('')
 
                     return
+
+                // struggle
 
                 } else if (totalPP === 0 && actionNo === 0) {
 
@@ -726,6 +251,8 @@ class Battle {
                     this[opponentPokemon].currentHP -= Math.floor(attackStat * 60 / defenseStat / 2)
                     this[currentPokemon].currentHP -= Math.floor(attackStat * 60 / recoilDefenseStat / 4)
 
+                // invalud move
+
                 } else if (this[currentPokemon].pp[actionNo] === 0 || this[currentPokemon].pp[actionNo] === undefined) {
 
                     console.log("You don't have a valid move in that slot, please select a valid move")
@@ -734,7 +261,11 @@ class Battle {
 
                     return
 
+                // if attack is used
+
                 } else {
+
+                    // damage calculation
 
                     let attackStat = this[currentPokemon].species.attack
 
@@ -766,9 +297,15 @@ class Battle {
 
                         let stabModifier = 1
 
-                        if (this[currentPokemon].moves[actionNo].type === this[currentPokemon].species.type1 || this[currentPokemon].moves[actionNo].type === this[currentPokemon].species.type2) {
+                        if (damageCalc === 1) {
 
-                            stabModifier = 1
+                            stabModifier *= 0.6
+
+                            if (this[currentPokemon].moves[actionNo].type === this[currentPokemon].species.type1 || this[currentPokemon].moves[actionNo].type === this[currentPokemon].species.type2) {
+
+                                stabModifier *= 1.5
+
+                            }
 
                         }
 
@@ -1000,5 +537,4 @@ class Battle {
 
 }
 
-
-module.exports = { Pokemon, Individual, Move, Trainer, Battle }
+module.exports = { Battle }
