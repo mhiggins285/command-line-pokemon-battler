@@ -1,4 +1,5 @@
 const { typeChart } = require('./typeChart')
+const { typeColourise, bolden } = require('../typeColourise')
 
 class Battle {
 
@@ -98,7 +99,7 @@ class Battle {
 
         const nicknameObj = this.getNicknames(currentPokemon, opponentPokemon)
 
-        const battleStatusLine = `${this[opponentTrainer].name}'s turn\n${nicknameObj.opponentPokemonFullName} (${this[opponentPokemon].currentHP}/${this[opponentPokemon].species.hp}) - ${nicknameObj.currentPokemonFullName} (${this[currentPokemon].currentHP}/${this[currentPokemon].species.hp})`
+        const battleStatusLine = `${bolden(this[opponentTrainer].name)}'s turn\n\n${typeColourise(nicknameObj.opponentPokemonFullName, this[opponentPokemon].species.type1, this[opponentPokemon].species.type2)} (${this[opponentPokemon].currentHP}/${this[opponentPokemon].species.hp}) - ${typeColourise(nicknameObj.currentPokemonFullName, this[currentPokemon].species.type1, this[currentPokemon].species.type2)} (${this[currentPokemon].currentHP}/${this[currentPokemon].species.hp})`
 
         let attackLine = 'Attacks: '
         const noOfMoves = this[opponentPokemon].moves.length
@@ -107,7 +108,7 @@ class Battle {
 
             if(this[opponentPokemon].pp[i] > 0) {
 
-                attackLine = attackLine + i.toString() + ' - ' + this[opponentPokemon].moves[i].name + ' (' + this[opponentPokemon].pp[i] + '/' + this[opponentPokemon].moves[i].pp + '), '
+                attackLine = attackLine + i.toString() + ' - ' + typeColourise(this[opponentPokemon].moves[i].name, this[opponentPokemon].moves[i].type) + ' (' + this[opponentPokemon].pp[i] + '/' + this[opponentPokemon].moves[i].pp + '), '
 
             }
 
@@ -123,7 +124,7 @@ class Battle {
 
         }
 
-        let battleScreen = battleStatusLine + '\n' + attackLine
+        let battleScreen = battleStatusLine + '\n' + '\n' + attackLine + '\n'
 
         if (opponentRemainingPokemon > 1) {
 
@@ -135,7 +136,7 @@ class Battle {
 
                 if (this[opponentTrainer].pokemon[i].currentHP > 0 && this[opponentTrainer].pokemon[i] !== this[opponentPokemon]) {
 
-                    pokemonLine = pokemonLine + i.toString() + ' - ' + this[opponentTrainer].pokemon[i].species.name + ' (' + this[opponentTrainer].pokemon[i].currentHP + '/' + this[opponentTrainer].pokemon[i].species.hp + '), '
+                    pokemonLine = pokemonLine + i.toString() + ' - ' + typeColourise(this[opponentTrainer].pokemon[i].species.name, this[opponentTrainer].pokemon[i].species.type1, this[opponentTrainer].pokemon[i].species.type2) + ' (' + this[opponentTrainer].pokemon[i].currentHP + '/' + this[opponentTrainer].pokemon[i].species.hp + '), '
     
                 }
 
@@ -151,9 +152,17 @@ class Battle {
 
         console.log(battleScreen)
 
+        console.log('')
+
         console.log('5 - See Move Details')
 
-        console.log('')
+        console.log('6 - See Pokemon Details')
+
+        if (opponentRemainingPokemon > 1) {
+
+            console.log('')
+
+        }
 
     }
 
@@ -361,9 +370,13 @@ class Battle {
 
             } else if (actionNo === 5) {
 
+                let moveCount = 1
+
                 for (const move of this[currentPokemon].moves) {
 
-                    console.log(`${move.name} - ${move.type} - ${move.power} Power - ${move.accuracy} Accuracy - ${move.category}`)
+                    console.log(typeColourise(`${moveCount} - ${move.name} - ${move.type} - ${move.power} Power - ${move.accuracy} Accuracy - ${move.category}`, move.type))
+
+                    moveCount++
 
                 }
 
@@ -373,6 +386,45 @@ class Battle {
 
             // struggle
 
+            } else if (actionNo === 6 && currentRemainingPokemon > 1) {
+
+                let pokemonCount = 1
+
+                for (const pokemon of this[currentTrainer].pokemon) {
+
+                    let fullName = pokemon.species.name
+
+                    if (pokemon.nickname !== undefined) {
+
+                        fullName = pokemon.nickname + ' the ' + pokemon.species.name
+
+                    }
+
+                    console.log(pokemonCount.toString() + ' - ' + typeColourise(fullName, pokemon.species.type1, pokemon.species.type2) + ` (${pokemon.currentHP}/${pokemon.species.hp})`)
+                    console.log(bolden('Attack') + ' - ' + pokemon.species.attack + ', ' + bolden('Defense') + ' - ' + pokemon.species.def + ', ' + bolden('Special Attack') + ' - ' + pokemon.species.spAttack + ', ' + bolden('Special Defense') + ' - ' + pokemon.species.spDef)
+
+                    let attackLine = ''
+
+                    const noOfMoves = pokemon.moves.length
+
+                    for (let i = 0; i < noOfMoves; i++) {
+
+                        attackLine = attackLine + typeColourise(pokemon.moves[i].name, pokemon.moves[i].type) + ' (' + pokemon.pp[i] + '/' + pokemon.moves[i].pp + '), '
+
+                    }
+
+                    attackLine = attackLine.substring(0, attackLine.length - 2)
+
+                    console.log(attackLine)
+
+                    console.log('')
+
+                    pokemonCount++
+
+                }
+
+                return
+                
             } else if (totalPP === 0 && actionNo === 0) {
 
                 console.log(`${nicknameObj.currentPokemonFullName} used Struggle`)
