@@ -86,6 +86,12 @@ function bolden(string) {
 
 }
 
+function underline(string) {
+
+    return '\x1b[4m' + string + '\x1b[0m'
+
+}
+
 // const keys = Object.keys(bgColours)
 // const typeQuant = keys.length
 
@@ -103,4 +109,4 @@ function bolden(string) {
 
 // }
 
-module.exports = { typeColourise, bolden }
+module.exports = { typeColourise, bolden, underline }

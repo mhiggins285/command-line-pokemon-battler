@@ -1,3 +1,4 @@
+const { typeColourise } = require('../typeColourise')
 
 class Pokemon {
 
@@ -17,7 +18,7 @@ class Pokemon {
     makeSound() {
 
         const cry = this.name.substring(0,4)
-        const sound = cry + '... ' + this.name + '!'
+        const sound = typeColourise(cry + '... ' + this.name + '!', this.type1, this.type2)
         return sound
 
     }

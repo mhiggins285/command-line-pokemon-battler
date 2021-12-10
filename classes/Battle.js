@@ -1,5 +1,5 @@
 const { typeChart } = require('./typeChart')
-const { typeColourise, bolden } = require('../typeColourise')
+const { typeColourise, bolden, underline } = require('../typeColourise')
 
 class Battle {
 
@@ -23,25 +23,25 @@ class Battle {
 
         if (this[currentPokemon].nickname === undefined) {
 
-            currentPokemonNickname = this[currentPokemon].species.name
-            currentPokemonFullName = this[currentPokemon].species.name
+            currentPokemonNickname = typeColourise(this[currentPokemon].species.name, this[currentPokemon].species.type1, this[currentPokemon].species.type2)
+            currentPokemonFullName = typeColourise(this[currentPokemon].species.name, this[currentPokemon].species.type1, this[currentPokemon].species.type2)
 
         } else {
 
-            currentPokemonNickname = this[currentPokemon].nickname
-            currentPokemonFullName = this[currentPokemon].nickname + ' the ' + this[currentPokemon].species.name
+            currentPokemonNickname = typeColourise(this[currentPokemon].nickname, this[currentPokemon].species.type1, this[currentPokemon].species.type2)
+            currentPokemonFullName = typeColourise(this[currentPokemon].nickname + ' the ' + this[currentPokemon].species.name, this[currentPokemon].species.type1, this[currentPokemon].species.type2)
 
         }
 
         if (this[opponentPokemon].nickname === undefined) {
 
-            opponentPokemonNickname = this[opponentPokemon].species.name
-            opponentPokemonFullName = this[opponentPokemon].species.name
+            opponentPokemonNickname = typeColourise(this[opponentPokemon].species.name, this[opponentPokemon].species.type1, this[opponentPokemon].species.type2)
+            opponentPokemonFullName = typeColourise(this[opponentPokemon].species.name, this[opponentPokemon].species.type1, this[opponentPokemon].species.type2)
 
         } else {
 
-            opponentPokemonNickname = this[opponentPokemon].nickname
-            opponentPokemonFullName = this[opponentPokemon].nickname + ' the ' + this[opponentPokemon].species.name
+            opponentPokemonNickname = typeColourise(this[opponentPokemon].nickname, this[opponentPokemon].species.type1, this[opponentPokemon].species.type2)
+            opponentPokemonFullName = typeColourise(this[opponentPokemon].nickname + ' the ' + this[opponentPokemon].species.name, this[opponentPokemon].species.type1, this[opponentPokemon].species.type2)
 
         }
 
@@ -77,7 +77,7 @@ class Battle {
 
                         if (this[faintedTrainer].pokemon[i].currentHP > 0) {
 
-                            pokemonLineAfterFainting = pokemonLineAfterFainting + i.toString() + ' - ' + this[faintedTrainer].pokemon[i].species.name + ' (' + this[faintedTrainer].pokemon[i].currentHP + '/' + this[faintedTrainer].pokemon[i].species.hp + '), '
+                            pokemonLineAfterFainting = pokemonLineAfterFainting + i.toString() + ' - ' + typeColourise(this[faintedTrainer].pokemon[i].species.name, this[faintedTrainer].pokemon[i].species.type1, this[faintedTrainer].pokemon[i].species.type2) + ' (' + this[faintedTrainer].pokemon[i].currentHP + '/' + this[faintedTrainer].pokemon[i].species.hp + '), '
             
                         }
 
@@ -86,6 +86,8 @@ class Battle {
                     pokemonLineAfterFainting = pokemonLineAfterFainting.substring(0, pokemonLineAfterFainting.length - 2)
 
                     const faintedScreen = faintedLine + '\n' + pokemonLineAfterFainting
+
+                    console.log('')
 
                     console.log(faintedScreen)
 
@@ -99,7 +101,7 @@ class Battle {
 
         const nicknameObj = this.getNicknames(currentPokemon, opponentPokemon)
 
-        const battleStatusLine = `${bolden(this[opponentTrainer].name)}'s turn\n\n${typeColourise(nicknameObj.opponentPokemonFullName, this[opponentPokemon].species.type1, this[opponentPokemon].species.type2)} (${this[opponentPokemon].currentHP}/${this[opponentPokemon].species.hp}) - ${typeColourise(nicknameObj.currentPokemonFullName, this[currentPokemon].species.type1, this[currentPokemon].species.type2)} (${this[currentPokemon].currentHP}/${this[currentPokemon].species.hp})`
+        const battleStatusLine = `${underline(bolden(this[opponentTrainer].name + "'s turn"))}\n\n${typeColourise(nicknameObj.opponentPokemonFullName, this[opponentPokemon].species.type1, this[opponentPokemon].species.type2)} (${this[opponentPokemon].currentHP}/${this[opponentPokemon].species.hp}) - ${typeColourise(nicknameObj.currentPokemonFullName, this[currentPokemon].species.type1, this[currentPokemon].species.type2)} (${this[currentPokemon].currentHP}/${this[currentPokemon].species.hp})`
 
         let attackLine = 'Attacks: '
         const noOfMoves = this[opponentPokemon].moves.length
@@ -386,7 +388,7 @@ class Battle {
 
             // struggle
 
-            } else if (actionNo === 6 && currentRemainingPokemon > 1) {
+            } else if (actionNo === 6) {
 
                 let pokemonCount = 1
 
@@ -400,8 +402,16 @@ class Battle {
 
                     }
 
-                    console.log(pokemonCount.toString() + ' - ' + typeColourise(fullName, pokemon.species.type1, pokemon.species.type2) + ` (${pokemon.currentHP}/${pokemon.species.hp})`)
-                    console.log(bolden('Attack') + ' - ' + pokemon.species.attack + ', ' + bolden('Defense') + ' - ' + pokemon.species.def + ', ' + bolden('Special Attack') + ' - ' + pokemon.species.spAttack + ', ' + bolden('Special Defense') + ' - ' + pokemon.species.spDef)
+                    let hpCondition = `(${pokemon.currentHP}/${pokemon.species.hp})`
+
+                    if (pokemon.currentHP === 0) {
+
+                        hpCondition = typeColourise(hpCondition, 'Fighting', 'Fire')
+
+                    }
+
+                    console.log(pokemonCount.toString() + ' - ' + typeColourise(fullName, pokemon.species.type1, pokemon.species.type2) + ' ' + hpCondition)
+                    console.log('Attack - ' + pokemon.species.attack + ', Defense - ' + pokemon.species.def + ', Special Attack - ' + pokemon.species.spAttack + ', Special Defense - ' + pokemon.species.spDef)
 
                     let attackLine = ''
 
@@ -469,7 +479,7 @@ class Battle {
 
                 this[currentPokemon].pp[actionNo]--
 
-                console.log(`${nicknameObj.currentPokemonFullName} used ${this[currentPokemon].moves[actionNo].name}`)
+                console.log(`${nicknameObj.currentPokemonFullName} used ${typeColourise(this[currentPokemon].moves[actionNo].name, this[currentPokemon].moves[actionNo].type)}`)
 
                 const accuracyCheck = Math.random()
 
