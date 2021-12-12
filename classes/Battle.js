@@ -101,7 +101,13 @@ class Battle {
 
         const nicknameObj = this.getNicknames(currentPokemon, opponentPokemon)
 
-        const battleStatusLine = `${underline(bolden(this[opponentTrainer].name + "'s turn"))}\n\n${typeColourise(nicknameObj.opponentPokemonFullName, this[opponentPokemon].species.type1, this[opponentPokemon].species.type2)} (${this[opponentPokemon].currentHP}/${this[opponentPokemon].species.hp}) - ${typeColourise(nicknameObj.currentPokemonFullName, this[currentPokemon].species.type1, this[currentPokemon].species.type2)} (${this[currentPokemon].currentHP}/${this[currentPokemon].species.hp})`
+        console.log('')
+
+        console.log(underline(bolden(this[opponentTrainer].name + "'s turn")))
+
+        console.log('')
+
+        console.log(`${nicknameObj.opponentPokemonFullName} (${this[opponentPokemon].currentHP}/${this[opponentPokemon].species.hp}) - ${nicknameObj.currentPokemonFullName} (${this[currentPokemon].currentHP}/${this[currentPokemon].species.hp})`)
 
         let attackLine = 'Attacks: '
         const noOfMoves = this[opponentPokemon].moves.length
@@ -118,7 +124,7 @@ class Battle {
 
         if (attackLine === 'Attacks: ') {
 
-            attackLine = nicknameObj.opponentPokemonFullName + ' is out of usable moves, 0 - Struggle'
+            attackLine = nicknameObj.opponentPokemonFullName + ' is out of usable moves, 0 - \x1b[1mStruggle\x1b[0m'
         
         } else {
 
@@ -126,7 +132,9 @@ class Battle {
 
         }
 
-        let battleScreen = battleStatusLine + '\n' + '\n' + attackLine + '\n'
+        console.log(attackLine)
+
+        console.log('')
 
         if (opponentRemainingPokemon > 1) {
 
@@ -146,13 +154,9 @@ class Battle {
 
             pokemonLine = pokemonLine.substring(0, pokemonLine.length - 2)
 
-            battleScreen = battleScreen + '\n' + pokemonLine
+            console.log(pokemonLine)
 
         }
-
-        console.log('')
-
-        console.log(battleScreen)
 
         console.log('')
 
@@ -160,11 +164,7 @@ class Battle {
 
         console.log('6 - See Pokemon Details')
 
-        if (opponentRemainingPokemon > 1) {
-
-            console.log('')
-
-        }
+        console.log('')
 
     }
 
@@ -386,7 +386,7 @@ class Battle {
 
                 return
 
-            // struggle
+            // course of action if check Pokemon is used
 
             } else if (actionNo === 6) {
 
@@ -434,10 +434,12 @@ class Battle {
                 }
 
                 return
+
+            // struggle
                 
             } else if (totalPP === 0 && actionNo === 0) {
 
-                console.log(`${nicknameObj.currentPokemonFullName} used Struggle`)
+                console.log(`${nicknameObj.currentPokemonFullName} used \x1b[1mStruggle\x1b[0m`)
                 console.log(`${nicknameObj.currentPokemonFullName} is damaged by recoil`)
 
                 let attackStat = this[currentPokemon].species.attack
