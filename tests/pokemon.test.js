@@ -13,7 +13,7 @@ describe('Pokemon', () => {
 
         jest.spyOn(global.Math, 'random').mockReturnValue(0.1)
 
-    });
+    })
     
     afterEach(function () {
 
@@ -21,7 +21,7 @@ describe('Pokemon', () => {
 
         jest.spyOn(global.Math, 'random').mockRestore()
 
-    });
+    })
 
     describe('Constructor suite', () => {
 
