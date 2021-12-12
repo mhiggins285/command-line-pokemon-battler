@@ -188,10 +188,10 @@ class Battle {
 
         let trainerTurn = (this.turnCount % 2)
 
-        const currentTrainer = 'trainer' + (2 - trainerTurn).toString()
-        const opponentTrainer = 'trainer' + (1 + trainerTurn).toString()
-        const currentPokemon = 'pokemon' + (2 - trainerTurn).toString()
-        const opponentPokemon = 'pokemon' + (1 + trainerTurn).toString()
+        let currentTrainer = 'trainer' + (2 - trainerTurn).toString()
+        let opponentTrainer = 'trainer' + (1 + trainerTurn).toString()
+        let currentPokemon = 'pokemon' + (2 - trainerTurn).toString()
+        let opponentPokemon = 'pokemon' + (1 + trainerTurn).toString()
 
         // defining nickname and full name of each Pokemon
 
@@ -236,6 +236,8 @@ class Battle {
             for (const pokemon of this.trainer1.pokemon) {
 
                 pokemon.currentHP = pokemon.species.hp
+                pokemon.status = {}
+                pokemon.volatileStatus = {}
 
                 for (let i = 0; i < pokemon.moves.length; i++) {
 
@@ -335,9 +337,98 @@ class Battle {
 
             }
 
-            // course of action if switch Pokemon is picked
+            // if Pokemon is recharging from previous turn
 
-            if (actionNo === 4) {
+            if (this[currentPokemon].volatileStatus.hasOwnProperty('recharging')) {
+
+                console.log(`${this[currentTrainer].name}'s ${nicknameObj.currentPokemonFullName} needs to recharge`)
+
+                delete this[currentPokemon].volatileStatus.recharging
+
+                // if Pokemon charged a move the previous turn
+
+            } else if (this[currentPokemon].volatileStatus.hasOwnProperty('charging')) {
+
+                let attackStat = this[currentPokemon].species.attack
+
+                let defenseStat = this[opponentPokemon].species.def
+
+                if (this[currentPokemon].volatileStatus.charging.category === "Special") {
+
+                    attackStat = this[currentPokemon].species.spAttack
+
+                    defenseStat = this[opponentPokemon].species.spDef
+
+                }
+
+                console.log('')
+
+                console.log(`${this[currentTrainer].name}'s ${nicknameObj.currentPokemonFullName} unleashed its ${typeColourise(this[currentPokemon].volatileStatus.charging.name, this[currentPokemon].volatileStatus.charging.type)}`)
+
+                const accuracyCheck = Math.random()
+
+                if (accuracyCheck > this[currentPokemon].volatileStatus.charging.accuracy/100) {
+
+                    console.log(`${nicknameObj.currentPokemonFullName}'s attack missed!`)
+
+                } else {
+
+                    const typeModifier1 = typeChart[this[currentPokemon].volatileStatus.charging.type][this[opponentPokemon].species.type1]
+                    const typeModifier2 = typeChart[this[currentPokemon].volatileStatus.charging.type][this[opponentPokemon].species.type2]
+                    const typeModifier = typeModifier1 * typeModifier2
+
+                    let stabModifier = 1
+
+                    if (damageCalc === 1) {
+
+                        stabModifier *= 0.6
+
+                        if (this[currentPokemon].volatileStatus.charging.type === this[currentPokemon].species.type1 || this[currentPokemon].volatileStatus.charging.type === this[currentPokemon].species.type2) {
+
+                            stabModifier *= 1.5
+
+                        }
+
+                    }
+
+                    let criticalModifier = 1
+
+                    const criticalCheck = Math.random()
+
+                    if (criticalCheck > 0.875) {
+
+                        criticalModifier = 2
+                        console.log("It's a critical hit!")
+
+                    }
+
+                    this[opponentPokemon].currentHP -= Math.floor(attackStat * 60 / defenseStat * typeModifier * this[currentPokemon].volatileStatus.charging.power / 60 * criticalModifier * stabModifier / 2)
+
+                    // damage dealt is reduced to a half as otherwise battles would be over too quickly
+
+                    if (typeModifier > 1) {
+
+                        console.log("It's super effective!")
+
+                    }
+                    
+                    if (typeModifier === 0) {
+
+                        console.log("It had no effect")
+                    
+                    } else if (typeModifier < 0.9) {
+
+                        console.log("It's not very effective")
+
+                    }
+
+                    delete this[currentPokemon].volatileStatus.charging
+
+                }
+
+                // course of action if switch Pokemon is picked
+
+            } else if (actionNo === 4) {
 
                 if (this[currentTrainer].pokemon[pokemonNo] === undefined || this[currentTrainer].pokemon[pokemonNo].currentHP === 0) {
 
@@ -357,9 +448,11 @@ class Battle {
 
                 } else {
 
+                    this[currentPokemon].volatileStatus = {}
+
                     this[currentPokemon] = this[currentTrainer].pokemon[pokemonNo]
 
-                    const oldPokemonFullName = nicknameObj.currentPokemonNickname
+                    const oldPokemonFullName = nicknameObj.currentPokemonFullName
 
                     nicknameObj = this.getNicknames(currentPokemon, opponentPokemon)
 
@@ -463,6 +556,38 @@ class Battle {
 
             // if attack is used
 
+            // if move is a charging move
+
+            } else if (this[currentPokemon].moves[actionNo].effects.includes('Charge')) {
+
+                console.log(`${typeColourise(this[currentPokemon].moves[actionNo].name, this[currentPokemon].moves[actionNo].type)} is charging`)
+
+                this[currentPokemon].pp[actionNo]--
+
+                this[currentPokemon].volatileStatus.charging = this[currentPokemon].moves[actionNo]
+                
+            // dig is used
+
+            } else if (this[currentPokemon].moves[actionNo].effects.includes('Dig')) {
+
+                console.log(`${nicknameObj.currentPokemonFullName} dug underground`)
+
+                this[currentPokemon].pp[actionNo]--
+
+                this[currentPokemon].volatileStatus.charging = this[currentPokemon].moves[actionNo]
+                
+            // fly is used
+
+            } else if (this[currentPokemon].moves[actionNo].effects.includes('Fly')) {
+
+                console.log(`${nicknameObj.currentPokemonFullName} flew up in the air`)
+
+                this[currentPokemon].pp[actionNo]--
+
+                this[currentPokemon].volatileStatus.charging = this[currentPokemon].moves[actionNo]
+                
+            // if move takes effect this turn
+
             } else {
 
                 // damage calculation
@@ -483,9 +608,29 @@ class Battle {
 
                 console.log(`${nicknameObj.currentPokemonFullName} used ${typeColourise(this[currentPokemon].moves[actionNo].name, this[currentPokemon].moves[actionNo].type)}`)
 
+                let accuracyModifier = 1
+
+                if (this[opponentPokemon].volatileStatus.hasOwnProperty('charging')) {
+
+                    if (this[opponentPokemon].volatileStatus.charging.effects.includes('Dig') || this[opponentPokemon].volatileStatus.charging.effects.includes('Fly')) {
+
+                        if (this[currentPokemon].moves[actionNo].effects.includes(`Hits ${this[opponentPokemon].volatileStatus.charging.effects[0]}`)) {
+
+                            attackStat *= 2
+
+                        } else {
+
+                            accuracyModifier = 0
+
+                        }
+
+                    }
+
+                }
+
                 const accuracyCheck = Math.random()
 
-                if (accuracyCheck > this[currentPokemon].moves[actionNo].accuracy/100) {
+                if (accuracyCheck > accuracyModifier * this[currentPokemon].moves[actionNo].accuracy/100) {
 
                     console.log(`${nicknameObj.currentPokemonFullName}'s attack missed!`)
 
@@ -540,6 +685,12 @@ class Battle {
 
                     }
 
+                    if (this[currentPokemon].moves[actionNo].effects.includes('Recharge')) {
+
+                        this[currentPokemon].volatileStatus.recharging = true
+
+                    }
+
                 }
 
             }
@@ -567,6 +718,15 @@ class Battle {
         }
         
         this.turnCount++
+
+        if (this[opponentPokemon].volatileStatus.hasOwnProperty('recharging') || this[opponentPokemon].volatileStatus.hasOwnProperty('charging')) {
+
+            this.fight()
+
+            return
+
+        }
+
 
         this.battleScreen(currentPokemon, opponentPokemon, opponentTrainer, opponentRemainingPokemon)
 

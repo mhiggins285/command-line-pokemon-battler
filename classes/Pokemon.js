@@ -34,6 +34,8 @@ class Individual {
         this.moves = []
         this.currentHP = species.hp
         this.pp = []
+        this.status = {}
+        this.volatileStatus = {}
 
     }
 

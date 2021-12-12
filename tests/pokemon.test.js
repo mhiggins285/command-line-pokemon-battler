@@ -48,6 +48,7 @@ describe('Pokemon', () => {
 
         test("No more than 6 Pokemon can be a trainer's party", () => {
 
+            tD.michael.catch(tD.slowpoke)
             expect(tD.michael.pokemon.length).toBe(6)
 
         })
@@ -62,9 +63,9 @@ describe('Pokemon', () => {
         test('Can use teach method to add move to Pokemon', () => {
 
             tD.michael.pokemon[0].teach(tD.absorb)
-            expect(tD.michael.pokemon[0].moves).toEqual([{name:'Absorb',type:'Grass', pp: 35, power: 60, accuracy: 100, category: 'Physical'}])
+            expect(tD.michael.pokemon[0].moves).toEqual([{name:'Absorb',type:'Grass', pp: 35, power: 60, accuracy: 100, category: 'Physical', effects: []}])
             tD.michael.pokemon[0].teach(tD.tackle)
-            expect(tD.michael.pokemon[0].moves).toEqual([{name:'Absorb',type:'Grass', pp: 35, power: 60, accuracy: 100, category: 'Physical'}, {name:'Tackle',type:'Normal', pp: 35, power: 60, accuracy: 100, category: 'Physical'}])
+            expect(tD.michael.pokemon[0].moves).toEqual([{name:'Absorb',type:'Grass', pp: 35, power: 60, accuracy: 100, category: 'Physical', effects: []}, {name:'Tackle',type:'Normal', pp: 35, power: 60, accuracy: 100, category: 'Physical', effects: []}])
 
         })
 

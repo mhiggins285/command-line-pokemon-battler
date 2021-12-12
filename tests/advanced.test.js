@@ -100,4 +100,98 @@ describe('Advanced tests', () => {
 
     })
 
+    describe('Testing "Charge/Recharge" Attacks', () => {
+
+        test('When a charge attack is used, no damage is done on the first turn', () => {
+
+            tD.battleC1.fight()
+            tD.battleC1.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith('\x1b[38;2;208;193;255m\x1b[48;2;119;104;166m\x1b[1mSky Attack\x1b[0m is charging')
+            expect(tD.battleC1.pokemon2.currentHP).toBe(80)
+
+        })
+
+        test("Trainer's next move is sacrificed and damage is done, it then reverts to being the opponent's turn", () => {
+
+            tD.battleC1.fight(1)
+            expect(consoleSpy).toHaveBeenCalledWith("Pyromaniac's \x1b[38;2;208;193;255m\x1b[48;2;176;83;31m\x1b[1mCharizard\x1b[0m unleashed its \x1b[38;2;208;193;255m\x1b[48;2;119;104;166m\x1b[1mSky Attack\x1b[0m")
+            expect(tD.battleC1.pokemon2.currentHP).toBe(15)
+            expect(tD.battleC1.turnCount % 2).toBe(0)
+
+        })
+
+        test("If charging Pokemon is killed, normal process resumes", () => {
+
+            tD.battleC2.fight()
+            tD.battleC2.fight(0)
+            tD.battleC2.fight(0)
+            tD.battleC2.fight(1)
+            expect(tD.battleC2.pokemon1.species).toBe(tD.slugma)
+            tD.battleC2.fight(0)
+            expect(tD.battleC2.turnCount % 2).toBe(0)
+
+        })
+
+        test("On first turn of fly or dig, Pokemon is invulnerable", () => {
+
+            tD.battleC3.fight()
+            tD.battleC3.fight(2)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;208;193;255m\x1b[48;2;176;83;31m\x1b[1mCharizard\x1b[0m flew up in the air")
+            expect(tD.battleC3.pokemon2.currentHP).toBe(80)
+            tD.battleC3.fight(0)
+            expect(tD.battleC3.pokemon1.currentHP).toBe(78)
+            expect(tD.battleC3.pokemon2.currentHP).toBe(54)
+
+            tD.battleC4.fight()
+            tD.battleC4.fight(3)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;208;193;255m\x1b[48;2;176;83;31m\x1b[1mCharizard\x1b[0m dug underground")
+            expect(tD.battleC4.pokemon2.currentHP).toBe(80)
+            tD.battleC4.fight(0)
+            expect(tD.battleC4.pokemon1.currentHP).toBe(78)
+            expect(tD.battleC4.pokemon2.currentHP).toBe(54)
+
+        })
+
+        test("Certain moves can hit Pokemon using fly or dig for double damage", () => {
+
+            tD.battleC5.fight()
+            tD.battleC5.fight(2)
+            tD.battleC5.fight(1)
+            expect(tD.battleC5.pokemon1.currentHP).toBe(6)
+
+            tD.battleC6.fight()
+            tD.battleC6.fight(3)
+            tD.battleC6.fight(2)
+            expect(tD.battleC6.pokemon1.currentHP).toBe(6)
+
+        })
+
+        test("When a recharge move is used, the user sacrifices their next turn", () => {
+
+            tD.battleC7.fight()
+            tD.battleC7.fight(1)
+            expect(tD.battleC7.pokemon2.currentHP).toBe(15)
+            tD.battleC7.fight(1)
+            expect(consoleSpy).toHaveBeenCalledWith("Pyromaniac's \x1b[38;2;208;193;255m\x1b[48;2;176;83;31m\x1b[1mCharizard\x1b[0m needs to recharge")
+            expect(tD.battleC7.turnCount % 2).toBe(0)
+            tD.battleC7.fight(1)
+            expect(tD.battleC7.pokemon1.currentHP).toBe(6)
+            expect(tD.battleC7.turnCount % 2).toBe(1)
+
+        })
+
+        test("If recharging Pokemon is killed, normal process resumes", () => {
+
+            tD.battleC8.fight()
+            tD.battleC8.fight(1)
+            tD.battleC8.fight(0)
+            tD.battleC8.fight(1)
+            expect(tD.battleC8.pokemon1.species).toBe(tD.slugma)
+            tD.battleC8.fight(0)
+            expect(tD.battleC8.turnCount % 2).toBe(0)
+
+        })
+
+    })
+
 })
