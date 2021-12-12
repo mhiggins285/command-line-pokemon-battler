@@ -70,17 +70,20 @@ describe('Advanced tests', () => {
 
             tD.battle17.fight(6)
 
-            expect(consoleSpy).toHaveBeenCalledWith('1 - \x1b[38;2;208;193;255m\x1b[48;2;176;83;31m\x1b[1mCharizard\x1b[0m (78/78)')
+            expect(consoleSpy).toHaveBeenCalledWith('1 - \x1b[38;2;208;193;255m\x1b[48;2;176;83;31m\x1b[1mCharizard\x1b[0m - \x1b[38;2;255;142;110m\x1b[48;2;176;83;31m\x1b[1mFire\x1b[0m/\x1b[38;2;208;193;255m\x1b[48;2;119;104;166m\x1b[1mFlying\x1b[0m (78/78)')
 
             expect(consoleSpy).toHaveBeenCalledWith('Attack - 84, Defense - 78, Special Attack - 109, Special Defense - 85')
 
             expect(consoleSpy).toHaveBeenCalledWith('\x1b[38;2;208;193;255m\x1b[48;2;119;104;166m\x1b[1mWing Attack\x1b[0m (35/35), \x1b[38;2;255;142;110m\x1b[48;2;176;83;31m\x1b[1mFire Blast\x1b[0m (15/15), \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mSlash\x1b[0m (20/20), \x1b[38;2;245;224;167m\x1b[48;2;156;135;78m\x1b[1mEarthquake\x1b[0m (5/5)')
 
-            expect(consoleSpy).toHaveBeenCalledWith('2 - \x1b[38;2;203;141;203m\x1b[48;2;88;140;62m\x1b[1mVenusaur\x1b[0m (80/80)')
+            expect(consoleSpy).toHaveBeenCalledWith('2 - \x1b[38;2;203;141;203m\x1b[48;2;88;140;62m\x1b[1mVenusaur\x1b[0m - \x1b[38;2;177;229;151m\x1b[48;2;88;140;62m\x1b[1mGrass\x1b[0m/\x1b[38;2;203;141;203m\x1b[48;2;114;52;114m\x1b[1mPoison\x1b[0m (80/80)')
 
             expect(consoleSpy).toHaveBeenCalledWith('Attack - 82, Defense - 83, Special Attack - 100, Special Defense - 100')
 
             expect(consoleSpy).toHaveBeenCalledWith('\x1b[38;2;203;141;203m\x1b[48;2;114;52;114m\x1b[1mSludge Bomb\x1b[0m (10/10), \x1b[38;2;177;229;151m\x1b[48;2;88;140;62m\x1b[1mSolar Beam\x1b[0m (10/10), \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mHyper Beam\x1b[0m (5/5)')
+
+            expect(consoleSpy).toHaveBeenCalledWith('3 - \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mPorygon\x1b[0m - \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mNormal\x1b[0m (65/65)')
+
 
         })
 
@@ -94,7 +97,7 @@ describe('Advanced tests', () => {
 
             tD.battle17.fight(6)
 
-            expect(consoleSpy).toHaveBeenCalledWith('1 - \x1b[38;2;208;193;255m\x1b[48;2;176;83;31m\x1b[1mCharizard\x1b[0m \x1b[38;2;255;142;110m\x1b[48;2;135;41;36m\x1b[1m(0/78)\x1b[0m')
+            expect(consoleSpy).toHaveBeenCalledWith('1 - \x1b[38;2;208;193;255m\x1b[48;2;176;83;31m\x1b[1mCharizard\x1b[0m - \x1b[38;2;255;142;110m\x1b[48;2;176;83;31m\x1b[1mFire\x1b[0m/\x1b[38;2;208;193;255m\x1b[48;2;119;104;166m\x1b[1mFlying\x1b[0m \x1b[38;2;255;142;110m\x1b[48;2;135;41;36m\x1b[1m(0/78)\x1b[0m')
 
         })
 
@@ -189,6 +192,98 @@ describe('Advanced tests', () => {
             expect(tD.battleC8.pokemon1.species).toBe(tD.slugma)
             tD.battleC8.fight(0)
             expect(tD.battleC8.turnCount % 2).toBe(0)
+
+        })
+
+    })
+
+    describe('Testing "Recovery/Draining" Moves', () => {
+
+        test('Recovery moves restore half of total HP', () => {
+
+            tD.battleR1.fight()
+            tD.battleR1.fight(0)
+            tD.battleR1.fight(3)
+            tD.battleR1.fight(0)
+            tD.battleR1.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith('\x1b[38;2;255;156;188m\x1b[48;2;88;140;62m\x1b[1mCelebi\x1b[0m recovered health')
+            expect(tD.battleR1.pokemon2.currentHP).toBe(82)
+
+        })
+
+        test('Recovery moves restore to max health when health is more than half full', () => {
+
+            tD.battleR2.fight()
+            tD.battleR2.fight(0)
+            tD.battleR2.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith('\x1b[38;2;255;156;188m\x1b[48;2;88;140;62m\x1b[1mCelebi\x1b[0m recovered health')
+            expect(tD.battleR2.pokemon2.currentHP).toBe(100)
+            
+        })
+
+        test('Recovery moves fail when used with max health', () => {
+
+            tD.battleR3.fight()
+            tD.battleR3.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith('\x1b[38;2;255;156;188m\x1b[48;2;88;140;62m\x1b[1mCelebi\x1b[0m is already at full health - move failed')
+            expect(tD.battleR3.pokemon1.currentHP).toBe(100)
+
+        })
+
+        test('Draining moves recover half the damage dealt', () => {
+
+            tD.battleR4.fight()
+            tD.battleR4.fight(0)
+            tD.battleR4.fight(1)
+            expect(tD.battleR4.pokemon1.currentHP).toBe(48)
+            expect(tD.battleR4.pokemon2.currentHP).toBe(79)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;255;156;188m\x1b[48;2;88;140;62m\x1b[1mCelebi\x1b[0m drained some of \x1b[38;2;219;203;135m\x1b[48;2;130;114;46m\x1b[1mLycanroc\x1b[0m's health")
+            
+        })
+
+        test('Draining moves recover to max health when recovery would have increased above max HP', () => {
+
+            tD.battleR5.fight()
+            tD.battleR5.fight(1)
+            tD.battleR5.fight(1)
+            expect(tD.battleR5.pokemon1.currentHP).toBe(48)
+            expect(tD.battleR5.pokemon2.currentHP).toBe(100)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;255;156;188m\x1b[48;2;88;140;62m\x1b[1mCelebi\x1b[0m drained some of \x1b[38;2;219;203;135m\x1b[48;2;130;114;46m\x1b[1mLycanroc\x1b[0m's health")
+            
+        })
+
+        test('Amount of HP drained scales with other factors', () => {
+
+            tD.battleR6.fight()
+            tD.battleR6.fight(0)
+            tD.battleR6.fight(3)
+            tD.battleR6.fight(0)
+            tD.battleR6.fight(2)
+            expect(tD.battleR6.pokemon1.currentHP).toBe(24)
+            expect(tD.battleR6.pokemon2.currentHP).toBe(57)
+            
+        })
+
+    })
+
+    describe('Testing "High-Crit Ratio" moves', () => {
+
+        test('Moves with a high critical hit ratio produce critical hits for critical check ratios for which standard moves do not', () => {
+
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.8)
+
+            tD.battleCrit1.fight()
+            tD.battleCrit1.fight(1)
+
+            expect(consoleSpy).toHaveBeenCalledWith("It's a critical hit!")
+            expect(tD.battleCrit1.pokemon2.currentHP).toBe(17)
+
+            tD.battleCrit2.fight()
+            tD.battleCrit2.fight(0)
+
+            expect(tD.battleCrit2.pokemon2.currentHP).toBe(49)
 
         })
 

@@ -5,6 +5,8 @@ const { Battle } = require('../classes/Battle')
 
 const tD = {}
 
+
+
 tD.shroomish = new Pokemon('Shroomish', [60, 40], 'Grass')
 tD.porygon = new Pokemon('Porygon', [65, 60], 'Normal')
 tD.slugma = new Pokemon('Slugma', [40, 40], 'Fire')
@@ -26,8 +28,13 @@ tD.solrock = new Pokemon('Solrock', [70, 95, 55], 'Rock', 'Psychic')
 tD.lunatone = new Pokemon('Lunatone', [70, 60, 60, 65, 85], 'Rock', 'Psychic')
 tD.charizard = new Pokemon('Charizard', [78, 84, 109, 78, 85], 'Fire', 'Flying')
 tD.rhydon = new Pokemon('Rhydon', [105, 130, 45, 120, 45], 'Rock', 'Ground')
+
 tD.venusaur = new Pokemon('Venusaur', [80, 82, 100, 83, 100], 'Grass', 'Poison')
 tD.aerodactyl = new Pokemon('Aerodactyl', [80, 105, 60, 65, 75], 'Rock', 'Flying')
+tD.celebi = new Pokemon('Celebi', [100, 100, 100, 100, 100], 'Grass', 'Psychic')
+tD.lycanroc = new Pokemon('Lycanroc', [75, 115, 55, 65, 65], 'Rock')
+
+
 
 tD.absorb = new Move('Absorb', 'Grass')
 tD.tackle = new Move('Tackle','Normal')
@@ -52,6 +59,7 @@ tD.earthquake = new Move('Earthquake', 'Ground', 5, 100, 100, 'Physical')
 tD.sludgeBomb = new Move('Sludge Bomb', 'Poison', 10, 90, 100, 'Physical')
 tD.solarBeam = new Move('Solar Beam', 'Grass', 10, 60, 100, 'Special')
 tD.hyperBeam = new Move('Hyper Beam', 'Normal', 5, 90, 90,'Special')
+
 tD.rockWrecker = new Move('Rock Wrecker', 'Rock', 5, 150, 100, 'Physical')
 tD.skyAttack = new Move('Sky Attack', 'Flying', 5, 150, 100, 'Physical', ['Charge'])
 tD.blastBurn = new Move('Blast Burn', 'Fire', 5, 150, 100, 'Physical', ['Recharge'])
@@ -59,6 +67,15 @@ tD.normalFly = new Move('Normal Fly', 'Normal', 15, 90, 100, 'Physical', ['Fly']
 tD.normalDig = new Move('Normal Dig', 'Normal', 15, 90, 100, 'Physical', ['Dig'])
 tD.gust = new Move('Gust', 'Flying', 35, 60, 100, 'Physical', ['Hits Fly'])
 tD.rampage = new Move('Rampage', 'Normal', 20, 90, 100, 'Physical', ['Hits Dig'])
+tD.recover = new Move('Recover', 'Normal', 10, 0, 0, 'Status', ['Recover'])
+tD.drainingKiss = new Move('Draining Kiss', 'Fairy', 10, 60, 100, 'Special', ['Drain'])
+tD.gigaDrain = new Move('Giga Drain', 'Grass', 10, 60, 100, 'Special', ['Drain'])
+tD.crunch = new Move('Crunch', 'Dark', 15, 80, 100, 'Physical')
+tD.scratch = new Move('Scratch', 'Normal', 40, 30, 100, 'Physical')
+tD.splash = new Move('Splash', 'Normal', 40, 0, 0, 'Status')
+tD.razorLeaf = new Move('Razor Leaf', 'Grass', 30, 60, 100, 'Physical', ['High Crit'])
+
+
 
 tD.michael = new Trainer('Michael')
 tD.evilMichael = new Trainer('Evil Michael')
@@ -83,8 +100,14 @@ tD.lunarlad = new Trainer('Lunarlad')
 tD.moonman = new Trainer('Moonman')
 tD.red = new Trainer('Red')
 tD.blue = new Trainer('Blue')
+
 tD.pyromaniac = new Trainer('Pyromaniac')
 tD.waiter = new Trainer('Waiter')
+tD.timeLord = new Trainer('Time Lord')
+tD.hiker = new Trainer('Hiker')
+tD.ninja = new Trainer('Ninja')
+
+
 
 tD.michael.catch(tD.shroomish, 'Shroomy')
 tD.michael.catch(tD.slugma, 'Slugs')
@@ -119,11 +142,18 @@ tD.sunboy.catch(tD.solrock)
 tD.lunarlad.catch(tD.lunatone)
 tD.moonman.catch(tD.lunatone)
 tD.red.catch(tD.charizard)
+
 tD.red.catch(tD.venusaur)
+tD.red.catch(tD.porygon)
 tD.blue.catch(tD.rhydon)
 tD.pyromaniac.catch(tD.charizard)
 tD.pyromaniac.catch(tD.slugma)
 tD.waiter.catch(tD.aerodactyl)
+tD.timeLord.catch(tD.celebi)
+tD.hiker.catch(tD.lycanroc)
+tD.ninja.catch(tD.venusaur)
+
+
 
 tD.evilMichael.pokemon[0].teach(tD.waterGun)
 tD.coolGuy.pokemon[0].teach(tD.absorb)
@@ -162,7 +192,9 @@ tD.red.pokemon[0].teach(tD.earthquake)
 tD.red.pokemon[1].teach(tD.sludgeBomb)
 tD.red.pokemon[1].teach(tD.solarBeam)
 tD.red.pokemon[1].teach(tD.hyperBeam)
+tD.red.pokemon[2].teach(tD.zapCannon)
 tD.blue.pokemon[0].teach(tD.rockWrecker)
+
 tD.pyromaniac.pokemon[0].teach(tD.skyAttack)
 tD.pyromaniac.pokemon[0].teach(tD.blastBurn)
 tD.pyromaniac.pokemon[0].teach(tD.normalFly)
@@ -171,6 +203,16 @@ tD.pyromaniac.pokemon[1].teach(tD.ember)
 tD.waiter.pokemon[0].teach(tD.rockWrecker)
 tD.waiter.pokemon[0].teach(tD.gust)
 tD.waiter.pokemon[0].teach(tD.rampage)
+tD.timeLord.pokemon[0].teach(tD.recover)
+tD.timeLord.pokemon[0].teach(tD.drainingKiss)
+tD.timeLord.pokemon[0].teach(tD.gigaDrain)
+tD.timeLord.pokemon[0].teach(tD.splash)
+tD.hiker.pokemon[0].teach(tD.crunch)
+tD.hiker.pokemon[0].teach(tD.scratch)
+tD.ninja.pokemon[0].teach(tD.absorb)
+tD.ninja.pokemon[0].teach(tD.razorLeaf)
+
+
 
 tD.battle1 = new Battle(tD.michael, tD.evilMichael)
 tD.battle2 = new Battle(tD.coolGuy, tD.fossilphile)
@@ -189,6 +231,7 @@ tD.battle13 = new Battle(tD.mystic, tD.nerd)
 tD.battle14 = new Battle(tD.starman, tD.sunboy)
 tD.battle15 = new Battle(tD.lunarlad, tD.moonman)
 tD.battle16 = new Battle(tD.red, tD.blue)
+
 tD.battle17 = new Battle(tD.red, tD.blue)
 tD.battleC1 = new Battle(tD.pyromaniac, tD.waiter)
 tD.battleC2 = new Battle(tD.pyromaniac, tD.waiter)
@@ -198,5 +241,15 @@ tD.battleC5 = new Battle(tD.pyromaniac, tD.waiter)
 tD.battleC6 = new Battle(tD.pyromaniac, tD.waiter)
 tD.battleC7 = new Battle(tD.pyromaniac, tD.waiter)
 tD.battleC8 = new Battle(tD.pyromaniac, tD.waiter)
+tD.battleR1 = new Battle(tD.hiker, tD.timeLord)
+tD.battleR2 = new Battle(tD.hiker, tD.timeLord)
+tD.battleR3 = new Battle(tD.timeLord, tD.hiker)
+tD.battleR4 = new Battle(tD.hiker, tD.timeLord)
+tD.battleR5 = new Battle(tD.hiker, tD.timeLord)
+tD.battleR6 = new Battle(tD.hiker, tD.timeLord)
+tD.battleCrit1 = new Battle(tD.ninja, tD.waiter)
+tD.battleCrit2 = new Battle(tD.ninja, tD.waiter)
+
+
 
 module.exports = tD

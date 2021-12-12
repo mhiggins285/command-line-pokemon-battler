@@ -495,6 +495,14 @@ class Battle {
 
                     }
 
+                    let types = typeColourise(pokemon.species.type1, pokemon.species.type1)
+
+                    if (pokemon.species.type2 !== 'N/A') {
+
+                        types = types + '/' + typeColourise(pokemon.species.type2, pokemon.species.type2)
+
+                    }
+
                     let hpCondition = `(${pokemon.currentHP}/${pokemon.species.hp})`
 
                     if (pokemon.currentHP === 0) {
@@ -503,7 +511,7 @@ class Battle {
 
                     }
 
-                    console.log(pokemonCount.toString() + ' - ' + typeColourise(fullName, pokemon.species.type1, pokemon.species.type2) + ' ' + hpCondition)
+                    console.log(pokemonCount.toString() + ' - ' + typeColourise(fullName, pokemon.species.type1, pokemon.species.type2) + ' - ' + types + ' ' + hpCondition)
                     console.log('Attack - ' + pokemon.species.attack + ', Defense - ' + pokemon.species.def + ', Special Attack - ' + pokemon.species.spAttack + ', Special Defense - ' + pokemon.species.spDef)
 
                     let attackLine = ''
@@ -590,37 +598,129 @@ class Battle {
 
             } else {
 
-                // damage calculation
-
-                let attackStat = this[currentPokemon].species.attack
-
-                let defenseStat = this[opponentPokemon].species.def
-
-                if (this[currentPokemon].moves[actionNo].category === "Special") {
-
-                    attackStat = this[currentPokemon].species.spAttack
-
-                    defenseStat = this[opponentPokemon].species.spDef
-
-                }
-
                 this[currentPokemon].pp[actionNo]--
 
                 console.log(`${nicknameObj.currentPokemonFullName} used ${typeColourise(this[currentPokemon].moves[actionNo].name, this[currentPokemon].moves[actionNo].type)}`)
 
-                let accuracyModifier = 1
+                if (this[currentPokemon].moves[actionNo].category !== 'Status') {
+                // damage calculation
 
-                if (this[opponentPokemon].volatileStatus.hasOwnProperty('charging')) {
+                    let attackStat = this[currentPokemon].species.attack
 
-                    if (this[opponentPokemon].volatileStatus.charging.effects.includes('Dig') || this[opponentPokemon].volatileStatus.charging.effects.includes('Fly')) {
+                    let defenseStat = this[opponentPokemon].species.def
 
-                        if (this[currentPokemon].moves[actionNo].effects.includes(`Hits ${this[opponentPokemon].volatileStatus.charging.effects[0]}`)) {
+                    if (this[currentPokemon].moves[actionNo].category === "Special") {
 
-                            attackStat *= 2
+                        attackStat = this[currentPokemon].species.spAttack
 
-                        } else {
+                        defenseStat = this[opponentPokemon].species.spDef
 
-                            accuracyModifier = 0
+                    }
+                    
+                    let accuracyModifier = 1
+
+                    if (this[opponentPokemon].volatileStatus.hasOwnProperty('charging')) {
+
+                        if (this[opponentPokemon].volatileStatus.charging.effects.includes('Dig') || this[opponentPokemon].volatileStatus.charging.effects.includes('Fly')) {
+
+                            if (this[currentPokemon].moves[actionNo].effects.includes(`Hits ${this[opponentPokemon].volatileStatus.charging.effects[0]}`)) {
+
+                                attackStat *= 2
+
+                            } else {
+
+                                accuracyModifier = 0
+
+                            }
+
+                        }
+
+                    }
+
+                    const accuracyCheck = Math.random()
+
+                    if (accuracyCheck > accuracyModifier * this[currentPokemon].moves[actionNo].accuracy/100) {
+
+                        console.log(`${nicknameObj.currentPokemonFullName}'s attack missed!`)
+
+                    } else {
+
+                        const typeModifier1 = typeChart[this[currentPokemon].moves[actionNo].type][this[opponentPokemon].species.type1]
+                        const typeModifier2 = typeChart[this[currentPokemon].moves[actionNo].type][this[opponentPokemon].species.type2]
+                        const typeModifier = typeModifier1 * typeModifier2
+
+                        let stabModifier = 1
+
+                        if (damageCalc === 1) {
+
+                            stabModifier *= 0.6
+
+                            if (this[currentPokemon].moves[actionNo].type === this[currentPokemon].species.type1 || this[currentPokemon].moves[actionNo].type === this[currentPokemon].species.type2) {
+
+                                stabModifier *= 1.5
+
+                            }
+
+                        }
+
+                        let criticalModifier = 1
+
+                        const criticalCheck = Math.random()
+
+                        let criticalThreshold = 0.875
+
+                        if (this[currentPokemon].moves[actionNo].effects.includes("High Crit")) {
+
+                            criticalThreshold = 0.75
+
+                        }
+
+                        if (criticalCheck > criticalThreshold) {
+
+                            criticalModifier = 2
+                            console.log("It's a critical hit!")
+
+                        }
+
+                        const damage = Math.floor(attackStat * 60 / defenseStat * typeModifier * this[currentPokemon].moves[actionNo].power / 60 * criticalModifier * stabModifier / 2)
+
+                        // damage dealt is reduced to a half as otherwise battles would be over too quickly
+
+                        this[opponentPokemon].currentHP -= damage
+
+                        if (typeModifier > 1) {
+
+                            console.log("It's super effective!")
+
+                        }
+                        
+                        if (typeModifier === 0) {
+
+                            console.log("It had no effect")
+                        
+                        } else if (typeModifier < 0.9) {
+
+                            console.log("It's not very effective")
+
+                        }
+
+                        if (this[currentPokemon].moves[actionNo].effects.includes('Drain')) {
+
+                            this[currentPokemon].currentHP += Math.floor(damage * 0.5)
+
+                            if (this[currentPokemon].currentHP > this[currentPokemon].species.hp) {
+
+                                this[currentPokemon].currentHP = this[currentPokemon].species.hp
+
+                            }
+
+                            console.log(`${nicknameObj.currentPokemonFullName} drained some of ${nicknameObj.opponentPokemonFullName}'s health`)
+
+                        }
+
+                        if (this[currentPokemon].moves[actionNo].effects.includes('Recharge')) {
+
+                            this[currentPokemon].volatileStatus.recharging = true
 
                         }
 
@@ -628,66 +728,23 @@ class Battle {
 
                 }
 
-                const accuracyCheck = Math.random()
+                if (this[currentPokemon].moves[actionNo].effects.includes('Recover')) {
 
-                if (accuracyCheck > accuracyModifier * this[currentPokemon].moves[actionNo].accuracy/100) {
+                    if (this[currentPokemon].currentHP < this[currentPokemon].species.hp) {
 
-                    console.log(`${nicknameObj.currentPokemonFullName}'s attack missed!`)
+                        this[currentPokemon].currentHP += Math.floor(this[currentPokemon].species.hp / 2)
 
-                } else {
+                        if (this[currentPokemon].currentHP > this[currentPokemon].species.hp) {
 
-                    const typeModifier1 = typeChart[this[currentPokemon].moves[actionNo].type][this[opponentPokemon].species.type1]
-                    const typeModifier2 = typeChart[this[currentPokemon].moves[actionNo].type][this[opponentPokemon].species.type2]
-                    const typeModifier = typeModifier1 * typeModifier2
-
-                    let stabModifier = 1
-
-                    if (damageCalc === 1) {
-
-                        stabModifier *= 0.6
-
-                        if (this[currentPokemon].moves[actionNo].type === this[currentPokemon].species.type1 || this[currentPokemon].moves[actionNo].type === this[currentPokemon].species.type2) {
-
-                            stabModifier *= 1.5
+                            this[currentPokemon].currentHP = this[currentPokemon].species.hp
 
                         }
 
-                    }
+                        console.log(`${nicknameObj.currentPokemonFullName} recovered health`)
 
-                    let criticalModifier = 1
+                    } else {
 
-                    const criticalCheck = Math.random()
-
-                    if (criticalCheck > 0.875) {
-
-                        criticalModifier = 2
-                        console.log("It's a critical hit!")
-
-                    }
-
-                    this[opponentPokemon].currentHP -= Math.floor(attackStat * 60 / defenseStat * typeModifier * this[currentPokemon].moves[actionNo].power / 60 * criticalModifier * stabModifier / 2)
-
-                    // damage dealt is reduced to a half as otherwise battles would be over too quickly
-
-                    if (typeModifier > 1) {
-
-                        console.log("It's super effective!")
-
-                    }
-                    
-                    if (typeModifier === 0) {
-
-                        console.log("It had no effect")
-                    
-                    } else if (typeModifier < 0.9) {
-
-                        console.log("It's not very effective")
-
-                    }
-
-                    if (this[currentPokemon].moves[actionNo].effects.includes('Recharge')) {
-
-                        this[currentPokemon].volatileStatus.recharging = true
+                        console.log(`${nicknameObj.currentPokemonFullName} is already at full health - move failed`)
 
                     }
 
