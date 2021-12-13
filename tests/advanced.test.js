@@ -522,6 +522,7 @@ describe('Advanced tests', () => {
             tD.battleFS1.fight()
             tD.battleFS1.fight(0)
             expect(tD.battleFS1.pokemon2.species).toBe(tD.slugma)
+            expect(consoleSpy).toHaveBeenCalledWith("Michael's \x1b[38;2;255;142;110m\x1b[48;2;176;83;31m\x1b[1mSlugs the Slugma\x1b[0m was switched in for \x1b[38;2;177;229;151m\x1b[48;2;88;140;62m\x1b[1mShroomy the Shroomish\x1b[0m")
 
             jest.spyOn(global.Math, 'random').mockRestore()
 
@@ -530,6 +531,8 @@ describe('Advanced tests', () => {
             tD.battleFS2.fight()
             tD.battleFS2.fight(0)
             expect(tD.battleFS2.pokemon2.species).toBe(tD.psyduck)
+            expect(consoleSpy).toHaveBeenCalledWith("Michael's \x1b[38;2;167;193;255m\x1b[48;2;78;104;166m\x1b[1mPsyduck\x1b[0m was switched in for \x1b[38;2;177;229;151m\x1b[48;2;88;140;62m\x1b[1mShroomy the Shroomish\x1b[0m")
+
 
             jest.spyOn(global.Math, 'random').mockRestore()
 
@@ -538,6 +541,8 @@ describe('Advanced tests', () => {
             tD.battleFS3.fight()
             tD.battleFS3.fight(0)
             expect(tD.battleFS3.pokemon2.species).toBe(tD.snivy)
+            expect(consoleSpy).toHaveBeenCalledWith("Michael's \x1b[38;2;177;229;151m\x1b[48;2;88;140;62m\x1b[1mSnivy\x1b[0m was switched in for \x1b[38;2;177;229;151m\x1b[48;2;88;140;62m\x1b[1mShroomy the Shroomish\x1b[0m")
+
 
             jest.spyOn(global.Math, 'random').mockRestore()
 
@@ -546,6 +551,8 @@ describe('Advanced tests', () => {
             tD.battleFS4.fight()
             tD.battleFS4.fight(0)
             expect(tD.battleFS4.pokemon2.species).toBe(tD.houndour)
+            expect(consoleSpy).toHaveBeenCalledWith("Michael's \x1b[38;2;0;0;0m\x1b[48;2;176;83;31m\x1b[1mHoundour\x1b[0m was switched in for \x1b[38;2;177;229;151m\x1b[48;2;88;140;62m\x1b[1mShroomy the Shroomish\x1b[0m")
+
 
             jest.spyOn(global.Math, 'random').mockRestore()
 
@@ -554,6 +561,8 @@ describe('Advanced tests', () => {
             tD.battleFS5.fight()
             tD.battleFS5.fight(0)
             expect(tD.battleFS5.pokemon2.species).toBe(tD.porygon)
+            expect(consoleSpy).toHaveBeenCalledWith("Michael's \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mPorygon\x1b[0m was switched in for \x1b[38;2;177;229;151m\x1b[48;2;88;140;62m\x1b[1mShroomy the Shroomish\x1b[0m")
+
 
         })
 
@@ -567,6 +576,8 @@ describe('Advanced tests', () => {
             jest.spyOn(global.Math, 'random').mockReturnValue(0.4)
 
             tD.battleFS6.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith("Pyromaniac's \x1b[38;2;255;142;110m\x1b[48;2;176;83;31m\x1b[1mSlugma\x1b[0m was switched in for \x1b[38;2;208;193;255m\x1b[48;2;176;83;31m\x1b[1mCharizard\x1b[0m")
+
 
             expect(tD.battleFS6.pokemon1.species).toBe(tD.slugma)
             expect(tD.battleFS6.trainer1.pokemon[0].volatileStatus).toEqual({})
@@ -586,6 +597,22 @@ describe('Advanced tests', () => {
             tD.battleFS8.fight(0)
             tD.battleFS8.fight(0)
             expect(consoleSpy).toHaveBeenCalledWith('Some Sap is down to their last Pokemon - move failed')
+
+        })
+
+        test('Move fails on opponents that are flying or digging', () => {
+
+            tD.battleFS9.fight()
+            tD.battleFS9.fight(2)
+            tD.battleFS9.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith('Target was unaffected by move')
+            expect(tD.battleFS9.pokemon1.species).toBe(tD.charizard)
+
+            tD.battleFS10.fight()
+            tD.battleFS10.fight(3)
+            tD.battleFS10.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith('Target was unaffected by move')
+            expect(tD.battleFS10.pokemon1.species).toBe(tD.charizard)
 
         })
         

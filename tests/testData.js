@@ -329,6 +329,8 @@ tD.battleFS5 = new Battle(tD.katy, tD.michael)
 tD.battleFS6 = new Battle(tD.pyromaniac, tD.katy)
 tD.battleFS7 = new Battle(tD.katy, tD.shroomLover)
 tD.battleFS8 = new Battle(tD.katy, tD.someSap)
+tD.battleFS9 = new Battle(tD.pyromaniac, tD.katy)
+tD.battleFS10 = new Battle(tD.pyromaniac, tD.katy)
 
 
 

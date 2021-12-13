@@ -53,45 +53,49 @@ class Battle {
 
         this[faintedPokemon].currentHP = 0
 
-                if (remainingPokemon === 1) {
+        console.log('')
 
-                    console.log(`${faintedPokemonFullName} has fainted!`)
+        if (remainingPokemon === 1) {
 
-                    console.log(`${this[faintedTrainer].name}'s last Pokemon has fainted! ${this[otherTrainer].name} has won the battle!`)
+            console.log(`${faintedPokemonFullName} has fainted!`)
 
-                    this.winner = this[otherTrainer]
+            console.log('')
 
-                    console.log('')
+            console.log(`${this[faintedTrainer].name}'s last Pokemon has fainted! ${this[otherTrainer].name} has won the battle!`)
 
-                    return
+            this.winner = this[otherTrainer]
 
-                } else {
+            console.log('')
 
-                    console.log(`${this[faintedTrainer].name}'s ${faintedPokemonFullName} has fainted! Please select another Pokemon`)
+            return
 
-                    let pokemonLineAfterFainting = ''
+        } else {
 
-                    let noOfPokemonAfterFaiting = this[faintedTrainer].pokemon.length
+            console.log(`${this[faintedTrainer].name}'s ${faintedPokemonFullName} has fainted! Please select another Pokemon`)
 
-                    for (let i = 0; i < noOfPokemonAfterFaiting; i++) {
+            let pokemonLineAfterFainting = ''
 
-                        if (this[faintedTrainer].pokemon[i].currentHP > 0) {
+            let noOfPokemonAfterFaiting = this[faintedTrainer].pokemon.length
 
-                            pokemonLineAfterFainting = pokemonLineAfterFainting + i.toString() + ' - ' + typeColourise(this[faintedTrainer].pokemon[i].species.name, this[faintedTrainer].pokemon[i].species.type1, this[faintedTrainer].pokemon[i].species.type2) + ' (' + this[faintedTrainer].pokemon[i].currentHP + '/' + this[faintedTrainer].pokemon[i].species.hp + '), '
-            
-                        }
+            for (let i = 0; i < noOfPokemonAfterFaiting; i++) {
 
-                    }
+                if (this[faintedTrainer].pokemon[i].currentHP > 0) {
 
-                    pokemonLineAfterFainting = pokemonLineAfterFainting.substring(0, pokemonLineAfterFainting.length - 2)
-
-                    console.log('')
-
-                    console.log(pokemonLineAfterFainting)
-
-                    console.log('')
-
+                    pokemonLineAfterFainting = pokemonLineAfterFainting + i.toString() + ' - ' + typeColourise(this[faintedTrainer].pokemon[i].species.name, this[faintedTrainer].pokemon[i].species.type1, this[faintedTrainer].pokemon[i].species.type2) + ' (' + this[faintedTrainer].pokemon[i].currentHP + '/' + this[faintedTrainer].pokemon[i].species.hp + '), '
+    
                 }
+
+            }
+
+            pokemonLineAfterFainting = pokemonLineAfterFainting.substring(0, pokemonLineAfterFainting.length - 2)
+
+            console.log('')
+
+            console.log(pokemonLineAfterFainting)
+
+            console.log('')
+
+        }
 
     }
 
@@ -395,7 +399,7 @@ class Battle {
 
                     const criticalCheck = Math.random()
 
-                    if (criticalCheck > 0.875) {
+                    if (criticalCheck > 0.875 && typeModifier !== 0) {
 
                         criticalModifier = 2
                         console.log("It's a critical hit!")
@@ -832,7 +836,11 @@ class Battle {
 
                 if (this[currentPokemon].moves[actionNo].effects.includes('Force Switch')) {
 
-                    if (opponentRemainingPokemon === 1) {
+                    if (this[opponentPokemon].volatileStatus.hasOwnProperty('charging') && (this[opponentPokemon].volatileStatus.charging.effects.includes('Dig') || this[opponentPokemon].volatileStatus.charging.effects.includes('Fly')) && !(this[currentPokemon].moves[actionNo].effects.includes(`Hits ${this[opponentPokemon].volatileStatus.charging.effects[0]}`))) {
+
+                        console.log('Target was unaffected by move')
+
+                    } else if (opponentRemainingPokemon === 1) {
 
                         console.log(`${this[opponentTrainer].name} is down to their last Pokemon - move failed`)
 
@@ -851,6 +859,16 @@ class Battle {
                                 if (livingPokemonNo === pokemonSelected) {
 
                                     this[opponentPokemon].volatileStatus = {}
+
+                                    let nickname = typeColourise(pokemon.species.name, pokemon.species.type1, pokemon.species.type2)
+
+                                    if (pokemon.nickname !== undefined) {
+
+                                        nickname = typeColourise(`${pokemon.nickname} the ${pokemon.species.name}`, pokemon.species.type1, pokemon.species.type2)
+
+                                    }
+
+                                    console.log(`${this[opponentTrainer].name}'s ${nickname} was switched in for ${nicknameObj.opponentPokemonFullName}`)
 
                                     this[opponentPokemon] = pokemon
 
