@@ -289,4 +289,14 @@ describe('Advanced tests', () => {
 
     })
 
+    describe('Testing "Set Damage" moves', () => {
+
+        test('Moves with set damage always do the same amount of damage', () => {
+
+
+            
+        })
+
+    })
+
 })
