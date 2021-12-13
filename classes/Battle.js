@@ -67,7 +67,7 @@ class Battle {
 
                 } else {
 
-                    const faintedLine = `${this[faintedTrainer].name}'s ${faintedPokemonFullName} has fainted! Please select another Pokemon`
+                    console.log(`${this[faintedTrainer].name}'s ${faintedPokemonFullName} has fainted! Please select another Pokemon`)
 
                     let pokemonLineAfterFainting = ''
 
@@ -85,11 +85,9 @@ class Battle {
 
                     pokemonLineAfterFainting = pokemonLineAfterFainting.substring(0, pokemonLineAfterFainting.length - 2)
 
-                    const faintedScreen = faintedLine + '\n' + pokemonLineAfterFainting
-
                     console.log('')
 
-                    console.log(faintedScreen)
+                    console.log(pokemonLineAfterFainting)
 
                     console.log('')
 
@@ -288,7 +286,7 @@ class Battle {
 
                 if (this[currentPokemon].currentHP <= 0) {
 
-                    this.faintedPokemon(currentPokemon, currentPokemonFullName, currentTrainer, otherTrainer, currentRemainingPokemon)
+                    this.faintedPokemon(currentPokemon, nicknameObj.currentPokemonFullName, currentTrainer, opponentTrainer, currentRemainingPokemon + 1)
 
                     return
                     
@@ -744,7 +742,15 @@ class Battle {
 
                             // damage dealt is reduced to a half as otherwise battles would be over too quickly
 
+                            const hpBefore = this[opponentPokemon].currentHP
+
                             this[opponentPokemon].currentHP -= damage
+
+                            if (this[opponentPokemon].currentHP < 0) {
+
+                                damage += this[opponentPokemon].currentHP
+
+                            }
 
                             totalDamage += damage
 
@@ -785,6 +791,18 @@ class Battle {
                         } else if (typeModifier < 0.9) {
 
                             console.log("It's not very effective")
+
+                        }
+
+                        if (this[currentPokemon].moves[actionNo].effects.includes('Recoil')) {
+
+                            this[currentPokemon].currentHP -= Math.floor(totalDamage / 4)
+
+                        }
+
+                        if (this[currentPokemon].moves[actionNo].effects.includes('Self-Destruct')) {
+
+                            this[currentPokemon].currentHP = 0
 
                         }
 

@@ -19,7 +19,7 @@ const typeChart = {
         Flying: neut,
         Bug: neut,
         Ghost: immune,
-        Steel: neut,
+        Steel: weak,
         Fighting: neut,
         Ice: neut,
         Dragon: neut,

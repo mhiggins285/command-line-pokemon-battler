@@ -137,7 +137,8 @@ describe('Pokemon', () => {
             tD.battle1.fight(0, -1, 0)
             expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;255;156;188m\x1b[48;2;78;104;166m\x1b[1mPokester the Slowpoke\x1b[0m used \x1b[38;2;167;193;255m\x1b[48;2;78;104;166m\x1b[1mWater Gun\x1b[0m")
             expect(consoleSpy).toHaveBeenCalledWith("It's not very effective")
-            expect(consoleSpy).toHaveBeenCalledWith("Michael's \x1b[38;2;177;229;151m\x1b[48;2;88;140;62m\x1b[1mShroomy the Shroomish\x1b[0m has fainted! Please select another Pokemon\n1 - \x1b[38;2;255;142;110m\x1b[48;2;176;83;31m\x1b[1mSlugma\x1b[0m (40/40), 2 - \x1b[38;2;167;193;255m\x1b[48;2;78;104;166m\x1b[1mPsyduck\x1b[0m (50/50), 3 - \x1b[38;2;177;229;151m\x1b[48;2;88;140;62m\x1b[1mSnivy\x1b[0m (45/45), 4 - \x1b[38;2;0;0;0m\x1b[48;2;176;83;31m\x1b[1mHoundour\x1b[0m (45/45), 5 - \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mPorygon\x1b[0m (65/65)")
+            expect(consoleSpy).toHaveBeenCalledWith("Michael's \x1b[38;2;177;229;151m\x1b[48;2;88;140;62m\x1b[1mShroomy the Shroomish\x1b[0m has fainted! Please select another Pokemon")
+            expect(consoleSpy).toHaveBeenCalledWith("1 - \x1b[38;2;255;142;110m\x1b[48;2;176;83;31m\x1b[1mSlugma\x1b[0m (40/40), 2 - \x1b[38;2;167;193;255m\x1b[48;2;78;104;166m\x1b[1mPsyduck\x1b[0m (50/50), 3 - \x1b[38;2;177;229;151m\x1b[48;2;88;140;62m\x1b[1mSnivy\x1b[0m (45/45), 4 - \x1b[38;2;0;0;0m\x1b[48;2;176;83;31m\x1b[1mHoundour\x1b[0m (45/45), 5 - \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mPorygon\x1b[0m (65/65)")
 
         })
 
@@ -248,7 +249,8 @@ describe('Pokemon', () => {
 
             tD.battleG.fight()
             tD.battleG.fight(0, -1, 0)
-            expect(consoleSpy).toHaveBeenCalledWith("Glass General's \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mCannon A the Glass Cannon\x1b[0m has fainted! Please select another Pokemon\n1 - \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mGlass Cannon\x1b[0m (1/1), 2 - \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mGlass Cannon\x1b[0m (1/1), 3 - \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mGlass Cannon\x1b[0m (1/1), 4 - \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mGlass Cannon\x1b[0m (1/1)")
+            expect(consoleSpy).toHaveBeenCalledWith("Glass General's \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mCannon A the Glass Cannon\x1b[0m has fainted! Please select another Pokemon")
+            expect(consoleSpy).toHaveBeenCalledWith("1 - \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mGlass Cannon\x1b[0m (1/1), 2 - \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mGlass Cannon\x1b[0m (1/1), 3 - \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mGlass Cannon\x1b[0m (1/1), 4 - \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mGlass Cannon\x1b[0m (1/1)")
             tD.battleG.fight(2, -1, 0)
             expect(tD.battleG.pokemon2.nickname).toBe('Cannon C')
             expect(tD.battleG.turnCount).toBe(2)

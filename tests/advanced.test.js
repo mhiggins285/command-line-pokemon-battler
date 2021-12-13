@@ -267,6 +267,16 @@ describe('Advanced tests', () => {
             
         })
 
+        test('When draining moves kill opponent, only damage actual done is taken account of in the calculation', () => {
+
+            tD.battleR7.fight()
+            tD.battleR7.fight(0)
+            tD.battleR7.fight(0)
+            tD.battleR7.fight(1)
+            expect(tD.battleR7.pokemon1.currentHP).toBe(78)
+
+        })
+
     })
 
     describe('Testing "High-Crit Ratio" moves', () => {
@@ -428,7 +438,80 @@ describe('Advanced tests', () => {
 
     describe('Testing "Self-Damaging" moves', () => {
 
+        test('Recoil moves give a quarter of damage given back to the user', () => {
 
+            tD.battleS1.fight()
+            tD.battleS1.fight(2)
+            expect(tD.battleS1.pokemon1.currentHP).toBe(97)
+
+        })
+
+        test('Recoil damage scales with numerous factors', () => {
+
+            tD.battleS2.fight()
+            tD.battleS2.fight(0)
+            expect(tD.battleS2.pokemon1.currentHP).toBe(69)
+
+        })
+
+        test('Recoil only is affected by damage actually dealt in the case that move kills opponent', () => {
+
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.6)
+
+            tD.battleS3.fight()
+            tD.battleS3.fight(0)
+            tD.battleS3.fight(3)
+            tD.battleS3.fight(0)
+            tD.battleS3.fight(3)
+            tD.battleS3.fight(0)
+            tD.battleS3.fight(3)
+            tD.battleS3.fight(2)
+            expect(tD.battleS3.pokemon1.currentHP).toBe(101)
+
+        })
+
+        test('Battle procedes as normal if recoil damage faints user', () => {
+
+            tD.battleS4.fight()
+            tD.battleS4.fight(0)
+            tD.battleS4.fight(1)
+            expect(consoleSpy).toHaveBeenCalledWith("Glass Private's \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mGlass Cannon\x1b[0m has fainted! Please select another Pokemon")
+            tD.battleS4.fight(0)
+            tD.battleS4.fight(1)
+            expect(tD.battleS4.turnCount % 2).toBe(0)
+
+        })
+
+        test('Self-destructing moves faint user, and battle procedes as normal', () => {
+
+            tD.battleS5.fight()
+            tD.battleS5.fight(3)
+            expect(consoleSpy).toHaveBeenCalledWith("Furious Fred's \x1b[38;2;245;224;167m\x1b[48;2;130;114;46m\x1b[1mRhydon\x1b[0m has fainted! Please select another Pokemon")
+            tD.battleS5.fight(1)
+            expect(tD.battleS5.pokemon1.species).toBe(tD.psyduck)
+            expect(tD.battleS5.pokemon2.currentHP).toBe(39)
+            expect(tD.battleS5.turnCount % 2).toBe(0)
+
+        })
+
+        test("If self-destructing move kills user's Pokemon while opponent has Pokemon left, opponent wins", () => {
+
+            tD.battleS6.fight()
+            tD.battleS6.fight(0)
+            tD.battleS6.fight(1)
+            expect(tD.battleS6.winner).toBe(tD.furiousFred)
+
+        })
+
+        test("If self-destructive move kills opponent's last Pokemon, user wins", () => {
+
+            tD.battleS7.fight()
+            tD.battleS7.fight(0)
+            expect(tD.battleS7.winner).toBe(tD.glassPeon)
+
+        })
         
     })
 

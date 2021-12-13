@@ -36,6 +36,8 @@ tD.lycanroc = new Pokemon('Lycanroc', [75, 115, 55, 65, 65], 'Rock')
 tD.dragonite = new Pokemon('Dragonite', [91, 134, 100, 95, 100], 'Dragon', 'Flying')
 tD.florges = new Pokemon('Florges', [78, 65, 112, 68, 154], 'Fairy')
 tD.whismur = new Pokemon('Whismur', [62, 51, 51, 23, 23], 'Normal')
+tD.steelix = new Pokemon('Steelix', [75, 85, 55, 200, 65], 'Steel', 'Ground')
+tD.tauros = new Pokemon('Tauros', [75, 100, 40, 95, 70], 'Normal')
 
 
 
@@ -80,6 +82,8 @@ tD.razorLeaf = new Move('Razor Leaf', 'Grass', 30, 60, 100, 'Physical', ['High C
 tD.dragonRage = new Move('Dragon Rage', 'Dragon', 20, 40, 100, 'Special', ['Set Damage'])
 tD.furySwipes = new Move('Fury Swipes', 'Normal', 15, 18, 85, 'Physical', ['Multi-Hit'])
 tD.doubleKick = new Move('Double Kick', 'Fighting', 30, 30, 100, 'Physical', ['Double-Hit'])
+tD.takeDown = new Move('Take Down', 'Normal', 15, 90, 100, 'Physical', ['Recoil'])
+tD.selfDestruct = new Move('Self-Destruct', 'Normal', 5, 250, 100, 'Physical', ['Self-Destruct'])
 
 
 
@@ -110,6 +114,7 @@ tD.blue = new Trainer('Blue')
 tD.pyromaniac = new Trainer('Pyromaniac')
 tD.waiter = new Trainer('Waiter')
 tD.timeLord = new Trainer('Time Lord')
+tD.timeExecutive = new Trainer('Time Executive')
 tD.hiker = new Trainer('Hiker')
 tD.ninja = new Trainer('Ninja')
 tD.steadyEddie = new Trainer('Steady Eddie')
@@ -117,6 +122,10 @@ tD.dragonTamer = new Trainer('Dragon Tamer')
 tD.faePrince = new Trainer('Fae Prince')
 tD.furiousFred = new Trainer('Furious Fred')
 tD.someSap = new Trainer('Some Sap')
+tD.sculptor = new Trainer('Sculptor')
+tD.roughneck = new Trainer('Roughneck')
+tD.glassPrivate = new Trainer('Glass Private')
+tD.glassPeon = new Trainer('Glass Peon')
 
 
 
@@ -161,14 +170,21 @@ tD.pyromaniac.catch(tD.charizard)
 tD.pyromaniac.catch(tD.slugma)
 tD.waiter.catch(tD.aerodactyl)
 tD.timeLord.catch(tD.celebi)
+tD.timeExecutive.catch(tD.celebi)
 tD.hiker.catch(tD.lycanroc)
 tD.ninja.catch(tD.venusaur)
 tD.dragonTamer.catch(tD.dragonite)
 tD.steadyEddie.catch(tD.charizard)
 tD.faePrince.catch(tD.florges)
 tD.furiousFred.catch(tD.rhydon)
+tD.furiousFred.catch(tD.psyduck)
 tD.someSap.catch(tD.whismur)
 tD.someSap.catch(tD.whismur)
+tD.sculptor.catch(tD.tauros)
+tD.roughneck.catch(tD.steelix)
+tD.glassPrivate.catch(tD.glassCannon)
+tD.glassPrivate.catch(tD.glassCannon)
+tD.glassPeon.catch(tD.glassCannon)
 
 
 
@@ -226,12 +242,21 @@ tD.timeLord.pokemon[0].teach(tD.gigaDrain)
 tD.timeLord.pokemon[0].teach(tD.splash)
 tD.hiker.pokemon[0].teach(tD.crunch)
 tD.hiker.pokemon[0].teach(tD.scratch)
+tD.timeExecutive.pokemon[0].teach(tD.absorb)
+tD.timeExecutive.pokemon[0].teach(tD.gigaDrain)
 tD.ninja.pokemon[0].teach(tD.absorb)
 tD.ninja.pokemon[0].teach(tD.razorLeaf)
 tD.steadyEddie.pokemon[0].teach(tD.dragonRage)
 tD.dragonTamer.pokemon[0].teach(tD.dragonRage)
 tD.furiousFred.pokemon[0].teach(tD.furySwipes)
-tD.furiousFred.pokemon[0].teach(tD.doubleKick)
+tD.furiousFred.pokemon[0].teach(tD.doubleKick) 
+tD.furiousFred.pokemon[0].teach(tD.takeDown)
+tD.furiousFred.pokemon[0].teach(tD.selfDestruct)
+tD.sculptor.pokemon[0].teach(tD.takeDown)
+tD.glassPrivate.pokemon[0].teach(tD.takeDown)
+tD.glassPrivate.pokemon[0].teach(tD.selfDestruct)
+tD.glassPeon.pokemon[0].teach(tD.selfDestruct)
+
 
 
 
@@ -268,6 +293,7 @@ tD.battleR3 = new Battle(tD.timeLord, tD.hiker)
 tD.battleR4 = new Battle(tD.hiker, tD.timeLord)
 tD.battleR5 = new Battle(tD.hiker, tD.timeLord)
 tD.battleR6 = new Battle(tD.hiker, tD.timeLord)
+tD.battleR7 = new Battle(tD.timeExecutive, tD.hiker)
 tD.battleCrit1 = new Battle(tD.ninja, tD.waiter)
 tD.battleCrit2 = new Battle(tD.ninja, tD.waiter)
 tD.battleF1 = new Battle(tD.dragonTamer, tD.steadyEddie)
@@ -282,6 +308,13 @@ tD.battleM7 = new Battle(tD.furiousFred, tD.blue)
 tD.battleM8 = new Battle(tD.furiousFred, tD.blue)
 tD.battleM9 = new Battle(tD.furiousFred, tD.someSap)
 tD.battleM10 = new Battle(tD.furiousFred, tD.someSap)
+tD.battleS1 = new Battle(tD.furiousFred, tD.timeLord)
+tD.battleS2 = new Battle(tD.sculptor, tD.furiousFred)
+tD.battleS3 = new Battle(tD.furiousFred, tD.timeLord)
+tD.battleS4 = new Battle(tD.glassPrivate, tD.someSap)
+tD.battleS5 = new Battle(tD.furiousFred, tD.roughneck)
+tD.battleS6 = new Battle(tD.glassPeon, tD.furiousFred)
+tD.battleS7 = new Battle(tD.glassPeon, tD.shroomFan)
 
 
 
