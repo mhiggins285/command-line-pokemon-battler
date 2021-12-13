@@ -109,6 +109,8 @@ class Battle {
 
         console.log(`${nicknameObj.opponentPokemonFullName} (${this[opponentPokemon].currentHP}/${this[opponentPokemon].species.hp}) - ${nicknameObj.currentPokemonFullName} (${this[currentPokemon].currentHP}/${this[currentPokemon].species.hp})`)
 
+        console.log('')
+
         let attackLine = 'Attacks: '
         const noOfMoves = this[opponentPokemon].moves.length
 
@@ -647,7 +649,7 @@ class Battle {
 
                         const typeModifier1 = typeChart[this[currentPokemon].moves[actionNo].type][this[opponentPokemon].species.type1]
                         const typeModifier2 = typeChart[this[currentPokemon].moves[actionNo].type][this[opponentPokemon].species.type2]
-                        const typeModifier = typeModifier1 * typeModifier2
+                        let typeModifier = typeModifier1 * typeModifier2
 
                         let stabModifier = 1
 
@@ -663,10 +665,6 @@ class Battle {
 
                         }
 
-                        let criticalModifier = 1
-
-                        const criticalCheck = Math.random()
-
                         let criticalThreshold = 0.875
 
                         if (this[currentPokemon].moves[actionNo].effects.includes("High Crit")) {
@@ -675,18 +673,104 @@ class Battle {
 
                         }
 
-                        if (criticalCheck > criticalThreshold) {
+                        if (this[currentPokemon].moves[actionNo].effects.includes('Set Damage')) {
 
-                            criticalModifier = 2
-                            console.log("It's a critical hit!")
+                            criticalThreshold = 1
 
                         }
 
-                        const damage = Math.floor(attackStat * 60 / defenseStat * typeModifier * this[currentPokemon].moves[actionNo].power / 60 * criticalModifier * stabModifier / 2)
+                        let noOfHits = 1
 
-                        // damage dealt is reduced to a half as otherwise battles would be over too quickly
+                        let actualNoOfHits = 0
 
-                        this[opponentPokemon].currentHP -= damage
+                        if (this[currentPokemon].moves[actionNo].effects.includes('Double-Hit')) {
+
+                            noOfHits = 2
+
+                        }
+
+                        if (this[currentPokemon].moves[actionNo].effects.includes('Multi-Hit')) {
+
+                            const hitCheck = Math.random()
+
+                            if (hitCheck < 0.15) {
+
+                                noOfHits = 2
+
+                            } else if (hitCheck < 0.5) {
+
+                                noOfHits = 3
+
+                            } else if (hitCheck < 0.85) {
+
+                                noOfHits = 4
+
+                            } else {
+
+                                noOfHits = 5
+
+                            }
+
+                        }
+
+                        let totalDamage = 0
+
+                        for (let i = 0; i < noOfHits; i++) {
+
+                            let criticalModifier = 1
+
+                            const criticalCheck = Math.random()
+
+                            if (criticalCheck > criticalThreshold) {
+
+                                criticalModifier = 2
+                                console.log("It's a critical hit!")
+
+                            }
+
+                            let damage = Math.floor(attackStat / defenseStat * typeModifier * this[currentPokemon].moves[actionNo].power * criticalModifier * stabModifier / 2)
+
+                            if (this[currentPokemon].moves[actionNo].effects.includes('Set Damage')) {
+
+                                if (typeModifier > 0) {
+
+                                    typeModifier = 1
+
+                                }
+
+                                damage = this[currentPokemon].moves[actionNo].power * typeModifier
+                                
+                            }
+
+                            // damage dealt is reduced to a half as otherwise battles would be over too quickly
+
+                            this[opponentPokemon].currentHP -= damage
+
+                            totalDamage += damage
+
+                            actualNoOfHits++
+
+                            if(this[opponentPokemon].currentHP < 0) {
+
+                                break
+
+                            }
+
+                        }
+
+                        if (noOfHits > 1) {
+
+                            if (actualNoOfHits > 1) {
+
+                                console.log(`It hit ${actualNoOfHits} times`)
+
+                            } else {
+
+                                console.log('It hit once')
+
+                            }
+
+                        }
 
                         if (typeModifier > 1) {
 
@@ -706,7 +790,7 @@ class Battle {
 
                         if (this[currentPokemon].moves[actionNo].effects.includes('Drain')) {
 
-                            this[currentPokemon].currentHP += Math.floor(damage * 0.5)
+                            this[currentPokemon].currentHP += Math.floor(totalDamage * 0.5)
 
                             if (this[currentPokemon].currentHP > this[currentPokemon].species.hp) {
 

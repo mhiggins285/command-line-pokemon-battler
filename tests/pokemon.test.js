@@ -105,7 +105,7 @@ describe('Pokemon', () => {
             tD.battle1.fight(0, -1, 0)
             expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;177;229;151m\x1b[48;2;88;140;62m\x1b[1mShroomy the Shroomish\x1b[0m used \x1b[38;2;177;229;151m\x1b[48;2;88;140;62m\x1b[1mAbsorb\x1b[0m")
             expect(consoleSpy).toHaveBeenCalledWith("It's super effective!")
-            expect(tD.battle1.pokemon2.currentHP).toBe(65)
+            expect(tD.battle1.pokemon2.currentHP).toBe(66)
             
 
         })
@@ -115,7 +115,7 @@ describe('Pokemon', () => {
             tD.battle1.fight(0, -1, 0)
             expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;255;156;188m\x1b[48;2;78;104;166m\x1b[1mPokester the Slowpoke\x1b[0m used \x1b[38;2;167;193;255m\x1b[48;2;78;104;166m\x1b[1mWater Gun\x1b[0m")
             expect(consoleSpy).toHaveBeenCalledWith("It's not very effective")
-            expect(tD.battle1.pokemon2.currentHP).toBe(65)
+            expect(tD.battle1.pokemon2.currentHP).toBe(66)
             expect(tD.battle1.pokemon1.currentHP).toBe(36)
 
         })
@@ -125,7 +125,7 @@ describe('Pokemon', () => {
             tD.battle1.fight(0, -1, 0)
             expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;177;229;151m\x1b[48;2;88;140;62m\x1b[1mShroomy the Shroomish\x1b[0m used \x1b[38;2;177;229;151m\x1b[48;2;88;140;62m\x1b[1mAbsorb\x1b[0m")
             expect(consoleSpy).toHaveBeenCalledWith("It's super effective!")
-            expect(tD.battle1.pokemon2.currentHP).toBe(40)
+            expect(tD.battle1.pokemon2.currentHP).toBe(42)
             
 
         })

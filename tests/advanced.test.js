@@ -36,6 +36,9 @@ const tD = require('./testData')
     // \x1b[38;2;208;193;255m\x1b[48;2;176;83;31m\x1b[1mCharizard\x1b[0m'
 
     // \x1b[38;2;255;142;110m\x1b[48;2;135;41;36m\x1b[1mFainted\x1b[0m'
+
+
+    // \x1b[38;2;245;224;167m\x1b[48;2;130;114;46m\x1b[1mRhydon\x1b[0m
     
 
 describe('Advanced tests', () => {
@@ -293,10 +296,146 @@ describe('Advanced tests', () => {
 
         test('Moves with set damage always do the same amount of damage', () => {
 
-
+            tD.battleF1.fight()
+            tD.battleF1.fight(0)
+            expect(tD.battleF1.pokemon2.currentHP).toBe(38)
+            tD.battleF1.fight(0)
+            expect(tD.battleF1.pokemon1.currentHP).toBe(51)
             
         })
 
+        test("Moves don't work if opponent has type immunity", () => {
+
+            tD.battleF2.fight()
+            tD.battleF2.fight(0)
+            expect(tD.battleF2.pokemon2.currentHP).toBe(78)
+            expect(consoleSpy).toHaveBeenCalledWith('It had no effect')
+            
+        })
+
+    })
+
+    describe('Testing "Multi-Hit" moves', () => {
+
+        test('Standard multi-hit moves can hit between two and five times', () => {
+
+            tD.battleM1.fight()
+            tD.battleM1.fight(0)
+
+            expect(consoleSpy).toHaveBeenCalledWith('It hit 2 times')
+            expect(tD.battleM1.pokemon2.currentHP).toBe(97)
+
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.2)
+
+            tD.battleM2.fight()
+            tD.battleM2.fight(0)
+
+            expect(consoleSpy).toHaveBeenCalledWith('It hit 3 times')
+            expect(tD.battleM2.pokemon2.currentHP).toBe(93)
+
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.6)
+
+            tD.battleM3.fight()
+            tD.battleM3.fight(0)
+
+            expect(consoleSpy).toHaveBeenCalledWith('It hit 4 times')
+            expect(tD.battleM3.pokemon2.currentHP).toBe(89)
+
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValueOnce(0.1).mockReturnValue(0.86)
+
+            tD.battleM4.fight()
+            tD.battleM4.fight(0)
+
+            expect(consoleSpy).toHaveBeenCalledWith('It hit 5 times')
+            expect(tD.battleM4.pokemon2.currentHP).toBe(85)
+
+        })
+
+        test('Standard multi-hit moves can miss altogether', () => {
+
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.9)
+
+            tD.battleM5.fight()
+            tD.battleM5.fight(0)
+
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;245;224;167m\x1b[48;2;130;114;46m\x1b[1mRhydon\x1b[0m's attack missed!")
+            expect(tD.battleM5.pokemon2.currentHP).toBe(105)
+            
+        })
+
+        test('Criticals on multi-hit moves are treated separately for each hit', () => {
+
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValueOnce(0.1).mockReturnValueOnce(0.6).mockReturnValueOnce(0.6).mockReturnValueOnce(0.9).mockReturnValue(0.6)
+
+            tD.battleM6.fight()
+            tD.battleM6.fight(0)
+
+            expect(consoleSpy).toHaveBeenCalledWith('It hit 4 times')
+            expect(consoleSpy).toHaveBeenCalledWith("It's a critical hit!")
+            expect(tD.battleM6.pokemon2.currentHP).toBe(85)
+            
+        })
+
+        test('Some multi-hit moves alway hit a specific number of times', () => {
+
+            tD.battleM7.fight()
+            tD.battleM7.fight(1)
+
+            expect(consoleSpy).toHaveBeenCalledWith('It hit 2 times')
+            expect(tD.battleM7.pokemon2.currentHP).toBe(81)
+
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.6)
+
+            tD.battleM8.fight()
+            tD.battleM8.fight(1)
+
+            expect(consoleSpy).toHaveBeenCalledWith('It hit 2 times')
+            expect(tD.battleM8.pokemon2.currentHP).toBe(81)
+            
+        })
+
+        test('Multi-hit moves cannot hit more times than is neccesary to kill the Pokemon', () => {
+
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.6)
+
+            tD.battleM9.fight()
+            tD.battleM9.fight(0)
+
+            expect(consoleSpy).toHaveBeenCalledWith('It hit 3 times')
+
+            tD.battleM10.fight()
+            tD.battleM10.fight(1)
+
+            expect(consoleSpy).toHaveBeenCalledWith('It hit once')
+            
+        })
+
+    })
+
+    describe('Testing "Self-Damaging" moves', () => {
+
+
+        
+    })
+
+    describe('Testing "Forced Switch" moves', () => {
+
+
+        
     })
 
 })

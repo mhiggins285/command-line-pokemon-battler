@@ -33,6 +33,9 @@ tD.venusaur = new Pokemon('Venusaur', [80, 82, 100, 83, 100], 'Grass', 'Poison')
 tD.aerodactyl = new Pokemon('Aerodactyl', [80, 105, 60, 65, 75], 'Rock', 'Flying')
 tD.celebi = new Pokemon('Celebi', [100, 100, 100, 100, 100], 'Grass', 'Psychic')
 tD.lycanroc = new Pokemon('Lycanroc', [75, 115, 55, 65, 65], 'Rock')
+tD.dragonite = new Pokemon('Dragonite', [91, 134, 100, 95, 100], 'Dragon', 'Flying')
+tD.florges = new Pokemon('Florges', [78, 65, 112, 68, 154], 'Fairy')
+tD.whismur = new Pokemon('Whismur', [62, 51, 51, 23, 23], 'Normal')
 
 
 
@@ -67,13 +70,16 @@ tD.normalFly = new Move('Normal Fly', 'Normal', 15, 90, 100, 'Physical', ['Fly']
 tD.normalDig = new Move('Normal Dig', 'Normal', 15, 90, 100, 'Physical', ['Dig'])
 tD.gust = new Move('Gust', 'Flying', 35, 60, 100, 'Physical', ['Hits Fly'])
 tD.rampage = new Move('Rampage', 'Normal', 20, 90, 100, 'Physical', ['Hits Dig'])
-tD.recover = new Move('Recover', 'Normal', 10, 0, 0, 'Status', ['Recover'])
+tD.recover = new Move('Recover', 'Normal', 10, 'N/A', 'N/A', 'Status', ['Recover'])
 tD.drainingKiss = new Move('Draining Kiss', 'Fairy', 10, 60, 100, 'Special', ['Drain'])
 tD.gigaDrain = new Move('Giga Drain', 'Grass', 10, 60, 100, 'Special', ['Drain'])
 tD.crunch = new Move('Crunch', 'Dark', 15, 80, 100, 'Physical')
 tD.scratch = new Move('Scratch', 'Normal', 40, 30, 100, 'Physical')
-tD.splash = new Move('Splash', 'Normal', 40, 0, 0, 'Status')
+tD.splash = new Move('Splash', 'Normal', 40, 'N/A', 'N/A', 'Status')
 tD.razorLeaf = new Move('Razor Leaf', 'Grass', 30, 60, 100, 'Physical', ['High Crit'])
+tD.dragonRage = new Move('Dragon Rage', 'Dragon', 20, 40, 100, 'Special', ['Set Damage'])
+tD.furySwipes = new Move('Fury Swipes', 'Normal', 15, 18, 85, 'Physical', ['Multi-Hit'])
+tD.doubleKick = new Move('Double Kick', 'Fighting', 30, 30, 100, 'Physical', ['Double-Hit'])
 
 
 
@@ -106,6 +112,11 @@ tD.waiter = new Trainer('Waiter')
 tD.timeLord = new Trainer('Time Lord')
 tD.hiker = new Trainer('Hiker')
 tD.ninja = new Trainer('Ninja')
+tD.steadyEddie = new Trainer('Steady Eddie')
+tD.dragonTamer = new Trainer('Dragon Tamer')
+tD.faePrince = new Trainer('Fae Prince')
+tD.furiousFred = new Trainer('Furious Fred')
+tD.someSap = new Trainer('Some Sap')
 
 
 
@@ -152,6 +163,12 @@ tD.waiter.catch(tD.aerodactyl)
 tD.timeLord.catch(tD.celebi)
 tD.hiker.catch(tD.lycanroc)
 tD.ninja.catch(tD.venusaur)
+tD.dragonTamer.catch(tD.dragonite)
+tD.steadyEddie.catch(tD.charizard)
+tD.faePrince.catch(tD.florges)
+tD.furiousFred.catch(tD.rhydon)
+tD.someSap.catch(tD.whismur)
+tD.someSap.catch(tD.whismur)
 
 
 
@@ -211,6 +228,10 @@ tD.hiker.pokemon[0].teach(tD.crunch)
 tD.hiker.pokemon[0].teach(tD.scratch)
 tD.ninja.pokemon[0].teach(tD.absorb)
 tD.ninja.pokemon[0].teach(tD.razorLeaf)
+tD.steadyEddie.pokemon[0].teach(tD.dragonRage)
+tD.dragonTamer.pokemon[0].teach(tD.dragonRage)
+tD.furiousFred.pokemon[0].teach(tD.furySwipes)
+tD.furiousFred.pokemon[0].teach(tD.doubleKick)
 
 
 
@@ -249,6 +270,18 @@ tD.battleR5 = new Battle(tD.hiker, tD.timeLord)
 tD.battleR6 = new Battle(tD.hiker, tD.timeLord)
 tD.battleCrit1 = new Battle(tD.ninja, tD.waiter)
 tD.battleCrit2 = new Battle(tD.ninja, tD.waiter)
+tD.battleF1 = new Battle(tD.dragonTamer, tD.steadyEddie)
+tD.battleF2 = new Battle(tD.dragonTamer, tD.faePrince)
+tD.battleM1 = new Battle(tD.furiousFred, tD.blue)
+tD.battleM2 = new Battle(tD.furiousFred, tD.blue)
+tD.battleM3 = new Battle(tD.furiousFred, tD.blue)
+tD.battleM4 = new Battle(tD.furiousFred, tD.blue)
+tD.battleM5 = new Battle(tD.furiousFred, tD.blue)
+tD.battleM6 = new Battle(tD.furiousFred, tD.blue)
+tD.battleM7 = new Battle(tD.furiousFred, tD.blue)
+tD.battleM8 = new Battle(tD.furiousFred, tD.blue)
+tD.battleM9 = new Battle(tD.furiousFred, tD.someSap)
+tD.battleM10 = new Battle(tD.furiousFred, tD.someSap)
 
 
 
