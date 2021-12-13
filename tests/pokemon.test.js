@@ -63,9 +63,9 @@ describe('Pokemon', () => {
         test('Can use teach method to add move to Pokemon', () => {
 
             tD.michael.pokemon[0].teach(tD.absorb)
-            expect(tD.michael.pokemon[0].moves).toEqual([{name:'Absorb',type:'Grass', pp: 35, power: 60, accuracy: 100, category: 'Physical', effects: []}])
+            expect(tD.michael.pokemon[0].moves).toEqual([{name:'Absorb',type:'Grass', pp: 35, power: 60, accuracy: 100, category: 'Physical', effects: [], description: ''}])
             tD.michael.pokemon[0].teach(tD.tackle)
-            expect(tD.michael.pokemon[0].moves).toEqual([{name:'Absorb',type:'Grass', pp: 35, power: 60, accuracy: 100, category: 'Physical', effects: []}, {name:'Tackle',type:'Normal', pp: 35, power: 60, accuracy: 100, category: 'Physical', effects: []}])
+            expect(tD.michael.pokemon[0].moves).toEqual([{name:'Absorb',type:'Grass', pp: 35, power: 60, accuracy: 100, category: 'Physical', effects: [], description: ''}, {name:'Tackle',type:'Normal', pp: 35, power: 60, accuracy: 100, category: 'Physical', effects: [], description: ''}])
 
         })
 
@@ -455,6 +455,11 @@ describe('Pokemon', () => {
             expect(consoleSpy).toHaveBeenCalledWith('\x1b[38;2;255;142;110m\x1b[48;2;176;83;31m\x1b[1m2 - Fire Blast - Fire - 120 Power - 75 Accuracy - Special\x1b[0m')
             expect(consoleSpy).toHaveBeenCalledWith('\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1m3 - Slash - Normal - 70 Power - 100 Accuracy - Physical\x1b[0m')
             expect(consoleSpy).toHaveBeenCalledWith('\x1b[38;2;245;224;167m\x1b[48;2;156;135;78m\x1b[1m4 - Earthquake - Ground - 100 Power - 100 Accuracy - Physical\x1b[0m')
+
+            expect(consoleSpy).toHaveBeenCalledWith('\x1b[38;2;208;193;255m\x1b[48;2;119;104;166m\x1b[1mStrikes the foe with wings spread wide\x1b[0m')
+            expect(consoleSpy).toHaveBeenCalledWith('\x1b[38;2;255;142;110m\x1b[48;2;176;83;31m\x1b[1mThe foe is attacked with an intense blast of all-consuming fire\x1b[0m')
+            expect(consoleSpy).toHaveBeenCalledWith('\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mThe foe is attacked with a slash of claws\x1b[0m')
+            expect(consoleSpy).toHaveBeenCalledWith('\x1b[38;2;245;224;167m\x1b[48;2;156;135;78m\x1b[1mA powerful quake, but has no effect on flying foes\x1b[0m')
             expect(tD.battle16.turnCount).toBe(1)
 
         })

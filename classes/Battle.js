@@ -470,12 +470,12 @@ class Battle {
                 for (const move of this[currentPokemon].moves) {
 
                     console.log(typeColourise(`${moveCount} - ${move.name} - ${move.type} - ${move.power} Power - ${move.accuracy} Accuracy - ${move.category}`, move.type))
+                    console.log(typeColourise(move.description, move.type))
+                    console.log('')
 
                     moveCount++
 
                 }
-
-                console.log('')
 
                 return
 
@@ -830,6 +830,42 @@ class Battle {
 
                 }
 
+                if (this[currentPokemon].moves[actionNo].effects.includes('Force Switch')) {
+
+                    if (opponentRemainingPokemon === 1) {
+
+                        console.log(`${this[opponentTrainer].name} is down to their last Pokemon - move failed`)
+
+                    } else {
+
+                        let pokemonSelected = Math.ceil((opponentRemainingPokemon - 1) * Math.random())
+
+                        let livingPokemonNo = 0
+
+                        for (const pokemon of this[opponentTrainer].pokemon) {
+
+                            if (pokemon.currentHP > 0 && pokemon !== this[opponentPokemon]) {
+
+                                livingPokemonNo++
+
+                                if (livingPokemonNo === pokemonSelected) {
+
+                                    this[opponentPokemon].volatileStatus = {}
+
+                                    this[opponentPokemon] = pokemon
+
+                                    break
+
+                                }
+
+                            }
+
+                        }
+
+                    }
+
+                }
+                
                 if (this[currentPokemon].moves[actionNo].effects.includes('Recover')) {
 
                     if (this[currentPokemon].currentHP < this[currentPokemon].species.hp) {

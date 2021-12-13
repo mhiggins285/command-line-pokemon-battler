@@ -38,6 +38,7 @@ tD.florges = new Pokemon('Florges', [78, 65, 112, 68, 154], 'Fairy')
 tD.whismur = new Pokemon('Whismur', [62, 51, 51, 23, 23], 'Normal')
 tD.steelix = new Pokemon('Steelix', [75, 85, 55, 200, 65], 'Steel', 'Ground')
 tD.tauros = new Pokemon('Tauros', [75, 100, 40, 95, 70], 'Normal')
+tD.arcanine = new Pokemon('Arcanine', [90, 110, 100, 80, 80], 'Fire')
 
 
 
@@ -57,10 +58,10 @@ tD.scratch = new Move('Scratch', 'Normal')
 tD.shadowBall = new Move('Shadow Ball', 'Ghost')
 tD.confusion = new Move('Confusion', 'Psychic')
 tD.powerGem = new Move('Power Gem', 'Rock', 25, 60, 100, 'Special')
-tD.wingAttack = new Move('Wing Attack', 'Flying', 35, 60, 100, 'Physical')
-tD.fireBlast = new Move('Fire Blast', 'Fire', 15, 120, 75, 'Special')
-tD.slash = new Move('Slash', 'Normal', 20, 70, 100, 'Physical')
-tD.earthquake = new Move('Earthquake', 'Ground', 5, 100, 100, 'Physical')
+tD.wingAttack = new Move('Wing Attack', 'Flying', 35, 60, 100, 'Physical', [], 'Strikes the foe with wings spread wide')
+tD.fireBlast = new Move('Fire Blast', 'Fire', 15, 120, 75, 'Special', [], 'The foe is attacked with an intense blast of all-consuming fire')
+tD.slash = new Move('Slash', 'Normal', 20, 70, 100, 'Physical', [], 'The foe is attacked with a slash of claws')
+tD.earthquake = new Move('Earthquake', 'Ground', 5, 100, 100, 'Physical', [], 'A powerful quake, but has no effect on flying foes')
 tD.sludgeBomb = new Move('Sludge Bomb', 'Poison', 10, 90, 100, 'Physical')
 tD.solarBeam = new Move('Solar Beam', 'Grass', 10, 60, 100, 'Special')
 tD.hyperBeam = new Move('Hyper Beam', 'Normal', 5, 90, 90,'Special')
@@ -84,6 +85,7 @@ tD.furySwipes = new Move('Fury Swipes', 'Normal', 15, 18, 85, 'Physical', ['Mult
 tD.doubleKick = new Move('Double Kick', 'Fighting', 30, 30, 100, 'Physical', ['Double-Hit'])
 tD.takeDown = new Move('Take Down', 'Normal', 15, 90, 100, 'Physical', ['Recoil'])
 tD.selfDestruct = new Move('Self-Destruct', 'Normal', 5, 250, 100, 'Physical', ['Self-Destruct'])
+tD.roar = new Move('Roar', 'Normal', 10, 'N/A', 'N/A', 'Status', ['Force Switch'])
 
 
 
@@ -126,6 +128,7 @@ tD.sculptor = new Trainer('Sculptor')
 tD.roughneck = new Trainer('Roughneck')
 tD.glassPrivate = new Trainer('Glass Private')
 tD.glassPeon = new Trainer('Glass Peon')
+tD.katy = new Trainer('Katy')
 
 
 
@@ -168,6 +171,7 @@ tD.red.catch(tD.porygon)
 tD.blue.catch(tD.rhydon)
 tD.pyromaniac.catch(tD.charizard)
 tD.pyromaniac.catch(tD.slugma)
+tD.pyromaniac.catch(tD.houndour)
 tD.waiter.catch(tD.aerodactyl)
 tD.timeLord.catch(tD.celebi)
 tD.timeExecutive.catch(tD.celebi)
@@ -185,6 +189,7 @@ tD.roughneck.catch(tD.steelix)
 tD.glassPrivate.catch(tD.glassCannon)
 tD.glassPrivate.catch(tD.glassCannon)
 tD.glassPeon.catch(tD.glassCannon)
+tD.katy.catch(tD.arcanine)
 
 
 
@@ -256,7 +261,8 @@ tD.sculptor.pokemon[0].teach(tD.takeDown)
 tD.glassPrivate.pokemon[0].teach(tD.takeDown)
 tD.glassPrivate.pokemon[0].teach(tD.selfDestruct)
 tD.glassPeon.pokemon[0].teach(tD.selfDestruct)
-
+tD.katy.pokemon[0].teach(tD.roar)
+tD.katy.pokemon[0].teach(tD.fireBlast)
 
 
 
@@ -315,6 +321,14 @@ tD.battleS4 = new Battle(tD.glassPrivate, tD.someSap)
 tD.battleS5 = new Battle(tD.furiousFred, tD.roughneck)
 tD.battleS6 = new Battle(tD.glassPeon, tD.furiousFred)
 tD.battleS7 = new Battle(tD.glassPeon, tD.shroomFan)
+tD.battleFS1 = new Battle(tD.katy, tD.michael)
+tD.battleFS2 = new Battle(tD.katy, tD.michael)
+tD.battleFS3 = new Battle(tD.katy, tD.michael)
+tD.battleFS4 = new Battle(tD.katy, tD.michael)
+tD.battleFS5 = new Battle(tD.katy, tD.michael)
+tD.battleFS6 = new Battle(tD.pyromaniac, tD.katy)
+tD.battleFS7 = new Battle(tD.katy, tD.shroomLover)
+tD.battleFS8 = new Battle(tD.katy, tD.someSap)
 
 
 

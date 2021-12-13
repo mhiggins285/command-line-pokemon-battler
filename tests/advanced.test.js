@@ -517,7 +517,77 @@ describe('Advanced tests', () => {
 
     describe('Testing "Forced Switch" moves', () => {
 
+        test("Opponent's Pokemon is swapped for a random Pokemon from their team", () => {
 
+            tD.battleFS1.fight()
+            tD.battleFS1.fight(0)
+            expect(tD.battleFS1.pokemon2.species).toBe(tD.slugma)
+
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.3)
+
+            tD.battleFS2.fight()
+            tD.battleFS2.fight(0)
+            expect(tD.battleFS2.pokemon2.species).toBe(tD.psyduck)
+
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.5)
+
+            tD.battleFS3.fight()
+            tD.battleFS3.fight(0)
+            expect(tD.battleFS3.pokemon2.species).toBe(tD.snivy)
+
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.7)
+
+            tD.battleFS4.fight()
+            tD.battleFS4.fight(0)
+            expect(tD.battleFS4.pokemon2.species).toBe(tD.houndour)
+
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.9)
+
+            tD.battleFS5.fight()
+            tD.battleFS5.fight(0)
+            expect(tD.battleFS5.pokemon2.species).toBe(tD.porygon)
+
+        })
+
+        test("Opponent's volatile conditions are cleared", () => {
+
+            tD.battleFS6.fight()
+            tD.battleFS6.fight(0)
+
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.4)
+
+            tD.battleFS6.fight(0)
+
+            expect(tD.battleFS6.pokemon1.species).toBe(tD.slugma)
+            expect(tD.battleFS6.trainer1.pokemon[0].volatileStatus).toEqual({})
+            expect(tD.battleFS6.pokemon1.volatileStatus).toEqual({})
+            
+        })
+
+        test("Move fails if opponent is down to their last Pokemon", () => {
+
+            tD.battleFS7.fight()
+            tD.battleFS7.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith('Shroom Lover is down to their last Pokemon - move failed')
+
+            tD.battleFS8.fight()
+            tD.battleFS8.fight(1)
+            tD.battleFS8.fight(1)
+            tD.battleFS8.fight(0)
+            tD.battleFS8.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith('Some Sap is down to their last Pokemon - move failed')
+
+        })
         
     })
 

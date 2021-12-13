@@ -1,6 +1,6 @@
 class Move {
 
-    constructor(name, type, pp = 35, power = 60, accuracy = 100, category = 'Physical', effects = []) {
+    constructor(name, type, pp = 35, power = 60, accuracy = 100, category = 'Physical', effects = [], description = '') {
 
         this.name = name
         this.type = type
@@ -9,6 +9,7 @@ class Move {
         this.accuracy = accuracy
         this.category = category
         this.effects = effects
+        this.description = description
 
     }
 
