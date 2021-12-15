@@ -365,8 +365,6 @@ class Battle {
 
                 }
 
-                console.log('')
-
                 console.log(`${this[currentTrainer].name}'s ${nicknameObj.currentPokemonFullName} unleashed its ${typeColourise(this[currentPokemon].volatileStatus.charging.name, this[currentPokemon].volatileStatus.charging.type)}`)
 
                 const accuracyCheck = Math.random()
@@ -835,6 +833,8 @@ class Battle {
                 }
 
                 if (this[currentPokemon].moves[actionNo].effects.includes('Force Switch')) {
+
+                    console.log('')
 
                     if (this[opponentPokemon].volatileStatus.hasOwnProperty('charging') && (this[opponentPokemon].volatileStatus.charging.effects.includes('Dig') || this[opponentPokemon].volatileStatus.charging.effects.includes('Fly')) && !(this[currentPokemon].moves[actionNo].effects.includes(`Hits ${this[opponentPokemon].volatileStatus.charging.effects[0]}`))) {
 

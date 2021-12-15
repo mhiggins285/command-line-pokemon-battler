@@ -21,15 +21,6 @@ const bgColours = {
 
 }
 
-// const bgColours = {
-
-//     Normal: {R: 168, G: 168, B: 120},
-//     Fire: {R: 240, G: 128, B: 48},
-//     Water: {R: 104, G: 144, B: 240},
-//     Grass: {R: 120, G: 200, B: 80}
-    
-// }
-
 const textColours = {
 
     Normal: {R: 213, G: 213, B: 182},
