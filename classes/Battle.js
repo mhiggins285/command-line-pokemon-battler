@@ -1,5 +1,6 @@
 const { typeChart } = require('./typeChart')
 const { typeColourise, bolden, underline } = require('../typeColourise')
+const { findStatMods } = require('./Move')
 
 class Battle {
 
@@ -242,6 +243,7 @@ class Battle {
                 pokemon.currentHP = pokemon.species.hp
                 pokemon.status = {}
                 pokemon.volatileStatus = {}
+                pokemon.statModifications = [0, 0, 0, 0, 0, 0]
 
                 for (let i = 0; i < pokemon.moves.length; i++) {
 
@@ -254,6 +256,9 @@ class Battle {
             for (const pokemon of this.trainer2.pokemon) {
 
                 pokemon.currentHP = pokemon.species.hp
+                pokemon.status = {}
+                pokemon.volatileStatus = {}
+                pokemon.statModifications = [0, 0, 0, 0, 0, 0]
 
                 for (let i = 0; i < pokemon.moves.length; i++) {
 
@@ -602,6 +607,8 @@ class Battle {
 
                 this[currentPokemon].pp[actionNo]--
 
+                let hitCheck = true
+
                 console.log(`${nicknameObj.currentPokemonFullName} used ${typeColourise(this[currentPokemon].moves[actionNo].name, this[currentPokemon].moves[actionNo].type)}`)
 
                 if (this[currentPokemon].moves[actionNo].category !== 'Status') {
@@ -611,13 +618,68 @@ class Battle {
 
                     let defenseStat = this[opponentPokemon].species.def
 
+                    let attackModifierNumerator = 2
+                    let attackModifierDenominator = 2
+
+                    if (this[currentPokemon].statModifications[0] > 0) {
+
+                        attackModifierNumerator += this[currentPokemon].statModifications[0]
+
+                    } else {
+
+                        attackModifierDenominator -= this[currentPokemon].statModifications[0]
+
+                    }
+
+                    let defenseModifierNumerator = 2
+                    let defenseModifierDenominator = 2
+
+                    if (this[opponentPokemon].statModifications[2] > 0) {
+
+                        defenseModifierNumerator += this[opponentPokemon].statModifications[2]
+
+                    } else {
+
+                        defenseModifierDenominator -= this[opponentPokemon].statModifications[2]
+
+                    }
+                    
+
                     if (this[currentPokemon].moves[actionNo].category === "Special") {
 
                         attackStat = this[currentPokemon].species.spAttack
 
                         defenseStat = this[opponentPokemon].species.spDef
 
+                        attackModifierNumerator = 2
+                        attackModifierDenominator = 2
+
+                        if (this[currentPokemon].statModifications[1] > 0) {
+
+                            attackModifierNumerator += this[currentPokemon].statModifications[1]
+
+                        } else {
+
+                            attackModifierDenominator -= this[currentPokemon].statModifications[1]
+
+                        }
+
+                        defenseModifierNumerator = 2
+                        defenseModifierDenominator = 2
+
+                        if (this[opponentPokemon].statModifications[3] > 0) {
+
+                            defenseModifierNumerator += this[opponentPokemon].statModifications[3]
+
+                        } else {
+
+                            defenseModifierDenominator -= this[opponentPokemon].statModifications[3]
+
+                        }
+
                     }
+
+                    const statModifier = attackModifierNumerator * defenseModifierDenominator / (attackModifierDenominator * defenseModifierNumerator)
                     
                     let accuracyModifier = 1
 
@@ -639,11 +701,47 @@ class Battle {
 
                     }
 
-                    const accuracyCheck = Math.random()
+                    let accuracyModifierNumerator = 3
+                    let accuracyModifierDenominator = 3
+
+                    if (this[currentPokemon].statModifications[4] > 0) {
+
+                        accuracyModifierNumerator += this[currentPokemon].statModifications[4]
+
+                    } else {
+
+                        accuracyModifierDenominator -= this[currentPokemon].statModifications[4]
+
+                    }
+
+                    let evasivenessModifierNumerator = 3
+                    let evasivenessModifierDenominator = 3
+
+                    if (this[opponentPokemon].statModifications[5] > 0) {
+
+                        evasivenessModifierNumerator += this[opponentPokemon].statModifications[5]
+
+                    } else {
+
+                        evasivenessModifierDenominator -= this[opponentPokemon].statModifications[5]
+
+                    }
+
+                    accuracyModifier *= (accuracyModifierNumerator * evasivenessModifierDenominator / (accuracyModifierDenominator * evasivenessModifierNumerator))
+
+                    let accuracyCheck = Math.random()
+
+                    if (this[currentPokemon].moves[actionNo].accuracy === "N/A") {
+
+                        accuracyCheck = 0
+
+                    }
 
                     if (accuracyCheck > accuracyModifier * this[currentPokemon].moves[actionNo].accuracy/100) {
 
                         console.log(`${nicknameObj.currentPokemonFullName}'s attack missed!`)
+
+                        hitCheck = false
 
                     } else {
 
@@ -728,7 +826,7 @@ class Battle {
 
                             }
 
-                            let damage = Math.floor(attackStat / defenseStat * typeModifier * this[currentPokemon].moves[actionNo].power * criticalModifier * stabModifier / 2)
+                            let damage = Math.floor(attackStat / defenseStat * typeModifier * this[currentPokemon].moves[actionNo].power * criticalModifier * stabModifier * statModifier / 2)
 
                             if (this[currentPokemon].moves[actionNo].effects.includes('Set Damage')) {
 
@@ -832,6 +930,134 @@ class Battle {
 
                 }
 
+                const statModCodes = findStatMods(this[currentPokemon].moves[actionNo].effects)
+
+                let statModThreshold = 0
+
+                if (statModCodes !== null && statModCodes[1].length > 5) {
+
+                    statModThreshold = 1 - parseInt(statModCodes[1].substring(5, statModCodes[1].length))/100
+
+                }
+
+                let statModCheck = Math.random()
+
+                if (statModCodes !== null && hitCheck === true && statModCheck > statModThreshold) {
+
+                    for (const statModCode of statModCodes) {
+
+                        let statAffectee = ''
+                        let statAffecteeFullName= ''
+
+                        if (statModCode[4] === 'U') {
+
+                            statAffectee = this[currentPokemon]
+                            statAffecteeFullName = nicknameObj.currentPokemonFullName
+
+                        } else {
+
+                            statAffectee = this[opponentPokemon]
+                            statAffecteeFullName = nicknameObj.opponentPokemonFullName
+
+                        }
+
+                        let affectedStat = ''
+                        let affectedStatNo = 0
+
+                        switch(statModCode.substring(0, 2)) {
+
+                            case 'AT':
+
+                                affectedStat = 'Attack'
+                                affectedStatNo = 0
+                                break
+
+                            case 'SA':
+
+                                affectedStat = 'Special Attack'
+                                affectedStatNo = 1
+                                break
+
+                            case 'DF':
+
+                                affectedStat = 'Defense'
+                                affectedStatNo = 2
+                                break
+
+                            case 'SD':
+
+                                affectedStat = 'Special Defense'
+                                affectedStatNo = 3
+                                break
+
+                            case 'AC':
+
+                                affectedStat = 'Accuracy'
+                                affectedStatNo = 4
+                                break
+
+                            case 'EV':
+
+                                affectedStat = 'Evasiveness'
+                                affectedStatNo = 5
+                                break
+
+                        }
+
+                        let intensifier = ''
+
+                        if (statModCode[2] === '2') {
+
+                            intensifier = 'sharply '
+
+                        }
+
+                        if (statModCode[3] === 'U') {
+
+                            if (statAffectee.statModifications[affectedStatNo] === 6) {
+
+                                console.log(`${statAffecteeFullName}'s ${affectedStat} won't go any higher`)
+
+                            } else {
+
+                                statAffectee.statModifications[affectedStatNo] += parseInt(statModCode[2])
+
+                                if (statAffectee.statModifications[affectedStatNo] > 6) {
+
+                                    statAffectee.statModifications[affectedStatNo] = 6
+
+                                }
+
+                                console.log(`${statAffecteeFullName}'s ${affectedStat} ${intensifier}increased`)
+
+                            }
+                            
+                        } else if ((statModCode[3] === 'D')) {
+
+                            if (statAffectee.statModifications[affectedStatNo] === -6) {
+
+                                console.log(`${statAffecteeFullName}'s ${affectedStat} won't go any lower`)
+
+                            } else {
+
+                                statAffectee.statModifications[affectedStatNo] -= parseInt(statModCode[2])
+
+                                if (statAffectee.statModifications[affectedStatNo] < -6) {
+
+                                    statAffectee.statModifications[affectedStatNo] = 6
+
+                                }
+
+                                console.log(`${statAffecteeFullName}'s ${affectedStat} ${intensifier}decreased`)
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
                 if (this[currentPokemon].moves[actionNo].effects.includes('Force Switch')) {
 
                     console.log('')
@@ -881,6 +1107,14 @@ class Battle {
                         }
 
                     }
+
+                }
+
+
+                if (this[currentPokemon].moves[actionNo].effects.includes('Stat Neut')) {
+
+                    this.pokemon1.statModifications = [0, 0, 0, 0, 0, 0]
+                    this.pokemon2.statModifications = [0, 0, 0, 0, 0, 0]
 
                 }
                 

@@ -36,6 +36,7 @@ class Individual {
         this.pp = []
         this.status = {}
         this.volatileStatus = {}
+        this.statModifications = [0, 0, 0, 0, 0, 0]
 
     }
 

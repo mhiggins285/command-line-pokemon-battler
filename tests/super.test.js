@@ -67,13 +67,13 @@ describe('Super advanced tests', () => {
 
             tD.battleSM1.fight()
             tD.battleSM1.fight(3)
-            expect(tD.battleSM1.pokemon2.currentHP).toBe(253)
+            expect(tD.battleSM1.pokemon2.currentHP).toBe(257)
             tD.battleSM1.fight(2)
             tD.battleSM1.fight(0)
             expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;254;199;211m\x1b[48;2;165;110;117m\x1b[1mClefable\x1b[0m's Special Attack increased")
             tD.battleSM1.fight(2)
             tD.battleSM1.fight(3)
-            expect(tD.battleSM1.pokemon2.currentHP).toBe(230)
+            expect(tD.battleSM1.pokemon2.currentHP).toBe(241)
 
             tD.battleSM2.fight()
             tD.battleSM2.fight(2)
@@ -158,7 +158,7 @@ describe('Super advanced tests', () => {
             tD.battleSM8.fight(0)
             tD.battleSM8.fight(3)
             tD.battleSM8.fight(2)
-            expect(tD.battleSM8.pokemon1.currentHP).toBe(285)
+            expect(tD.battleSM8.pokemon1.currentHP).toBe(286)
 
         })
 
@@ -198,9 +198,9 @@ describe('Super advanced tests', () => {
             tD.battleSM11.fight(0)
             tD.battleSM11.fight(0)
             tD.battleSM11.fight(0)
-            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;224;120;75m\x1b[48;2;171;67;94m\x1b[1mGallade\x1b[0m's Attack cannot go any higher")
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;224;120;75m\x1b[48;2;171;67;94m\x1b[1mGallade\x1b[0m's Attack won't go any higher")
             tD.battleSM11.fight(0)
-            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;254;199;211m\x1b[48;2;165;110;117m\x1b[1mClefable\x1b[0m's Special Defense cannot go any higher")
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;254;199;211m\x1b[48;2;165;110;117m\x1b[1mClefable\x1b[0m's Special Defense won't go any higher")
             tD.battleSM11.fight(3)
             expect(tD.battleSM11.pokemon2.currentHP).toBe(290)
             tD.battleSM11.fight(0)
@@ -222,7 +222,7 @@ describe('Super advanced tests', () => {
             tD.battleSM12.fight(2)
             tD.battleSM12.fight(2)
             tD.battleSM12.fight(3)
-            expect(tD.battleSM12.pokemon2.currentHP).toBe(233)
+            expect(tD.battleSM12.pokemon2.currentHP).toBe(235)
 
             tD.battleSM13.fight()
             tD.battleSM13.fight(2)
@@ -266,7 +266,21 @@ describe('Super advanced tests', () => {
             
         })
 
+        test('Moves can negatively affect stats for the user', () => {
 
+            tD.battleSM26.fight()
+            tD.battleSM26.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;219;203;135m\x1b[48;2;78;104;166m\x1b[1mOmanyte\x1b[0m's Defense decreased")
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;219;203;135m\x1b[48;2;78;104;166m\x1b[1mOmanyte\x1b[0m's Special Defense decreased")
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;219;203;135m\x1b[48;2;78;104;166m\x1b[1mOmanyte\x1b[0m's Attack sharply increased")
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;219;203;135m\x1b[48;2;78;104;166m\x1b[1mOmanyte\x1b[0m's Special Attack sharply increased")
+            expect(tD.battleSM26.pokemon1.statModifications).toEqual([2, 2, -1, -1, 0, 0])
+            tD.battleSM26.fight(1)
+            tD.battleSM26.fight(1)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;254;199;211m\x1b[48;2;165;110;117m\x1b[1mClefable\x1b[0m's Attack increased")
+            expect(tD.battleSM26.pokemon2.statModifications).toEqual([1, 0, 0, 0, 0, 0])
+
+        })
         
     })
 
@@ -276,11 +290,11 @@ describe('Super advanced tests', () => {
 
             tD.battleSM16.fight()
             tD.battleSM16.fight(0)
-            expect(tD.battleSM16.pokemon2.currentHP).toBe(265)
+            expect(tD.battleSM16.pokemon2.currentHP).toBe(272)
             expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;224;120;75m\x1b[48;2;171;67;94m\x1b[1mGallade\x1b[0m's Attack increased")
             tD.battleSM16.fight(1)
             tD.battleSM16.fight(0)
-            expect(tD.battleSM16.pokemon2.currentHP).toBe(219)
+            expect(tD.battleSM16.pokemon2.currentHP).toBe(238)
             
         })
 
@@ -288,7 +302,7 @@ describe('Super advanced tests', () => {
 
             tD.battleSM17.fight()
             tD.battleSM17.fight(1)
-            expect(tD.battleSM17.pokemon2.currentHP).toBe(270)
+            expect(tD.battleSM17.pokemon2.currentHP).toBe(263)
             tD.battleSM17.fight(1)
 
             jest.spyOn(global.Math, 'random').mockRestore()
@@ -297,10 +311,15 @@ describe('Super advanced tests', () => {
 
             tD.battleSM17.fight(1)
             expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;224;120;75m\x1b[48;2;171;67;94m\x1b[1mGallade\x1b[0m's Attack increased")
-            expect(tD.battleSM17.pokemon2.currentHP).toBe(245)
+            expect(tD.battleSM17.pokemon2.currentHP).toBe(231)
+
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.1)
+
             tD.battleSM17.fight(1)
             tD.battleSM17.fight(1)
-            expect(tD.battleSM17.pokemon2.currentHP).toBe(207)
+            expect(tD.battleSM17.pokemon2.currentHP).toBe(183)
             
         })
 
@@ -318,9 +337,26 @@ describe('Super advanced tests', () => {
             tD.battleSM18.fight(2)
             expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;254;199;211m\x1b[48;2;165;110;117m\x1b[1mClefable\x1b[0m's Defense decreased")
             expect(tD.battleSM18.pokemon2.currentHP).toBe(219)
+
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.1)
+
             tD.battleSM18.fight(1)
             tD.battleSM18.fight(2)
             expect(tD.battleSM18.pokemon2.currentHP).toBe(162)
+
+        })
+
+        test("Moves cannot affect stats if the move doesn't hit", () => {
+
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.99)
+
+            tD.battleSM27.fight()
+            tD.battleSM27.fight(1)
+            expect(tD.battleSM27.pokemon1.statModifications).toEqual([0, 0, 0, 0, 0, 0])
 
         })
         
@@ -330,31 +366,33 @@ describe('Super advanced tests', () => {
 
         test('Moves can have a chance to raise all the users stats', () => {
 
+            tD.battleSM19.fight()
             tD.battleSM19.fight(0)
-            expect(tD.battleSM19.pokemon1.statModifications).toEqual([0, 0, 0, 0])
+            expect(tD.battleSM19.pokemon1.statModifications).toEqual([0, 0, 0, 0, 0, 0])
             tD.battleSM19.fight(0)
 
             jest.spyOn(global.Math, 'random').mockRestore()
 
-            jest.spyOn(global.Math, 'random').mockReturnValueOnce(0.1).mockReturnValueOnce(0.1).mockReturnValue(0.95)
+            jest.spyOn(global.Math, 'random').mockReturnValueOnce(0.1).mockReturnValueOnce(0.1).mockReturnValueOnce(0.95).mockReturnValue(0.1)
 
             tD.battleSM19.fight(0)
-            expect(tD.battleSM19.pokemon1.statModifications).toEqual([1, 1, 1, 1])
+            expect(tD.battleSM19.pokemon1.statModifications).toEqual([1, 1, 1, 1, 0, 0])
             
         })
 
         test('Moves can eradicate all stat changes', () => {
 
-            expect(tD.battleSM20.pokemon1.statModifications).toEqual([0, 0, 0, 0])
-            expect(tD.battleSM20.pokemon2.statModifications).toEqual([0, 0, 0, 0])
+            tD.battleSM20.fight()
+            expect(tD.battleSM20.pokemon1.statModifications).toEqual([0, 0, 0, 0, 0, 0])
+            expect(tD.battleSM20.pokemon2.statModifications).toEqual([0, 0, 0, 0, 0, 0])
             tD.battleSM20.fight(0)
             tD.battleSM20.fight(2)
-            expect(tD.battleSM20.pokemon2.statModifications).toEqual([0, 1, 0, 0])
+            expect(tD.battleSM20.pokemon2.statModifications).toEqual([0, 1, 0, 0, 0, 0])
             tD.battleSM20.fight(1)
-            expect(tD.battleSM19.pokemon1.statModifications).toEqual([0, 0, 1, 3])
+            expect(tD.battleSM20.pokemon1.statModifications).toEqual([0, 0, 1, 3, 0, 0])
             tD.battleSM20.fight(1)
-            expect(tD.battleSM20.pokemon1.statModifications).toEqual([0, 0, 0, 0])
-            expect(tD.battleSM20.pokemon2.statModifications).toEqual([0, 0, 0, 0])
+            expect(tD.battleSM20.pokemon1.statModifications).toEqual([0, 0, 0, 0, 0, 0])
+            expect(tD.battleSM20.pokemon2.statModifications).toEqual([0, 0, 0, 0, 0, 0])
             
         })
 
@@ -372,7 +410,7 @@ describe('Super advanced tests', () => {
             tD.battleSM21.fight(0)
             expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;224;120;75m\x1b[48;2;171;67;94m\x1b[1mGallade\x1b[0m's Accuracy decreased")
             tD.battleSM21.fight(3)
-            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;224;120;75m\x1b[48;2;171;67;94m\x1b[1mGallade\x1b[0m's attack missed")
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;224;120;75m\x1b[48;2;171;67;94m\x1b[1mGallade\x1b[0m's attack missed!")
             expect(tD.battleSM21.pokemon1.currentHP).toBe(295)
             
         })
@@ -387,12 +425,16 @@ describe('Super advanced tests', () => {
             tD.battleSM22.fight(1)
             expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;254;199;211m\x1b[48;2;165;110;117m\x1b[1mClefable\x1b[0m's Evasiveness increased")
             tD.battleSM22.fight(3)
-            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;224;120;75m\x1b[48;2;171;67;94m\x1b[1mGallade\x1b[0m's attack missed")
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;224;120;75m\x1b[48;2;171;67;94m\x1b[1mGallade\x1b[0m's attack missed!")
             expect(tD.battleSM22.pokemon1.currentHP).toBe(295)
             
         })
 
         test("Moves can decrease a Pokemon's evasiveness", () => {
+
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.8)
 
             tD.battleSM23.fight()
             tD.battleSM23.fight(1)
@@ -407,6 +449,10 @@ describe('Super advanced tests', () => {
 
         test("Moves can affect accuracy while have other effects", () => {
 
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.8)
+
             tD.battleSM24.fight()
             tD.battleSM24.fight(0)
             tD.battleSM24.fight(1)
@@ -417,6 +463,10 @@ describe('Super advanced tests', () => {
         })
 
         test("Moves can bypass accuracy checks", () => {
+
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.8)
 
             tD.battleSM25.fight()
             tD.battleSM25.fight(0)

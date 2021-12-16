@@ -15,4 +15,22 @@ class Move {
 
 }
 
-module.exports = { Move }
+function findStatMods(effectArray) {
+
+    for (const effect of effectArray) {
+
+        if (effect.substring(0, 8) === "Stat Mod") {
+
+            let modCodes = effect.substring(8, effect.length).split(' ')
+
+            return modCodes
+
+        }
+
+    }
+
+    return null
+
+}
+
+module.exports = { Move, findStatMods }
