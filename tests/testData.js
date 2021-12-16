@@ -466,4 +466,43 @@ tD.battleSM27 = new Battle(tD.thug, tD.novice)
 
 
 
+tD.poisonPowder = new Move('Poison Powder', 'Poison', 20, 0, 100, 'Status', ['Stat Cond PSN100'])
+tD.poisonSting = new Move('Poison Sting', 'Poison', 20, 20, 100, 'Physical', ['Stat Cond PSN20'])
+tD.toxic = new Move('Toxic', 'Poison', 20, 0, 100, 'Status', ['Stat Cond BPN100'])
+
+tD.beedrill = new Pokemon('Beedrill', [65, 90, 45, 40, 80], 'Bug', 'Poison')
+
+tD.binMan = new Trainer('Bin Man')
+tD.patient = new Trainer('Patient')
+tD.immunologist = new Trainer('Immunologist')
+
+tD.binMan.catch(tD.beedrill)
+tD.patient.catch(tD.whismur)
+tD.patient.catch(tD.whismur)
+tD.immunologist.catch(tD.venusaur)
+
+tD.binMan.pokemon[0].teach(tD.poisonPowder)
+tD.binMan.pokemon[0].teach(tD.poisonSting)
+tD.binMan.pokemon[0].teach(tD.scratch)
+tD.binMan.pokemon[0].teach(tD.toxic)
+tD.patient.pokemon[0].teach(tD.splash)
+tD.patient.pokemon[0].teach(tD.flash)
+tD.immunologist.pokemon[0].teach(tD.splash)
+
+tD.battleP1 = new Battle(tD.binMan, tD.patient)
+tD.battleP2 = new Battle(tD.binMan, tD.patient)
+tD.battleP3 = new Battle(tD.binMan, tD.patient)
+tD.battleP4 = new Battle(tD.binMan, tD.patient)
+tD.battleP5 = new Battle(tD.binMan, tD.immunologist)
+tD.battleP6 = new Battle(tD.binMan, tD.patient)
+tD.battleP7 = new Battle(tD.patient, tD.binMan)
+tD.battleP8 = new Battle(tD.binMan, tD.patient)
+tD.battleP9 = new Battle(tD.binMan, tD.patient)
+tD.battleP10 = new Battle(tD.binMan, tD.patient)
+tD.battleP11 = new Battle(tD.binMan, tD.immunologist)
+tD.battleP12 = new Battle(tD.binMan, tD.patient)
+
+
+
+
 module.exports = tD

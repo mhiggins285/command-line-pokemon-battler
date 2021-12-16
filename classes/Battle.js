@@ -930,175 +930,127 @@ class Battle {
 
                 }
 
-                const statModCodes = findStatMods(this[currentPokemon].moves[actionNo].effects)
+                if (hitCheck === true) {
 
-                let statModThreshold = 0
+                    const statModCodes = findStatMods(this[currentPokemon].moves[actionNo].effects)
 
-                if (statModCodes !== null && statModCodes[1].length > 5) {
+                    let statModThreshold = 0
 
-                    statModThreshold = 1 - parseInt(statModCodes[1].substring(5, statModCodes[1].length))/100
+                    if (statModCodes !== null && statModCodes[1].length > 5) {
 
-                }
-
-                let statModCheck = Math.random()
-
-                if (statModCodes !== null && hitCheck === true && statModCheck > statModThreshold) {
-
-                    for (const statModCode of statModCodes) {
-
-                        let statAffectee = ''
-                        let statAffecteeFullName= ''
-
-                        if (statModCode[4] === 'U') {
-
-                            statAffectee = this[currentPokemon]
-                            statAffecteeFullName = nicknameObj.currentPokemonFullName
-
-                        } else {
-
-                            statAffectee = this[opponentPokemon]
-                            statAffecteeFullName = nicknameObj.opponentPokemonFullName
-
-                        }
-
-                        let affectedStat = ''
-                        let affectedStatNo = 0
-
-                        switch(statModCode.substring(0, 2)) {
-
-                            case 'AT':
-
-                                affectedStat = 'Attack'
-                                affectedStatNo = 0
-                                break
-
-                            case 'SA':
-
-                                affectedStat = 'Special Attack'
-                                affectedStatNo = 1
-                                break
-
-                            case 'DF':
-
-                                affectedStat = 'Defense'
-                                affectedStatNo = 2
-                                break
-
-                            case 'SD':
-
-                                affectedStat = 'Special Defense'
-                                affectedStatNo = 3
-                                break
-
-                            case 'AC':
-
-                                affectedStat = 'Accuracy'
-                                affectedStatNo = 4
-                                break
-
-                            case 'EV':
-
-                                affectedStat = 'Evasiveness'
-                                affectedStatNo = 5
-                                break
-
-                        }
-
-                        let intensifier = ''
-
-                        if (statModCode[2] === '2') {
-
-                            intensifier = 'sharply '
-
-                        }
-
-                        if (statModCode[3] === 'U') {
-
-                            if (statAffectee.statModifications[affectedStatNo] === 6) {
-
-                                console.log(`${statAffecteeFullName}'s ${affectedStat} won't go any higher`)
-
-                            } else {
-
-                                statAffectee.statModifications[affectedStatNo] += parseInt(statModCode[2])
-
-                                if (statAffectee.statModifications[affectedStatNo] > 6) {
-
-                                    statAffectee.statModifications[affectedStatNo] = 6
-
-                                }
-
-                                console.log(`${statAffecteeFullName}'s ${affectedStat} ${intensifier}increased`)
-
-                            }
-                            
-                        } else if ((statModCode[3] === 'D')) {
-
-                            if (statAffectee.statModifications[affectedStatNo] === -6) {
-
-                                console.log(`${statAffecteeFullName}'s ${affectedStat} won't go any lower`)
-
-                            } else {
-
-                                statAffectee.statModifications[affectedStatNo] -= parseInt(statModCode[2])
-
-                                if (statAffectee.statModifications[affectedStatNo] < -6) {
-
-                                    statAffectee.statModifications[affectedStatNo] = 6
-
-                                }
-
-                                console.log(`${statAffecteeFullName}'s ${affectedStat} ${intensifier}decreased`)
-
-                            }
-
-                        }
+                        statModThreshold = 1 - parseInt(statModCodes[1].substring(5, statModCodes[1].length))/100
 
                     }
 
-                }
+                    let statModCheck = Math.random()
 
-                if (this[currentPokemon].moves[actionNo].effects.includes('Force Switch')) {
+                    if (statModCodes !== null && statModCheck > statModThreshold) {
 
-                    console.log('')
+                        for (const statModCode of statModCodes) {
 
-                    if (this[opponentPokemon].volatileStatus.hasOwnProperty('charging') && (this[opponentPokemon].volatileStatus.charging.effects.includes('Dig') || this[opponentPokemon].volatileStatus.charging.effects.includes('Fly')) && !(this[currentPokemon].moves[actionNo].effects.includes(`Hits ${this[opponentPokemon].volatileStatus.charging.effects[0]}`))) {
+                            let statAffectee = ''
+                            let statAffecteeFullName= ''
 
-                        console.log('Target was unaffected by move')
+                            if (statModCode[4] === 'U') {
 
-                    } else if (opponentRemainingPokemon === 1) {
+                                statAffectee = this[currentPokemon]
+                                statAffecteeFullName = nicknameObj.currentPokemonFullName
 
-                        console.log(`${this[opponentTrainer].name} is down to their last Pokemon - move failed`)
+                            } else {
 
-                    } else {
+                                statAffectee = this[opponentPokemon]
+                                statAffecteeFullName = nicknameObj.opponentPokemonFullName
 
-                        let pokemonSelected = Math.ceil((opponentRemainingPokemon - 1) * Math.random())
+                            }
 
-                        let livingPokemonNo = 0
+                            let affectedStat = ''
+                            let affectedStatNo = 0
 
-                        for (const pokemon of this[opponentTrainer].pokemon) {
+                            switch(statModCode.substring(0, 2)) {
 
-                            if (pokemon.currentHP > 0 && pokemon !== this[opponentPokemon]) {
+                                case 'AT':
 
-                                livingPokemonNo++
+                                    affectedStat = 'Attack'
+                                    affectedStatNo = 0
+                                    break
 
-                                if (livingPokemonNo === pokemonSelected) {
+                                case 'SA':
 
-                                    this[opponentPokemon].volatileStatus = {}
+                                    affectedStat = 'Special Attack'
+                                    affectedStatNo = 1
+                                    break
 
-                                    let nickname = typeColourise(pokemon.species.name, pokemon.species.type1, pokemon.species.type2)
+                                case 'DF':
 
-                                    if (pokemon.nickname !== undefined) {
+                                    affectedStat = 'Defense'
+                                    affectedStatNo = 2
+                                    break
 
-                                        nickname = typeColourise(`${pokemon.nickname} the ${pokemon.species.name}`, pokemon.species.type1, pokemon.species.type2)
+                                case 'SD':
+
+                                    affectedStat = 'Special Defense'
+                                    affectedStatNo = 3
+                                    break
+
+                                case 'AC':
+
+                                    affectedStat = 'Accuracy'
+                                    affectedStatNo = 4
+                                    break
+
+                                case 'EV':
+
+                                    affectedStat = 'Evasiveness'
+                                    affectedStatNo = 5
+                                    break
+
+                            }
+
+                            let intensifier = ''
+
+                            if (statModCode[2] === '2') {
+
+                                intensifier = 'sharply '
+
+                            }
+
+                            if (statModCode[3] === 'U') {
+
+                                if (statAffectee.statModifications[affectedStatNo] === 6) {
+
+                                    console.log(`${statAffecteeFullName}'s ${affectedStat} won't go any higher`)
+
+                                } else {
+
+                                    statAffectee.statModifications[affectedStatNo] += parseInt(statModCode[2])
+
+                                    if (statAffectee.statModifications[affectedStatNo] > 6) {
+
+                                        statAffectee.statModifications[affectedStatNo] = 6
 
                                     }
 
-                                    console.log(`${this[opponentTrainer].name}'s ${nickname} was switched in for ${nicknameObj.opponentPokemonFullName}`)
+                                    console.log(`${statAffecteeFullName}'s ${affectedStat} ${intensifier}increased`)
 
-                                    this[opponentPokemon] = pokemon
+                                }
+                                
+                            } else if ((statModCode[3] === 'D')) {
 
-                                    break
+                                if (statAffectee.statModifications[affectedStatNo] === -6) {
+
+                                    console.log(`${statAffecteeFullName}'s ${affectedStat} won't go any lower`)
+
+                                } else {
+
+                                    statAffectee.statModifications[affectedStatNo] -= parseInt(statModCode[2])
+
+                                    if (statAffectee.statModifications[affectedStatNo] < -6) {
+
+                                        statAffectee.statModifications[affectedStatNo] = 6
+
+                                    }
+
+                                    console.log(`${statAffecteeFullName}'s ${affectedStat} ${intensifier}decreased`)
 
                                 }
 
@@ -1108,33 +1060,85 @@ class Battle {
 
                     }
 
-                }
+                    if (this[currentPokemon].moves[actionNo].effects.includes('Force Switch')) {
 
+                        console.log('')
 
-                if (this[currentPokemon].moves[actionNo].effects.includes('Stat Neut')) {
+                        if (this[opponentPokemon].volatileStatus.hasOwnProperty('charging') && (this[opponentPokemon].volatileStatus.charging.effects.includes('Dig') || this[opponentPokemon].volatileStatus.charging.effects.includes('Fly')) && !(this[currentPokemon].moves[actionNo].effects.includes(`Hits ${this[opponentPokemon].volatileStatus.charging.effects[0]}`))) {
 
-                    this.pokemon1.statModifications = [0, 0, 0, 0, 0, 0]
-                    this.pokemon2.statModifications = [0, 0, 0, 0, 0, 0]
+                            console.log('Target was unaffected by move')
 
-                }
-                
-                if (this[currentPokemon].moves[actionNo].effects.includes('Recover')) {
+                        } else if (opponentRemainingPokemon === 1) {
 
-                    if (this[currentPokemon].currentHP < this[currentPokemon].species.hp) {
+                            console.log(`${this[opponentTrainer].name} is down to their last Pokemon - move failed`)
 
-                        this[currentPokemon].currentHP += Math.floor(this[currentPokemon].species.hp / 2)
+                        } else {
 
-                        if (this[currentPokemon].currentHP > this[currentPokemon].species.hp) {
+                            let pokemonSelected = Math.ceil((opponentRemainingPokemon - 1) * Math.random())
 
-                            this[currentPokemon].currentHP = this[currentPokemon].species.hp
+                            let livingPokemonNo = 0
+
+                            for (const pokemon of this[opponentTrainer].pokemon) {
+
+                                if (pokemon.currentHP > 0 && pokemon !== this[opponentPokemon]) {
+
+                                    livingPokemonNo++
+
+                                    if (livingPokemonNo === pokemonSelected) {
+
+                                        this[opponentPokemon].volatileStatus = {}
+
+                                        let nickname = typeColourise(pokemon.species.name, pokemon.species.type1, pokemon.species.type2)
+
+                                        if (pokemon.nickname !== undefined) {
+
+                                            nickname = typeColourise(`${pokemon.nickname} the ${pokemon.species.name}`, pokemon.species.type1, pokemon.species.type2)
+
+                                        }
+
+                                        console.log(`${this[opponentTrainer].name}'s ${nickname} was switched in for ${nicknameObj.opponentPokemonFullName}`)
+
+                                        this[opponentPokemon] = pokemon
+
+                                        break
+
+                                    }
+
+                                }
+
+                            }
 
                         }
 
-                        console.log(`${nicknameObj.currentPokemonFullName} recovered health`)
+                    }
 
-                    } else {
 
-                        console.log(`${nicknameObj.currentPokemonFullName} is already at full health - move failed`)
+                    if (this[currentPokemon].moves[actionNo].effects.includes('Stat Neut')) {
+
+                        this.pokemon1.statModifications = [0, 0, 0, 0, 0, 0]
+                        this.pokemon2.statModifications = [0, 0, 0, 0, 0, 0]
+
+                    }
+                    
+                    if (this[currentPokemon].moves[actionNo].effects.includes('Recover')) {
+
+                        if (this[currentPokemon].currentHP < this[currentPokemon].species.hp) {
+
+                            this[currentPokemon].currentHP += Math.floor(this[currentPokemon].species.hp / 2)
+
+                            if (this[currentPokemon].currentHP > this[currentPokemon].species.hp) {
+
+                                this[currentPokemon].currentHP = this[currentPokemon].species.hp
+
+                            }
+
+                            console.log(`${nicknameObj.currentPokemonFullName} recovered health`)
+
+                        } else {
+
+                            console.log(`${nicknameObj.currentPokemonFullName} is already at full health - move failed`)
+
+                        }
 
                     }
 
