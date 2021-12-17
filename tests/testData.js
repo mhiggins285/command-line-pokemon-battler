@@ -489,6 +489,7 @@ tD.patient.pokemon[0].teach(tD.splash)
 tD.patient.pokemon[0].teach(tD.flash)
 tD.patient.pokemon[0].teach(tD.recover)
 tD.patient.pokemon[0].teach(tD.scratch)
+tD.patient.pokemon[1].teach(tD.splash)
 tD.immunologist.pokemon[0].teach(tD.splash)
 
 tD.battleP1 = new Battle(tD.binMan, tD.patient)
@@ -549,6 +550,7 @@ tD.battleB4 = new Battle(tD.kindler, tD.firebreather)
 tD.battleB5 = new Battle(tD.kindler, tD.patient)
 
 
+
 tD.glalie = new Pokemon('Glalie', [80, 80, 80, 80, 80], 'Ice')
 tD.sealeo = new Pokemon('Sealeo', [90, 60, 75, 70, 70], 'Water', 'Ice')
 
@@ -568,6 +570,51 @@ tD.battleFR3 = new Battle(tD.skier, tD.patient)
 tD.battleFR4 = new Battle(tD.skier, tD.snowboarder)
 tD.battleFR5 = new Battle(tD.skier, tD.patient)
 
+
+
+tD.hypno = new Pokemon('Hypno', [85, 73, 73, 70, 115], 'Psychic')
+
+tD.hypnosis = new Move('Hypnosis', 'Psychic', 20, 0, 100, 'Status', ['Stat Cond SLP100'])
+
+tD.hypnotist = new Trainer('Hypnotist')
+
+tD.hypnotist.catch(tD.hypno)
+tD.hypnotist.pokemon[0].teach(tD.hypnosis)
+
+tD.battleSL1 = new Battle(tD.hypnotist, tD.patient)
+tD.battleSL2 = new Battle(tD.hypnotist, tD.patient)
+tD.battleSL3 = new Battle(tD.hypnotist, tD.patient)
+tD.battleSL4 = new Battle(tD.hypnotist, tD.patient)
+tD.battleSL5 = new Battle(tD.hypnotist, tD.patient)
+tD.battleSL6 = new Battle(tD.hypnotist, tD.patient)
+tD.battleSL7 = new Battle(tD.hypnotist, tD.patient)
+
+
+
+tD.healBell = new Move('Heal Bell', 'Normal', 20, 0, 'N/A', 'Status', ['Heal Bell'])
+tD.snore = new Move('Snore', 'Normal', 20, 50, 100, 'Special', ['Snore'])
+tD.rest = new Move('Rest', 'Psychic', 20, 0, 'N/A', 'Status', ['Rest'])
+
+tD.snorlax = new Pokemon('Snorlax', [160, 110, 65, 65, 110], 'Normal')
+
+tD.hippie = new Trainer('Hippie')
+
+tD.hippie.catch(tD.snorlax)
+tD.hippie.catch(tD.solrock)
+tD.hippie.catch(tD.florges)
+
+tD.hippie.pokemon[0].teach(tD.rest)
+tD.hippie.pokemon[0].teach(tD.snore)
+tD.hippie.pokemon[2].teach(tD.healBell)
+tD.guitarist.pokemon[0].teach(tD.hypnosis)
+tD.guitarist.pokemon[0].teach(tD.hyperBeam)
+
+tD.battleX1 = new Battle(tD.guitarist, tD.hippie)
+tD.battleX2 = new Battle(tD.hippie, tD.guitarist)
+tD.battleX3 = new Battle(tD.guitarist, tD.hippie)
+tD.battleX4 = new Battle(tD.guitarist, tD.hippie)
+tD.battleX5 = new Battle(tD.guitarist, tD.hippie)
+tD.battleX6 = new Battle(tD.hippie, tD.guitarist)
 
 
 module.exports = tD

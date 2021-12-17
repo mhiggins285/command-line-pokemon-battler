@@ -388,6 +388,24 @@ class Battle {
 
             }
 
+            let isAsleep = false
+
+            let isWoken = false
+
+            if (this[currentPokemon].status.hasOwnProperty('asleep')) {
+
+                isAsleep = true
+
+                if (this[currentPokemon].status.asleep <= 0) {
+
+                    isAsleep = false
+
+                    isWoken = true
+
+                }
+
+            }
+
             // if Pokemon is recharging from previous turn
 
             if (this[currentPokemon].volatileStatus.hasOwnProperty('recharging')) {
@@ -404,6 +422,12 @@ class Battle {
 
                 delete this[currentPokemon].volatileStatus.charging
 
+            } else if (this[currentPokemon].volatileStatus.hasOwnProperty('charging') && (isAsleep)) {
+
+                console.log(`${nicknameObj.currentPokemonFullName} is fast asleep`)
+
+                delete this[currentPokemon].volatileStatus.charging
+
             } else if (this[currentPokemon].volatileStatus.hasOwnProperty('charging') && !(isParalyzed) && !(isFrozen)) {
 
                 if (isThawed) {
@@ -413,6 +437,15 @@ class Battle {
                     this[currentPokemon].status = {}
 
                 }
+
+                if (isWoken) {
+
+                    console.log(`${nicknameObj.currentPokemonFullName} woke up`)
+
+                    this[currentPokemon].status = {}
+
+                }
+
 
                 let attackStat = this[currentPokemon].species.attack * burnModifier
                         let defenseStat = this[opponentPokemon].species.def
@@ -701,11 +734,19 @@ class Battle {
 
             // struggle
 
-            } else if (totalPP === 0 && actionNo === 0 && !(isParalyzed) && !(isFrozen)) {
+            } else if (totalPP === 0 && actionNo === 0 && !(isParalyzed) && !(isFrozen) && !(isAsleep)) {
 
                 if (isThawed) {
 
                     console.log(`${nicknameObj.currentPokemonFullName} thawed out`)
+
+                    this[currentPokemon].status = {}
+
+                }
+
+                if (isWoken) {
+
+                    console.log(`${nicknameObj.currentPokemonFullName} woke up`)
 
                     this[currentPokemon].status = {}
 
@@ -745,6 +786,10 @@ class Battle {
 
                 console.log(`${nicknameObj.currentPokemonNickname} is frozen solid`)                
 
+            } else if (isAsleep && !(this[currentPokemon].moves[actionNo].effects.includes('Snore'))) {
+
+                console.log(`${nicknameObj.currentPokemonNickname} is fast asleep`) 
+
             } else if (this[currentPokemon].moves[actionNo].effects.includes('Charge')) {
 
                 if (isThawed) {
@@ -755,12 +800,24 @@ class Battle {
 
                 }
 
+                if (isWoken) {
+
+                    console.log(`${nicknameObj.currentPokemonFullName} woke up`)
+
+                    this[currentPokemon].status = {}
+
+                }
+
                 console.log(`${typeColourise(this[currentPokemon].moves[actionNo].name, this[currentPokemon].moves[actionNo].type)} is charging`)
 
                 this[currentPokemon].pp[actionNo]--
 
                 this[currentPokemon].volatileStatus.charging = this[currentPokemon].moves[actionNo]
-                
+            
+            } else if (!(isAsleep) && (this[currentPokemon].moves[actionNo].effects.includes('Snore'))) {
+
+                console.log(`${nicknameObj.currentPokemonFullName} is awake - move failed`)
+
             // dig is used
 
             } else if (this[currentPokemon].moves[actionNo].effects.includes('Dig')) {
@@ -768,6 +825,14 @@ class Battle {
                 if (isThawed) {
 
                     console.log(`${nicknameObj.currentPokemonFullName} thawed out`)
+
+                    this[currentPokemon].status = {}
+
+                }
+
+                if (isWoken) {
+
+                    console.log(`${nicknameObj.currentPokemonFullName} woke up`)
 
                     this[currentPokemon].status = {}
 
@@ -791,6 +856,14 @@ class Battle {
 
                 }
 
+                if (isWoken) {
+
+                    console.log(`${nicknameObj.currentPokemonFullName} woke up`)
+
+                    this[currentPokemon].status = {}
+
+                }
+
                 console.log(`${nicknameObj.currentPokemonFullName} flew up in the air`)
 
                 this[currentPokemon].pp[actionNo]--
@@ -808,7 +881,21 @@ class Battle {
                     this[currentPokemon].status = {}
 
                 }
-                
+
+                if (isWoken) {
+
+                    console.log(`${nicknameObj.currentPokemonFullName} woke up`)
+
+                    this[currentPokemon].status = {}
+
+                }
+
+                if (isAsleep) {
+
+                    console.log(`${nicknameObj.currentPokemonFullName} is fast asleep`)
+
+                }
+
                 this[currentPokemon].pp[actionNo]--
 
                 let digFlyMultiplier = 1
@@ -1362,6 +1449,16 @@ class Battle {
 
                             }
 
+                            if (statCond === 'SLP') {
+
+                                let sleepTurns = Math.ceil(3 * Math.random())
+
+                                this[opponentPokemon].status = {'asleep': sleepTurns}
+
+                                console.log(`${nicknameObj.opponentPokemonFullName} fell asleep`)
+
+                            }
+
                         }
 
                     }
@@ -1424,11 +1521,40 @@ class Battle {
 
                     }
 
-
                     if (this[currentPokemon].moves[actionNo].effects.includes('Stat Neut')) {
 
                         this.pokemon1.statModifications = [0, 0, 0, 0, 0, 0]
                         this.pokemon2.statModifications = [0, 0, 0, 0, 0, 0]
+
+                    }
+
+                    if (this[currentPokemon].moves[actionNo].effects.includes('Heal Bell')) {
+
+                        for (const pokemon of this[currentTrainer].pokemon) {
+
+                            pokemon.status = {}
+
+                        }
+
+                        console.log(`${this[currentTrainer].name}'s team was healed`)
+
+                    }
+
+                    if (this[currentPokemon].moves[actionNo].effects.includes('Rest')) {
+
+                        if (this[currentPokemon].currentHP === this[currentPokemon].species.hp) {
+
+                            console.log(`${nicknameObj.currentPokemonFullName} is at full health - move failed`)
+
+                        } else {
+
+                            this[currentPokemon].currentHP = this[currentPokemon].species.hp
+                            this[currentPokemon].status = {'asleep': 3}
+
+                            console.log(`${nicknameObj.currentPokemonFullName} fell asleep`)
+                            console.log(`${nicknameObj.currentPokemonFullName} fully restored its health`)
+
+                        }
 
                     }
                     
@@ -1481,6 +1607,12 @@ class Battle {
                 console.log(`${nicknameObj.currentPokemonFullName} was hurt by poison`)
 
                 this[currentPokemon].status['badly poisoned'] ++
+
+            }
+
+            if (this[currentPokemon].status.hasOwnProperty('asleep')) {
+
+                this[currentPokemon].status.asleep--
 
             }
 

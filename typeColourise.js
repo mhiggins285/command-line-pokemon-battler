@@ -123,6 +123,12 @@ function statusMenu(statusObject) {
 
     }
 
+    if (status === 'asleep') {
+
+        return ' ' + typeColourise('SLP', 'Normal')
+
+    }
+
 }
 
 // const keys = Object.keys(bgColours)

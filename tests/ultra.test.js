@@ -397,37 +397,84 @@ describe('Non-volatile status condition tests', () => {
 
         test("Moves can change opponent's status to asleep", () => {
 
-
+            tD.battleSL1.fight()
+            tD.battleSL1.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mWhismur\x1b[0m fell asleep")
+            expect(tD.battleSL1.pokemon2.status).toEqual({'asleep': 1})
 
         })
 
         test("Pokemon cannot move when asleep", () => {
 
-
+            tD.battleSL2.fight()
+            tD.battleSL2.fight(0)
+            tD.battleSL2.fight(3)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mWhismur\x1b[0m is fast asleep")
+            expect(tD.battleSL2.pokemon1.currentHP).toBe(85)
 
         })
 
-        test("Sleep can last 1-5 turns", () => {
+        test("Sleep can last 1-3 turns", () => {
 
+            jest.spyOn(global.Math, 'random').mockRestore()
 
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.5)
+            tD.battleSL3.fight()
+            tD.battleSL3.fight(0)
+            expect(tD.battleSL3.pokemon2.status).toEqual({'asleep': 2})
+
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.8)
+            tD.battleSL4.fight()
+            tD.battleSL4.fight(0)
+            expect(tD.battleSL4.pokemon2.status).toEqual({'asleep': 3})
 
         })
 
         test("Switching out doesn't effect a Pokemon's sleep counter", () => {
 
+            jest.spyOn(global.Math, 'random').mockRestore()
 
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.5)
+            tD.battleSL5.fight()
+            tD.battleSL5.fight(0)
+            tD.battleSL5.fight(4, 1)
+            tD.battleSL5.fight(0)
+            tD.battleSL5.fight(0)
+            expect(tD.battleSL5.trainer2.pokemon[0].status).toEqual({'asleep': 2})
 
         })
 
         test("Pokemon can attack on the turn they wake up", () => {
 
+            jest.spyOn(global.Math, 'random').mockRestore()
 
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.5)
+            tD.battleSL6.fight()
+            tD.battleSL6.fight(0)
+            tD.battleSL6.fight(3)
+            expect(tD.battleSL6.pokemon2.status).toEqual({'asleep': 1})
+            expect(tD.battleSL6.pokemon1.currentHP).toBe(85)
+            tD.battleSL6.fight(0)
+            tD.battleSL6.fight(3)
+            expect(tD.battleSL6.pokemon2.status).toEqual({'asleep': 0})
+            expect(tD.battleSL6.pokemon1.currentHP).toBe(85)
+            tD.battleSL6.fight(0)
+            tD.battleSL6.fight(3)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mWhismur\x1b[0m woke up")
+            expect(tD.battleSL6.pokemon2.status).toEqual({})
+            expect(tD.battleSL6.pokemon1.currentHP).toBe(76)
 
         })
 
         test("Sleep is displayed on the battle screen and the team screen", () => {
 
-
+            tD.battleSL7.fight()
+            tD.battleSL7.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mWhismur\x1b[0m (62/62) \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mSLP\x1b[0m - \x1b[38;2;255;156;188m\x1b[48;2;171;67;94m\x1b[1mHypno\x1b[0m (85/85)")
+            tD.battleSL7.fight(6)
+            expect(consoleSpy).toHaveBeenCalledWith('1 - \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mWhismur\x1b[0m - \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mNormal\x1b[0m (62/62) \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mSLP\x1b[0m')
 
         })
 
@@ -437,37 +484,73 @@ describe('Non-volatile status condition tests', () => {
 
         test("Heal Bell can cure all the status conditions of Pokemon on the user's team", () => {
 
-
+            tD.battleX1.fight()
+            tD.battleX1.fight(2)
+            tD.battleX1.fight(4, 1)
+            tD.battleX1.fight(1)
+            tD.battleX1.fight(4, 2)
+            tD.battleX1.fight(0)
+            tD.battleX1.fight(0)
+            expect(tD.battleX1.trainer2.pokemon[0].status).toEqual({})
+            expect(tD.battleX1.trainer2.pokemon[1].status).toEqual({})
+            expect(tD.battleX1.trainer2.pokemon[2].status).toEqual({})
+            expect(consoleSpy).toHaveBeenCalledWith("Hippie's team was healed")
 
         })
 
         test('Snore allows a Pokemon to attack when asleep', () => {
 
-
-            
-        })
-
-        test('Snore fails when awake', () => {
-
-
+            tD.battleX2.fight()
+            tD.battleX2.fight(1)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mSnorlax\x1b[0m is awake - move failed")
+            expect(tD.battleX2.pokemon2.currentHP).toBe(75)
+            tD.battleX2.fight(2)
+            tD.battleX2.fight(1)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mSnorlax\x1b[0m is fast asleep")
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mSnorlax\x1b[0m used \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mSnore\x1b[0m")
+            expect(tD.battleX2.pokemon2.currentHP).toBe(55)
             
         })
 
         test("Rest fully restores the user's health but puts it to sleep", () => {
 
-
+            tD.battleX3.fight()
+            tD.battleX3.fight(3)
+            tD.battleX3.fight(1)
+            tD.battleX3.fight(3)
+            tD.battleX3.fight(1)
+            tD.battleX3.fight(3)
+            tD.battleX3.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mSnorlax\x1b[0m fell asleep")
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mSnorlax\x1b[0m fully restored its health")
+            expect(tD.battleX3.pokemon2.currentHP).toBe(160)
             
         })
 
-        test("Sleep from rest always lasts three turns", () => {
+        test("Sleep from rest always lasts two turns", () => {
 
+            tD.battleX4.fight()
+            tD.battleX4.fight(3)
+            tD.battleX4.fight(0)
+            expect(tD.battleX4.pokemon2.status).toEqual({'asleep': 2})
 
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.8)
+
+            tD.battleX5.fight()
+            tD.battleX5.fight(3)
+            tD.battleX5.fight(0)
+            expect(tD.battleX5.pokemon2.status).toEqual({'asleep': 2})
             
         })
 
-        test("Rest cannot be used if a Pokemon has an existing status condition", () => {
+        test("Rest cannot be used if a Pokemon has full health", () => {
 
-
+            tD.battleX6.fight()
+            tD.battleX6.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mSnorlax\x1b[0m is at full health - move failed")
+            expect(tD.battleX6.pokemon1.status).toEqual({})
             
         })
 
