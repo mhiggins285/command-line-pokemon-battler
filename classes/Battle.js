@@ -360,6 +360,34 @@ class Battle {
 
             let isParalyzed = (paralysisCheck > 0.75)
 
+            let burnModifier = 1
+
+            if (this[currentPokemon].status.hasOwnProperty('burned')) {
+
+                burnModifier = 0.5
+
+            }
+
+            let isFrozen = false
+
+            let isThawed = false
+
+            if (this[currentPokemon].status.hasOwnProperty('frozen')) {
+
+                isFrozen = true
+
+                const thawCheck = Math.random()
+
+                if (thawCheck > 0.8) {
+
+                    isFrozen = false
+
+                    isThawed = true
+
+                }
+
+            }
+
             // if Pokemon is recharging from previous turn
 
             if (this[currentPokemon].volatileStatus.hasOwnProperty('recharging')) {
@@ -370,9 +398,23 @@ class Battle {
 
                 // if Pokemon charged a move the previous turn
 
-            } else if (this[currentPokemon].volatileStatus.hasOwnProperty('charging') & !(isParalyzed)) {
+            } else if (this[currentPokemon].volatileStatus.hasOwnProperty('charging') && (isFrozen)) {
 
-                let attackStat = this[currentPokemon].species.attack
+                console.log(`${nicknameObj.currentPokemonFullName} is frozen solid`)
+
+                delete this[currentPokemon].volatileStatus.charging
+
+            } else if (this[currentPokemon].volatileStatus.hasOwnProperty('charging') && !(isParalyzed) && !(isFrozen)) {
+
+                if (isThawed) {
+
+                    console.log(`${nicknameObj.currentPokemonFullName} thawed out`)
+
+                    this[currentPokemon].status = {}
+
+                }
+
+                let attackStat = this[currentPokemon].species.attack * burnModifier
                         let defenseStat = this[opponentPokemon].species.def
 
                         let attackModifierNumerator = 2
@@ -537,9 +579,9 @@ class Battle {
 
                     }
 
-                    delete this[currentPokemon].volatileStatus.charging
-
                 }
+
+                delete this[currentPokemon].volatileStatus.charging
 
                 // course of action if switch Pokemon is picked
 
@@ -656,18 +698,23 @@ class Battle {
                 }
 
                 return
-            
-            // invalid move
-
 
             // struggle
 
-            } else if (totalPP === 0 && actionNo === 0 && !(isParalyzed)) {
+            } else if (totalPP === 0 && actionNo === 0 && !(isParalyzed) && !(isFrozen)) {
+
+                if (isThawed) {
+
+                    console.log(`${nicknameObj.currentPokemonFullName} thawed out`)
+
+                    this[currentPokemon].status = {}
+
+                }
 
                 console.log(`${nicknameObj.currentPokemonFullName} used \x1b[1mStruggle\x1b[0m`)
                 console.log(`${nicknameObj.currentPokemonFullName} is damaged by recoil`)
 
-                let attackStat = this[currentPokemon].species.attack
+                let attackStat = this[currentPokemon].species.attack * burnModifier
 
                 let defenseStat = this[opponentPokemon].species.def
 
@@ -675,6 +722,8 @@ class Battle {
 
                 this[opponentPokemon].currentHP -= Math.floor(attackStat * 60 / defenseStat * 0.3)
                 this[currentPokemon].currentHP -= Math.floor(attackStat * 60 / recoilDefenseStat * 0.15)
+
+            // invalid move
 
             } else if (this[currentPokemon].pp[actionNo] === 0 || this[currentPokemon].pp[actionNo] === undefined) {
 
@@ -692,7 +741,19 @@ class Battle {
 
                 console.log(`${nicknameObj.currentPokemonNickname} is fully paralyzed`)
 
+            } else if (isFrozen) {
+
+                console.log(`${nicknameObj.currentPokemonNickname} is frozen solid`)                
+
             } else if (this[currentPokemon].moves[actionNo].effects.includes('Charge')) {
+
+                if (isThawed) {
+
+                    console.log(`${nicknameObj.currentPokemonFullName} thawed out`)
+
+                    this[currentPokemon].status = {}
+
+                }
 
                 console.log(`${typeColourise(this[currentPokemon].moves[actionNo].name, this[currentPokemon].moves[actionNo].type)} is charging`)
 
@@ -704,6 +765,14 @@ class Battle {
 
             } else if (this[currentPokemon].moves[actionNo].effects.includes('Dig')) {
 
+                if (isThawed) {
+
+                    console.log(`${nicknameObj.currentPokemonFullName} thawed out`)
+
+                    this[currentPokemon].status = {}
+
+                }
+
                 console.log(`${nicknameObj.currentPokemonFullName} dug underground`)
 
                 this[currentPokemon].pp[actionNo]--
@@ -713,6 +782,14 @@ class Battle {
             // fly is used
 
             } else if (this[currentPokemon].moves[actionNo].effects.includes('Fly')) {
+
+                if (isThawed) {
+
+                    console.log(`${nicknameObj.currentPokemonFullName} thawed out`)
+
+                    this[currentPokemon].status = {}
+
+                }
 
                 console.log(`${nicknameObj.currentPokemonFullName} flew up in the air`)
 
@@ -724,6 +801,14 @@ class Battle {
 
             } else {
 
+                if (isThawed) {
+
+                    console.log(`${nicknameObj.currentPokemonFullName} thawed out`)
+
+                    this[currentPokemon].status = {}
+
+                }
+                
                 this[currentPokemon].pp[actionNo]--
 
                 let digFlyMultiplier = 1
@@ -795,7 +880,7 @@ class Battle {
                     if (this[currentPokemon].moves[actionNo].category !== 'Status') {
                     // damage calculation
 
-                        let attackStat = this[currentPokemon].species.attack
+                        let attackStat = this[currentPokemon].species.attack * burnModifier
 
                         let defenseStat = this[opponentPokemon].species.def
 
@@ -1245,6 +1330,38 @@ class Battle {
 
                             }
 
+                            if (statCond === 'BRN') {
+
+                                if (this[opponentPokemon].species.type1 === 'Fire' || this[opponentPokemon].species.type2 === 'Fire') {
+
+                                    console.log('It had no effect')
+
+                                } else {
+
+                                    this[opponentPokemon].status = {'burned': 'burned'}
+
+                                    console.log(`${nicknameObj.opponentPokemonFullName} was burned`)
+
+                                }
+
+                            }
+
+                            if (statCond === 'FRZ') {
+
+                                if (this[opponentPokemon].species.type1 === 'Ice' || this[opponentPokemon].species.type2 === 'Ice') {
+
+                                    console.log('It had no effect')
+
+                                } else {
+
+                                    this[opponentPokemon].status = {'frozen': 'frozen'}
+
+                                    console.log(`${nicknameObj.opponentPokemonFullName} was frozen`)
+
+                                }
+
+                            }
+
                         }
 
                     }
@@ -1346,6 +1463,14 @@ class Battle {
                 this[currentPokemon].currentHP -= Math.ceil(this[currentPokemon].species.hp / 16)
 
                 console.log(`${nicknameObj.currentPokemonFullName} was hurt by poison`)
+
+            }
+
+            if (this[currentPokemon].status.hasOwnProperty('burned')) {
+
+                this[currentPokemon].currentHP -= Math.ceil(this[currentPokemon].species.hp / 16)
+
+                console.log(`${nicknameObj.currentPokemonFullName} was hurt by its burn`)
 
             }
 

@@ -111,6 +111,18 @@ function statusMenu(statusObject) {
 
     }
 
+    if (status === 'burned') {
+
+        return ' ' + typeColourise('BRN', 'Fire')
+
+    }
+
+    if (status === 'frozen') {
+
+        return ' ' + typeColourise('FRZ', 'Ice')
+
+    }
+
 }
 
 // const keys = Object.keys(bgColours)

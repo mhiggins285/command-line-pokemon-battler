@@ -48,6 +48,8 @@ const tD = require('./testData')
 
 // \x1b[38;2;255;234;130m\x1b[48;2;171;145;31m\x1b[1mPikachu\x1b[0m 
 
+// \x1b[38;2;198;240;240m\x1b[48;2;109;151;151m\x1b[1mGlalie\x1b[0m 
+
 beforeEach(function () {
 
     consoleSpy = jest.spyOn(console, 'log')
@@ -283,31 +285,50 @@ describe('Non-volatile status condition tests', () => {
 
         test("Moves can change opponent's status to burned", () => {
 
-
+            tD.battleB1.fight()
+            tD.battleB1.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mWhismur\x1b[0m was burned")
+            expect(tD.battleB1.pokemon2.status).toEqual({'burned': 'burned'})
 
         })
 
         test("Pokemon take damage from burn at the end of their turn", () => {
 
-
+            tD.battleB2.fight()
+            tD.battleB2.fight(0)
+            tD.battleB2.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mWhismur\x1b[0m was hurt by its burn")
+            expect(tD.battleB2.pokemon2.currentHP).toBe(58)
 
         })
 
         test("Pokemon's attack is reduced if they have a burn", () => {
 
-
+            tD.battleB3.fight()
+            tD.battleB3.fight(3)
+            expect(tD.battleB3.pokemon2.currentHP).toBe(21)
+            tD.battleB3.fight(0)
+            tD.battleB3.fight(3)
+            expect(tD.battleB3.pokemon2.currentHP).toBe(13)
 
         })
 
         test("Fire type Pokemon cannot be burned", () => {
 
-
+            tD.battleB4.fight()
+            tD.battleB4.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith("It had no effect")
+            expect(tD.battleB4.pokemon2.status).toEqual({})
 
         })
 
         test("Burn is displayed on the battle screen and the team screen", () => {
 
-
+            tD.battleB5.fight()
+            tD.battleB5.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mWhismur\x1b[0m (62/62) \x1b[38;2;255;142;110m\x1b[48;2;176;83;31m\x1b[1mBRN\x1b[0m - \x1b[38;2;255;142;110m\x1b[48;2;176;83;31m\x1b[1mVulpix\x1b[0m (38/38)")
+            tD.battleB5.fight(6)
+            expect(consoleSpy).toHaveBeenCalledWith('1 - \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mWhismur\x1b[0m - \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mNormal\x1b[0m (62/62) \x1b[38;2;255;142;110m\x1b[48;2;176;83;31m\x1b[1mBRN\x1b[0m')
 
         })
 
@@ -315,33 +336,58 @@ describe('Non-volatile status condition tests', () => {
 
     describe('Testing "Frozen" functionality', () => {
 
-        test("Moves can", () => {
+        test("Moves can change opponent's status to frozen", () => {
 
-
+            tD.battleFR1.fight()
+            tD.battleFR1.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mWhismur\x1b[0m was frozen")
+            expect(tD.battleFR1.pokemon2.status).toEqual({'frozen': 'frozen'})
 
         })
 
         test("Pokemon cannot move when frozen", () => {
 
-
+            tD.battleFR2.fight()
+            tD.battleFR2.fight(0)
+            tD.battleFR2.fight(3)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mWhismur\x1b[0m is frozen solid")
+            expect(tD.battleFR2.pokemon1.currentHP).toBe(80)
 
         })
 
         test("Pokemon have a 20% chance to thaw out every turn", () => {
 
+            tD.battleFR3.fight()
+            tD.battleFR3.fight(0)
+            tD.battleFR3.fight(3)
+            expect(tD.battleFR3.pokemon2.status).toEqual({'frozen': 'frozen'})
+            tD.battleFR3.fight(0)
+            jest.spyOn(global.Math, 'random').mockRestore()
+
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.81)
+            tD.battleFR3.fight(3)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mWhismur\x1b[0m thawed out")
+            expect(tD.battleFR3.pokemon1.currentHP).toBe(72)
 
 
         })
 
         test("Ice type Pokemon cannot be frozen", () => {
 
-
+            tD.battleFR4.fight()
+            tD.battleFR4.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith("It had no effect")
+            expect(tD.battleFR4.pokemon2.status).toEqual({})
 
         })
 
         test("Frozen is displayed on the battle screen and the team screen", () => {
 
-
+            tD.battleFR5.fight()
+            tD.battleFR5.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mWhismur\x1b[0m (62/62) \x1b[38;2;198;240;240m\x1b[48;2;109;151;151m\x1b[1mFRZ\x1b[0m - \x1b[38;2;198;240;240m\x1b[48;2;109;151;151m\x1b[1mGlalie\x1b[0m (80/80)")
+            tD.battleFR5.fight(6)
+            expect(consoleSpy).toHaveBeenCalledWith('1 - \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mWhismur\x1b[0m - \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mNormal\x1b[0m (62/62) \x1b[38;2;198;240;240m\x1b[48;2;109;151;151m\x1b[1mFRZ\x1b[0m')
 
         })
 
@@ -349,7 +395,7 @@ describe('Non-volatile status condition tests', () => {
 
     describe('Testing "Asleep" functionality', () => {
 
-        test("Moves can change user's status to asleep", () => {
+        test("Moves can change opponent's status to asleep", () => {
 
 
 

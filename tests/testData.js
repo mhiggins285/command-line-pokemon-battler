@@ -530,4 +530,44 @@ tD.battleP15 = new Battle(tD.electrician, tD.shepherd)
 tD.battleP16 = new Battle(tD.electrician, tD.patient)
 tD.battleP17 = new Battle(tD.guitarist, tD.patient)
 
+
+
+tD.vulpix = new Pokemon('Vulpix', [38, 41, 50, 40, 65], 'Fire')
+
+tD.willOWisp = new Move ('Will-O-Wisp', 'Fire', 20, 0, 100, 'Status', ['Stat Cond BRN100'])
+
+tD.kindler = new Trainer('Kindler')
+
+tD.kindler.catch(tD.vulpix)
+
+tD.kindler.pokemon[0].teach(tD.willOWisp)
+
+tD.battleB1 = new Battle(tD.kindler, tD.patient)
+tD.battleB2 = new Battle(tD.kindler, tD.patient)
+tD.battleB3 = new Battle(tD.patient, tD.kindler)
+tD.battleB4 = new Battle(tD.kindler, tD.firebreather)
+tD.battleB5 = new Battle(tD.kindler, tD.patient)
+
+
+tD.glalie = new Pokemon('Glalie', [80, 80, 80, 80, 80], 'Ice')
+tD.sealeo = new Pokemon('Sealeo', [90, 60, 75, 70, 70], 'Water', 'Ice')
+
+tD.freezeRay = new Move('Freeze Ray', 'Ice', 20, 0, 100, 'Status', ['Stat Cond FRZ100'])
+
+tD.skier = new Trainer('Skier')
+tD.snowboarder = new Trainer('Snowboarder')
+
+tD.skier.catch(tD.glalie)
+tD.snowboarder.catch(tD.sealeo)
+
+tD.skier.pokemon[0].teach(tD.freezeRay)
+
+tD.battleFR1 = new Battle(tD.skier, tD.patient)
+tD.battleFR2 = new Battle(tD.skier, tD.patient)
+tD.battleFR3 = new Battle(tD.skier, tD.patient)
+tD.battleFR4 = new Battle(tD.skier, tD.snowboarder)
+tD.battleFR5 = new Battle(tD.skier, tD.patient)
+
+
+
 module.exports = tD
