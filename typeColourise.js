@@ -83,6 +83,30 @@ function underline(string) {
 
 }
 
+function statusMenu(statusObject) {
+
+    if (Object.keys(statusObject).length === 0) {
+
+        return ''
+
+    }
+
+    const status = Object.keys(statusObject)[0]
+
+    if (status === 'poisoned') {
+
+        return ' ' + typeColourise('PSN', 'Poison', 'Poison')
+
+    }
+
+    if (status === 'badly poisoned') {
+
+        return ' ' + typeColourise('PSN', 'Poison', 'Dark')
+
+    }
+
+}
+
 // const keys = Object.keys(bgColours)
 // const typeQuant = keys.length
 
@@ -100,4 +124,4 @@ function underline(string) {
 
 // }
 
-module.exports = { typeColourise, bolden, underline }
+module.exports = { typeColourise, bolden, underline, statusMenu }

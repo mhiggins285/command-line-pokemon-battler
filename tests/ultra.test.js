@@ -95,7 +95,15 @@ describe('Non-volatile status condition tests', () => {
             tD.battleP3.fight(0)
             tD.battleP3.fight(0)
             tD.battleP3.fight(0)
-            expect(tD.battleP3.winner).toBe(tD.battleP3.trainer1)
+            tD.battleP3.fight(0)
+            tD.battleP3.fight(0)
+            tD.battleP3.fight(0)
+            tD.battleP3.fight(0)
+            tD.battleP3.fight(0)
+            tD.battleP3.fight(0)
+            tD.battleP3.fight(0)
+            tD.battleP3.fight(1)
+            expect(tD.battleP3.pokemon2).toBe(tD.battleP3.trainer2.pokemon[1])
 
         })
 
@@ -104,7 +112,7 @@ describe('Non-volatile status condition tests', () => {
             tD.battleP4.fight()
             tD.battleP4.fight(1)
             expect(tD.battleP4.pokemon2.status).toEqual({})
-            tD.battleP4.fight(0)
+            tD.battleP4.fight(2)
 
             jest.spyOn(global.Math, 'random').mockRestore()
 
@@ -141,10 +149,10 @@ describe('Non-volatile status condition tests', () => {
 
             jest.spyOn(global.Math, 'random').mockReturnValue(0.8)
 
-            tD.battleP7()
-            tD.battleP7(1)
-            tD.battleP7(0)
-            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;203;141;203m\x1b[48;2;119;130;31m\x1b[1mBeedrill\x1b[0m's attack missed")
+            tD.battleP7.fight()
+            tD.battleP7.fight(1)
+            tD.battleP7.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;203;141;203m\x1b[48;2;119;130;31m\x1b[1mBeedrill\x1b[0m's attack missed!")
             expect(tD.battleP7.pokemon1.status).toEqual({})
 
         })

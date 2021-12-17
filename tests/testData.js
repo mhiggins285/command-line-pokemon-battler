@@ -487,6 +487,7 @@ tD.binMan.pokemon[0].teach(tD.scratch)
 tD.binMan.pokemon[0].teach(tD.toxic)
 tD.patient.pokemon[0].teach(tD.splash)
 tD.patient.pokemon[0].teach(tD.flash)
+tD.patient.pokemon[0].teach(tD.recover)
 tD.immunologist.pokemon[0].teach(tD.splash)
 
 tD.battleP1 = new Battle(tD.binMan, tD.patient)

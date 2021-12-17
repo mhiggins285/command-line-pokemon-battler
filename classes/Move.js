@@ -33,4 +33,20 @@ function findStatMods(effectArray) {
 
 }
 
-module.exports = { Move, findStatMods }
+function findStatCond(effectArray) {
+
+    for (const effect of effectArray) {
+
+        if (effect.substring(0, 9) === "Stat Cond") {
+
+            return effect.substring(10, effect.length)
+
+        }
+
+    }
+
+    return null
+
+}
+
+module.exports = { Move, findStatMods, findStatCond }
