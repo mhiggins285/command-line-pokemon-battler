@@ -488,6 +488,7 @@ tD.binMan.pokemon[0].teach(tD.toxic)
 tD.patient.pokemon[0].teach(tD.splash)
 tD.patient.pokemon[0].teach(tD.flash)
 tD.patient.pokemon[0].teach(tD.recover)
+tD.patient.pokemon[0].teach(tD.scratch)
 tD.immunologist.pokemon[0].teach(tD.splash)
 
 tD.battleP1 = new Battle(tD.binMan, tD.patient)
@@ -505,5 +506,28 @@ tD.battleP12 = new Battle(tD.binMan, tD.patient)
 
 
 
+tD.thunderWave = new Move('Thunder Wave', 'Electric', 20, 0, 100, 'Status', ['Stat Cond PRZ100'])
+
+tD.pikachu = new Pokemon('Pikachu', [35, 55, 50, 30, 40], 'Electric')
+tD.flaaffy = new Pokemon('Flaaffy', [70, 55, 80, 55, 60], 'Electric')
+tD.toxtricity = new Pokemon('Toxtricity', [75, 98, 114, 70, 70], 'Electric', 'Poison')
+
+tD.electrician = new Trainer('Electrician')
+tD.shepherd = new Trainer('Shepherd')
+tD.guitarist = new Trainer('Guitarist')
+
+tD.electrician.catch(tD.pikachu)
+tD.shepherd.catch(tD.flaaffy)
+tD.guitarist.catch(tD.toxtricity)
+
+tD.electrician.pokemon[0].teach(tD.thunderWave)
+tD.guitarist.pokemon[0].teach(tD.poisonPowder)
+tD.guitarist.pokemon[0].teach(tD.thunderWave)
+
+tD.battleP13 = new Battle(tD.electrician, tD.patient)
+tD.battleP14 = new Battle(tD.electrician, tD.patient)
+tD.battleP15 = new Battle(tD.electrician, tD.shepherd)
+tD.battleP16 = new Battle(tD.electrician, tD.patient)
+tD.battleP17 = new Battle(tD.guitarist, tD.patient)
 
 module.exports = tD

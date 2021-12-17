@@ -46,6 +46,8 @@ const tD = require('./testData')
 
 // \x1b[38;2;203;141;203m\x1b[48;2;119;130;31m\x1b[1mBeedrill\x1b[0m 
 
+// \x1b[38;2;255;234;130m\x1b[48;2;171;145;31m\x1b[1mPikachu\x1b[0m 
+
 beforeEach(function () {
 
     consoleSpy = jest.spyOn(console, 'log')
@@ -66,7 +68,7 @@ describe('Non-volatile status condition tests', () => {
 
     describe('Testing "Poisoned" functionality', () => {
 
-        test("Moves can change user's status to poisoned", () => {
+        test("Moves can change opponent's status to poisoned", () => {
 
             tD.battleP1.fight()
             tD.battleP1.fight(0)
@@ -161,7 +163,7 @@ describe('Non-volatile status condition tests', () => {
 
     describe('Testing "Badly Poisoned" functionality', () => {
 
-        test("Moves can change user's status to badly poisoned", () => {
+        test("Moves can change opponent's status to badly poisoned", () => {
 
             tD.battleP8.fight()
             tD.battleP8.fight(3)
@@ -218,41 +220,60 @@ describe('Non-volatile status condition tests', () => {
 
     })
 
-    describe('Testing "Paralysed" functionality', () => {
+    describe('Testing "Paralyzed" functionality', () => {
 
-        test("Moves can change user's status to paralysed", () => {
+        test("Moves can change opponent's status to paralysed", () => {
 
-
+            tD.battleP13.fight()
+            tD.battleP13.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mWhismur\x1b[0m was paralyzed")
+            expect(tD.battleP13.pokemon2.status).toEqual({'paralyzed': 'paralyzed'})
 
         })
 
         test("Pokemon can have a chance to miss their turn if paralysed", () => {
 
+            tD.battleP14.fight()
+            tD.battleP14.fight(0)
+            tD.battleP14.fight(3)
+            expect(tD.battleP14.pokemon1.currentHP).toBe(13)
+            tD.battleP14.fight(0)
+            jest.spyOn(global.Math, 'random').mockRestore()
 
-
-        })
-
-        test("Damaging moves can have a chance to paralyse a Pokemon", () => {
-
-
+            jest.spyOn(global.Math, 'random').mockReturnValue(0.8)
+            tD.battleP14.fight(3)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mWhismur\x1b[0m is fully paralyzed")
+            expect(tD.battleP14.pokemon1.currentHP).toBe(13)
 
         })
 
         test("Electric type Pokemon cannot be paralysed", () => {
 
-
+            tD.battleP15.fight()
+            tD.battleP15.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith("It had no effect")
+            expect(tD.battleP15.pokemon2.status).toEqual({})
 
         })
 
         test("Paralysis is displayed on the battle screen and the team screen", () => {
 
-
+            tD.battleP16.fight()
+            tD.battleP16.fight(0)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mWhismur\x1b[0m (62/62) \x1b[38;2;255;234;130m\x1b[48;2;171;145;31m\x1b[1mPRZ\x1b[0m - \x1b[38;2;255;234;130m\x1b[48;2;171;145;31m\x1b[1mPikachu\x1b[0m (35/35)")
+            tD.battleP16.fight(6)
+            expect(consoleSpy).toHaveBeenCalledWith('1 - \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mWhismur\x1b[0m - \x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mNormal\x1b[0m (62/62) \x1b[38;2;255;234;130m\x1b[48;2;171;145;31m\x1b[1mPRZ\x1b[0m')
 
         })
 
         test("Pokemon cannot be given a status condition if they already have another one", () => {
 
-
+            tD.battleP17.fight()
+            tD.battleP17.fight(0)
+            tD.battleP17.fight(0)
+            tD.battleP17.fight(1)
+            expect(consoleSpy).toHaveBeenCalledWith("\x1b[38;2;213;213;182m\x1b[48;2;119;119;88m\x1b[1mWhismur\x1b[0m already has a status condition - move failed")
+            expect(tD.battleP17.pokemon2.status).toEqual({'poisoned': 'poisoned'})
 
         })
 
@@ -260,7 +281,7 @@ describe('Non-volatile status condition tests', () => {
 
     describe('Testing "Burned" functionality', () => {
 
-        test("Moves can change user's status to burned", () => {
+        test("Moves can change opponent's status to burned", () => {
 
 
 
@@ -273,12 +294,6 @@ describe('Non-volatile status condition tests', () => {
         })
 
         test("Pokemon's attack is reduced if they have a burn", () => {
-
-
-
-        })
-
-        test("Damaging moves can have a chance to burn a Pokemon", () => {
 
 
 
@@ -300,7 +315,7 @@ describe('Non-volatile status condition tests', () => {
 
     describe('Testing "Frozen" functionality', () => {
 
-        test("Damaging moves can have a chance to freeze a Pokemon", () => {
+        test("Moves can", () => {
 
 
 

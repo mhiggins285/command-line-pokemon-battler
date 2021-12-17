@@ -350,6 +350,16 @@ class Battle {
 
             }
 
+            let paralysisCheck = 0
+
+            if (this[currentPokemon].status.hasOwnProperty('paralyzed')) {
+
+                paralysisCheck = Math.random()
+
+            }
+
+            let isParalyzed = (paralysisCheck > 0.75)
+
             // if Pokemon is recharging from previous turn
 
             if (this[currentPokemon].volatileStatus.hasOwnProperty('recharging')) {
@@ -360,25 +370,119 @@ class Battle {
 
                 // if Pokemon charged a move the previous turn
 
-            } else if (this[currentPokemon].volatileStatus.hasOwnProperty('charging')) {
+            } else if (this[currentPokemon].volatileStatus.hasOwnProperty('charging') & !(isParalyzed)) {
 
                 let attackStat = this[currentPokemon].species.attack
+                        let defenseStat = this[opponentPokemon].species.def
 
-                let defenseStat = this[opponentPokemon].species.def
+                        let attackModifierNumerator = 2
+                        let attackModifierDenominator = 2
 
-                if (this[currentPokemon].volatileStatus.charging.category === "Special") {
+                        if (this[currentPokemon].statModifications[0] > 0) {
 
-                    attackStat = this[currentPokemon].species.spAttack
+                            attackModifierNumerator += this[currentPokemon].statModifications[0]
 
-                    defenseStat = this[opponentPokemon].species.spDef
+                        } else {
 
-                }
+                            attackModifierDenominator -= this[currentPokemon].statModifications[0]
+
+                        }
+
+                        let defenseModifierNumerator = 2
+                        let defenseModifierDenominator = 2
+
+                        if (this[opponentPokemon].statModifications[2] > 0) {
+
+                            defenseModifierNumerator += this[opponentPokemon].statModifications[2]
+
+                        } else {
+
+                            defenseModifierDenominator -= this[opponentPokemon].statModifications[2]
+
+                        }
+                        
+
+                        if (this[currentPokemon].moves[actionNo].category === "Special") {
+
+                            attackStat = this[currentPokemon].species.spAttack
+
+                            defenseStat = this[opponentPokemon].species.spDef
+
+                            attackModifierNumerator = 2
+                            attackModifierDenominator = 2
+
+                            if (this[currentPokemon].statModifications[1] > 0) {
+
+                                attackModifierNumerator += this[currentPokemon].statModifications[1]
+
+                            } else {
+
+                                attackModifierDenominator -= this[currentPokemon].statModifications[1]
+
+                            }
+
+                            defenseModifierNumerator = 2
+                            defenseModifierDenominator = 2
+
+                            if (this[opponentPokemon].statModifications[3] > 0) {
+
+                                defenseModifierNumerator += this[opponentPokemon].statModifications[3]
+
+                            } else {
+
+                                defenseModifierDenominator -= this[opponentPokemon].statModifications[3]
+
+                        }
+
+                    }
+
+                    const statModifier = attackModifierNumerator * defenseModifierDenominator / (attackModifierDenominator * defenseModifierNumerator)
 
                 console.log(`${this[currentTrainer].name}'s ${nicknameObj.currentPokemonFullName} unleashed its ${typeColourise(this[currentPokemon].volatileStatus.charging.name, this[currentPokemon].volatileStatus.charging.type)}`)
 
+                let accuracyModifier = 1
+
+                if (this[opponentPokemon].volatileStatus.hasOwnProperty('charging')) {
+
+                    if (this[opponentPokemon].volatileStatus.charging.effects.includes('Dig') || this[opponentPokemon].volatileStatus.charging.effects.includes('Fly')) {
+
+                        accuracyModifier = 0
+
+                    }
+
+                }
+
+                let accuracyModifierNumerator = 3
+                let accuracyModifierDenominator = 3
+
+                if (this[currentPokemon].statModifications[4] > 0) {
+
+                    accuracyModifierNumerator += this[currentPokemon].statModifications[4]
+
+                } else {
+
+                    accuracyModifierDenominator -= this[currentPokemon].statModifications[4]
+
+                }
+
+                let evasivenessModifierNumerator = 3
+                let evasivenessModifierDenominator = 3
+
+                if (this[opponentPokemon].statModifications[5] > 0) {
+
+                    evasivenessModifierNumerator += this[opponentPokemon].statModifications[5]
+
+                } else {
+
+                    evasivenessModifierDenominator -= this[opponentPokemon].statModifications[5]
+
+                }
+
+                accuracyModifier *= (accuracyModifierNumerator * evasivenessModifierDenominator / (accuracyModifierDenominator * evasivenessModifierNumerator))
+
                 const accuracyCheck = Math.random()
 
-                if (accuracyCheck > this[currentPokemon].volatileStatus.charging.accuracy/100) {
+                if (accuracyCheck > accuracyModifier * this[currentPokemon].volatileStatus.charging.accuracy/100) {
 
                     console.log(`${nicknameObj.currentPokemonFullName}'s attack missed!`)
 
@@ -413,7 +517,7 @@ class Battle {
 
                     }
 
-                    this[opponentPokemon].currentHP -= Math.floor(attackStat * 60 / defenseStat * typeModifier * this[currentPokemon].volatileStatus.charging.power / 60 * criticalModifier * stabModifier / 2)
+                    this[opponentPokemon].currentHP -= Math.floor(attackStat * 60 / defenseStat * typeModifier * this[currentPokemon].volatileStatus.charging.power / 60 * criticalModifier * stabModifier * statModifier / 2)
 
                     // damage dealt is reduced to a half as otherwise battles would be over too quickly
 
@@ -552,10 +656,13 @@ class Battle {
                 }
 
                 return
+            
+            // invalid move
+
 
             // struggle
-                
-            } else if (totalPP === 0 && actionNo === 0) {
+
+            } else if (totalPP === 0 && actionNo === 0 && !(isParalyzed)) {
 
                 console.log(`${nicknameObj.currentPokemonFullName} used \x1b[1mStruggle\x1b[0m`)
                 console.log(`${nicknameObj.currentPokemonFullName} is damaged by recoil`)
@@ -569,8 +676,6 @@ class Battle {
                 this[opponentPokemon].currentHP -= Math.floor(attackStat * 60 / defenseStat * 0.3)
                 this[currentPokemon].currentHP -= Math.floor(attackStat * 60 / recoilDefenseStat * 0.15)
 
-            // invalid move
-
             } else if (this[currentPokemon].pp[actionNo] === 0 || this[currentPokemon].pp[actionNo] === undefined) {
 
                 console.log("You don't have a valid move in that slot, please select a valid move")
@@ -582,6 +687,10 @@ class Battle {
             // if attack is used
 
             // if move is a charging move
+
+            } else if (isParalyzed) {
+
+                console.log(`${nicknameObj.currentPokemonNickname} is fully paralyzed`)
 
             } else if (this[currentPokemon].moves[actionNo].effects.includes('Charge')) {
 
@@ -1115,6 +1224,22 @@ class Battle {
                                     this[opponentPokemon].status = {'badly poisoned': 1}
 
                                     console.log(`${nicknameObj.opponentPokemonFullName} was badly poisoned`)
+
+                                }
+
+                            }
+
+                            if (statCond === 'PRZ') {
+
+                                if (this[opponentPokemon].species.type1 === 'Electric' || this[opponentPokemon].species.type2 === 'Electric') {
+
+                                    console.log('It had no effect')
+
+                                } else {
+
+                                    this[opponentPokemon].status = {'paralyzed': 'paralyzed'}
+
+                                    console.log(`${nicknameObj.opponentPokemonFullName} was paralyzed`)
 
                                 }
 

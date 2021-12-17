@@ -95,13 +95,19 @@ function statusMenu(statusObject) {
 
     if (status === 'poisoned') {
 
-        return ' ' + typeColourise('PSN', 'Poison', 'Poison')
+        return ' ' + typeColourise('PSN', 'Poison')
 
     }
 
     if (status === 'badly poisoned') {
 
         return ' ' + typeColourise('PSN', 'Poison', 'Dark')
+
+    }
+
+    if (status === 'paralyzed') {
+
+        return ' ' + typeColourise('PRZ', 'Electric')
 
     }
 
