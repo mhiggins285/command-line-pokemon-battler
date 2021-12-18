@@ -179,6 +179,8 @@ class Battle {
 
     fight(actionNo = 0, pokemonNo = -1, damageCalc = 1) {
 
+        let skipFlag = false
+
         console.log('')
 
         // code for when battle has already been completed
@@ -640,6 +642,8 @@ class Battle {
 
                     this[currentPokemon].volatileStatus = {}
 
+                    this[currentPokemon].statModifications = [0, 0, 0, 0, 0, 0]
+
                     if (this[currentPokemon].status.hasOwnProperty('badly poisoned')) {
 
                         this[currentPokemon].status = {'poisoned': 'poisoned'}
@@ -661,7 +665,7 @@ class Battle {
 
             } else if (actionNo === 5) {
 
-                let moveCount = 1
+                let moveCount = 0
 
                 for (const move of this[currentPokemon].moves) {
 
@@ -815,6 +819,10 @@ class Battle {
                 this[currentPokemon].volatileStatus.charging = this[currentPokemon].moves[actionNo]
             
             } else if (!(isAsleep) && (this[currentPokemon].moves[actionNo].effects.includes('Snore'))) {
+
+                console.log(`${nicknameObj.currentPokemonFullName} woke up`)
+
+                this[currentPokemon].status = {}
 
                 console.log(`${nicknameObj.currentPokemonFullName} is awake - move failed`)
 
@@ -1178,6 +1186,8 @@ class Battle {
                         if (typeModifier === 0) {
 
                             console.log("It had no effect")
+
+                            skipFlag = true
                         
                         } else if (typeModifier < 0.9) {
 
@@ -1185,9 +1195,11 @@ class Battle {
 
                         }
 
-                        if (this[currentPokemon].moves[actionNo].effects.includes('Recoil')) {
+                        if (this[currentPokemon].moves[actionNo].effects.includes('Recoil') && !(skipFlag)) {
 
                             this[currentPokemon].currentHP -= Math.floor(totalDamage / 4)
+
+                            console.log(`${nicknameObj.currentPokemonFullName} is damaged by recoil`)
 
                         }
 
@@ -1195,9 +1207,11 @@ class Battle {
 
                             this[currentPokemon].currentHP = 0
 
+                            console.log(`${nicknameObj.currentPokemonFullName} is damaged by recoil`)
+
                         }
 
-                        if (this[currentPokemon].moves[actionNo].effects.includes('Drain')) {
+                        if (this[currentPokemon].moves[actionNo].effects.includes('Drain') && !(skipFlag)) {
 
                             this[currentPokemon].currentHP += Math.floor(totalDamage * 0.5)
 
@@ -1231,7 +1245,7 @@ class Battle {
 
                     let statModCheck = Math.random()
 
-                    if (statModCodes !== null && statModCheck > statModThreshold) {
+                    if (statModCodes !== null && statModCheck > statModThreshold && !(skipFlag)) {
 
                         for (const statModCode of statModCodes) {
 
@@ -1359,7 +1373,7 @@ class Battle {
 
                     let statCondCheck = Math.random()
 
-                    if (statCondCode !== null && statCondCheck > statCondThreshold) {
+                    if (statCondCode !== null && statCondCheck > statCondThreshold && !(skipFlag)) {
 
                         if (Object.keys(this[opponentPokemon].status).length !== 0) {
                             
@@ -1490,6 +1504,8 @@ class Battle {
                                     if (livingPokemonNo === pokemonSelected) {
 
                                         this[opponentPokemon].volatileStatus = {}
+
+                                        this[opponentPokemon].statModifications = [0, 0, 0, 0, 0, 0]
 
                                         if (this[opponentPokemon].status.hasOwnProperty('badly poisoned')) {
 
