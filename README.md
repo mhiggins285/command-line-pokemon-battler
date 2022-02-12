@@ -45,4 +45,4 @@ npm t REGEX
 
 ## System requirements
 
-You will need to install Node v16.9.1 and PSQL v12.9 to run this repository.
+You will need to install Node v16.9.1.
